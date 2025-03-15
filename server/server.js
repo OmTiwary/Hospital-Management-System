@@ -2,14 +2,22 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const axios = require('axios')
+require('dotenv').config();
 
-const app = express()
+const app = express();
 const PORT = process.env.PORT || 5000
 
-app.use(cors())
+app.use(cors());
+app.use(express.json())
 app.get('/', (req, res)=>{
     res.send("Server is working well!")
 })
+
+const MONGO_URL = process.env.MONGO_URL
+mongoose.connect(MONGO_URL)
+.then(()=>console.log("Database Connected."))
+.catch((error)=>console.log("Error detected", error))
+
 
 app.listen(PORT, (req, res)=>{
     console.log(`Server is connected to http://localhost:${PORT}`)
