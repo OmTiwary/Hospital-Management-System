@@ -1,4 +1,4 @@
-# Hospital Management System (Full Stack)
+# Hospital Management System 
 
 ## Overview
 
@@ -62,7 +62,7 @@ Make sure you have the following installed:
 
 #### 1️⃣ Clone the Repository
 ```sh
-git clone https://github.com/yourusername/hospital-management-system.git
+git clone https://github.com/hospital-management-system.git
 cd hospital-management-system
 
 #### 2️⃣ Install Dependencies
