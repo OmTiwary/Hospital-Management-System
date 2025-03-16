@@ -34,7 +34,7 @@ export default function Sidebar() {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/reception'>
+                        <Link to='/remainder'>
                         <span>
                             <i class="fa-solid fa-bell-concierge" style={{ color: "#63E6BE" }}></i>
                         </span>
@@ -42,7 +42,7 @@ export default function Sidebar() {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/doctors'>
+                        <Link to='/revenue'>
                         <span>
                             <i class="fa-solid fa-dollar-sign" style={{ color: "#63E6BE" }}></i>
                         </span>
@@ -50,7 +50,7 @@ export default function Sidebar() {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/appointment'>
+                        <Link to='/inventory'>
                         <span>
                             <i class="fa-solid fa-warehouse" style={{ color: "#63E6BE" }}></i>
                         </span>
