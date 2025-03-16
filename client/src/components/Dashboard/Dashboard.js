@@ -214,21 +214,21 @@ export default function Dashboard() {
         <div className="patient">
           <h3>Top Doctors</h3>
           {
-            doctors.map((doctor)=>(
-             <div key={doctor.id} className="pat">
-              <img src={doctor.image} alt="" />
-              <div className="id">
-                <h4>{doctor.name}</h4>
-                <h4>{doctor.role}</h4>
+            doctors.map((doctor) => (
+              <div key={doctor.id} className="pat">
+                <img src={doctor.image} alt="" />
+                <div className="id">
+                  <h4>{doctor.name}</h4>
+                  <h4>{doctor.role}</h4>
+                </div>
+                <div className="time">
+                  <h5>{doctor.time}</h5>
+                </div>
               </div>
-              <div className="time">
-                <h5>{doctor.time}</h5>
-              </div>
-             </div> 
             ))
           }
         </div>
-        
+
       </div>
     </>
   )
