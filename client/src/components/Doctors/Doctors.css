@@ -1,11 +1,9 @@
-/* ===================== Base styles ===================== */
 .dashboard {
   padding: 24px;
   background-color: #f9fafb;
   min-height: 100vh;
 }
 
-/* ===================== Summary Cards ===================== */
 .summary-cards {
   display: grid;
   grid-template-columns: 1fr;
@@ -52,7 +50,6 @@
   margin: 0;
 }
 
-/* ===================== Search Bar ===================== */
 .search-container {
   display: flex;
   flex-direction: column;
@@ -105,7 +102,6 @@
   font-size: 18px;
 }
 
-/* ===================== Doctor Cards ===================== */
 .doctor-cards {
   display: grid;
   grid-template-columns: 1fr;
@@ -176,7 +172,6 @@
   margin: 0 0 12px 0;
 }
 
-/* ===================== Buttons ===================== */
 .profile-button {
   background-color: #d1fae5;
   color: #065f46;
@@ -208,7 +203,6 @@
   background-color: #e5e7eb;
 }
 
-/* ===================== Emergency Section ===================== */
 .emergency-title {
   color: #22c55e;
   font-size: 20px;
@@ -237,7 +231,6 @@
   margin-right: 12px;
 }
 
-/* ===================== Footer ===================== */
 .footer {
   margin-top: 32px;
   padding: 16px;
