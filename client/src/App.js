@@ -6,7 +6,6 @@ import Dashboard from './components/Dashboard/Dashboard'
 import Appointment from './components/Appointment/Appointment'
 import Campaign from './components/Campaign/Campaign'
 import Medecine from './components/Medicine/Medicine'
-import Patients from './components/Patients/Patient'
 import Invoices from './components/Invoices/Invoice'
 import Payments from './components/Payments/Payment'
 import Profile from './components/Profile/Profile'
@@ -30,7 +29,6 @@ function App() {
         <Route path="/doctors" element= {<Doctors />} />
         <Route path="/invoices" element= {<Invoices />} />
         <Route path="/medecine" element= {<Medecine />} />
-        <Route path="/patients" element= {<Patients />} />
         <Route path="/payments" element= {<Payments />} />
         <Route path="/profile" element= {<Profile />} />
         <Route path="/reception" element= {<Reception />} />

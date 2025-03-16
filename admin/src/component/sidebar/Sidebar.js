@@ -25,67 +25,36 @@ export default function Sidebar() {
                         </Link>
                     </li>
                     <li>
+                        <Link to='/patients'>
+                        <span>
+                            <i class="fa-regular fa-user" style={{ color: "#63E6BE" }}>
+                            </i>
+                        </span>
+                        Patients
+                        </Link>
+                    </li>
+                    <li>
                         <Link to='/reception'>
                         <span>
                             <i class="fa-solid fa-bell-concierge" style={{ color: "#63E6BE" }}></i>
                         </span>
-                        Receptions
+                        Reminder
                         </Link>
                     </li>
                     <li>
                         <Link to='/doctors'>
                         <span>
-                            <i class="fa-solid fa-user-doctor" style={{ color: "#63E6BE" }}></i>
+                            <i class="fa-solid fa-dollar-sign" style={{ color: "#63E6BE" }}></i>
                         </span>
-                        Doctors
+                        Revenue
                         </Link>
                     </li>
                     <li>
                         <Link to='/appointment'>
                         <span>
-                            <i class="fa-solid fa-calendar-check" style={{ color: "#63E6BE" }}></i>
+                            <i class="fa-solid fa-warehouse" style={{ color: "#63E6BE" }}></i>
                         </span>
-                        Appointment
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/payments'>
-                        <span>
-                            <i class="fa-brands fa-paypal" style={{ color: "#63E6BE" }}></i>
-                        </span>
-                        Payments
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/invoices'>
-                        <span>
-                            <i class="fa-solid fa-file-invoice" style={{ color: "#63E6BE" }}></i>
-                        </span>
-                        Invoices
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/services'>
-                        <span>
-                            <i class="fa-solid fa-truck-medical" style={{ color: "#63E6BE" }}></i>
-                        </span>
-                        Services
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/medicine'>
-                        <span>
-                            <i class="fa-solid fa-syringe" style={{ color: "#63E6BE" }}></i>
-                        </span>
-                        Medicine
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/campaign'>
-                        <span>
-                            <i class="fa-solid fa-campground" style={{ color: "#63E6BE" }}></i>
-                        </span>
-                        Campaign
+                        Inventory
                         </Link>
                     </li>
                     <li>

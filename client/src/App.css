@@ -7,5 +7,10 @@
     flex-grow: 1;
     padding: 20px;
     overflow-x: hidden;
-    margin-left: 250px;
+    margin-left: 85px;
+    transition: margin-left 0.5s ease;
+}
+
+.sidebar:hover~.content-container{
+    margin-left: 240px;
 }
