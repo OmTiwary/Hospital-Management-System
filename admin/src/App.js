@@ -4,12 +4,15 @@ import { BrowserRouter } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter >
+    <BrowserRouter>
+    <div className="app-container">
       <Sidebar />
-      </BrowserRouter>
+      <div className="content-container">
+
+      </div>
     </div>
-  );
+    </BrowserRouter>
+  )
 }
 
 export default App;

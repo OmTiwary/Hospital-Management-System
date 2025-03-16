@@ -138,19 +138,17 @@ export default function Dashboard() {
     },
   };
 
-  const patients = [
-    { id: 1, name: "Ayush Mishra", disease: "Cough", image: pat1, time: "2:20PM" },
-    { id: 2, name: "Abhishek", disease: "Fever", image: pat2, time: "3:15PM" },
-    { id: 3, name: "Om", disease: "Cold", image: pat3, time: "4:10PM" },
-    { id: 4, name: "Manjit", disease: "Headache", image: pat4, time: "5:05PM" },
-    { id: 5, name: "Keshav", disease: "Stomach Pain", image: pat5, time: "6:30PM" },
-];
-
-
+  const doctors = [
+    { id: 1, name: "Ayush Mishra", role: "Cardiologist", image: pat1, time: "2:20PM" },
+    { id: 2, name: "Abhishek", role: "General Physician", image: pat2, time: "3:15PM" },
+    { id: 3, name: "Om", role: "Pediatrician", image: pat3, time: "4:10PM" },
+    { id: 4, name: "Manjit", role: "Neurologist", image: pat4, time: "5:05PM" },
+    { id: 5, name: "Keshav", role: "Gastroenterologist", image: pat5, time: "6:30PM" },
+  ];
   return (
     <>
       <div className="nav">
-        <input type="search" name="search" id="search" placeholder='Search "Patient" ' required autoComplete='off' />
+        <input type="search" name="search" id="search" placeholder='Search "Doctor" ' required autoComplete='off' />
         <h4>Ayush Mishra</h4>
       </div>
 
@@ -214,17 +212,17 @@ export default function Dashboard() {
         </div>
 
         <div className="patient">
-          <h3>Recent Patients</h3>
+          <h3>Top Doctors</h3>
           {
-            patients.map((patient)=>(
-             <div key={patient.id} className="pat">
-              <img src={patient.image} alt="" />
+            doctors.map((doctor)=>(
+             <div key={doctor.id} className="pat">
+              <img src={doctor.image} alt="" />
               <div className="id">
-                <h4>{patient.name}</h4>
-                <h4>{patient.disease}</h4>
+                <h4>{doctor.name}</h4>
+                <h4>{doctor.role}</h4>
               </div>
               <div className="time">
-                <h5>{patient.time}</h5>
+                <h5>{doctor.time}</h5>
               </div>
              </div> 
             ))
