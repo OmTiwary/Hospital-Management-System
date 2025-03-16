@@ -31,7 +31,6 @@ const Doctors = () => {
 
   return (
     <div className="dashboard">
-      {/* 🔎 Search Bar */}
       <div className="search-container">
         <p className="search-note">
           You can choose your doctor as per your need.
@@ -49,7 +48,6 @@ const Doctors = () => {
         </div>
       </div>
 
-      {/* 🩺 Doctor Cards */}
       <div className="doctor-cards">
         {filteredDoctors.map(doctor => (
           <div key={doctor.id} className="doctor-card">
@@ -72,7 +70,6 @@ const Doctors = () => {
         ))}
       </div>
 
-      {/* 🚑 Emergency Doctors */}
       <h2 className="emergency-title">Emergency Doctors</h2>
       <div className="doctor-cards">
         {emergencyDoctors.map(doctor => (
@@ -89,7 +86,6 @@ const Doctors = () => {
         ))}
       </div>
 
-      {/* 📄 Footer */}
       <footer className="footer">
         © {new Date().getFullYear()} All Rights Reserved. Powered by Abhishek Kumar.
       </footer>
