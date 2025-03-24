@@ -50,6 +50,7 @@
   margin: 0;
 }
 
+/* ===================== Search Bar ===================== */
 .search-container {
   display: flex;
   flex-direction: column;
@@ -83,7 +84,7 @@
 }
 
 .search-button {
-  background-color: #22c55e;
+  background-color: #538f69;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -102,6 +103,7 @@
   font-size: 18px;
 }
 
+/* ===================== Doctor Cards ===================== */
 .doctor-cards {
   display: grid;
   grid-template-columns: 1fr;
@@ -172,6 +174,7 @@
   margin: 0 0 12px 0;
 }
 
+/* ===================== Buttons ===================== */
 .profile-button {
   background-color: #d1fae5;
   color: #065f46;
@@ -203,6 +206,7 @@
   background-color: #e5e7eb;
 }
 
+/* ===================== Emergency Section ===================== */
 .emergency-title {
   color: #22c55e;
   font-size: 20px;
@@ -231,6 +235,7 @@
   margin-right: 12px;
 }
 
+/* ===================== Footer ===================== */
 .footer {
   margin-top: 32px;
   padding: 16px;
