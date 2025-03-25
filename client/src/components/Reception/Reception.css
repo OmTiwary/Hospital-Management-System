@@ -33,11 +33,11 @@
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 25px;
-  transition: none;
+  transition: transform 0.3s ease;
 }
 
 .receptions-card:hover {
-  transform: none;
+  transform: translateY(-5px);
 }
 
 /* =============== Header Section Styles =============== */
@@ -71,13 +71,13 @@
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: none;
+  transition: all 0.3s ease;
   font-weight: 500;
 }
 
 .action-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 .action-btn svg {
@@ -121,13 +121,13 @@
   border: none;
   border-radius: 25px;
   cursor: pointer;
-  transition: none;
+  transition: all 0.3s ease;
   font-weight: 500;
 }
 
 .export-btn:hover {
-  background-color: var(--secondary);
-  transform: none;
+  background-color: #2980b9;
+  transform: translateY(-2px);
 }
 
 /* =============== Table Styles =============== */
@@ -160,11 +160,11 @@
 }
 
 .receptions-table tr {
-  transition: none;
+  transition: all 0.3s ease;
 }
 
 .receptions-table tr:hover {
-  background-color: transparent;
+  background-color: rgba(52, 152, 219, 0.1);
 }
 
 /* Receptionist info cell with image */
@@ -180,11 +180,11 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--secondary);
-  transition: none;
+  transition: transform 0.3s ease;
 }
 
 .receptionist-info img:hover {
-  transform: none;
+  transform: scale(1.1);
 }
 
 /* Actions cell with dropdown */
@@ -200,12 +200,12 @@
   padding: 8px;
   color: var(--gray);
   border-radius: 50%;
-  transition: none;
+  transition: all 0.3s ease;
 }
 
 .more-actions-btn:hover {
-  background: none;
-  color: var(--gray);
+  background: var(--light);
+  color: var(--primary);
 }
 
 .actions-menu {
@@ -247,8 +247,8 @@
 }
 
 .actions-menu button:hover {
-  background-color: transparent;
-  color: var(--dark);
+  background-color: var(--light);
+  color: var(--secondary);
 }
 
 /* =============== Add Button Styles =============== */
@@ -598,7 +598,7 @@ input[type="checkbox"]:disabled {
   padding: 12px 30px;
   border-radius: 25px;
   font-weight: 500;
-  transition: none;
+  transition: all 0.3s ease;
   min-width: 120px;
 }
 
@@ -609,8 +609,8 @@ input[type="checkbox"]:disabled {
 }
 
 .cancel-btn:hover {
-  background: none;
-  transform: none;
+  background-color: var(--light);
+  transform: translateY(-2px);
 }
 
 .save-btn {
@@ -619,8 +619,8 @@ input[type="checkbox"]:disabled {
 }
 
 .save-btn:hover {
-  background-color: var(--secondary);
-  transform: none;
+  background-color: #2980b9;
+  transform: translateY(-2px);
 }
 
 /* =============== Responsive Styles =============== */
@@ -751,13 +751,13 @@ input[type="checkbox"]:disabled {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  transition: none;
+  transition: all 0.3s ease;
   border-left: 4px solid transparent;
 }
 
 .attendance-item:hover {
-  transform: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .attendance-status {
@@ -794,12 +794,12 @@ input[type="checkbox"]:disabled {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  transition: none;
+  transition: all 0.3s ease;
 }
 
 .shift-item:hover {
-  transform: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .shift-controls select {
@@ -1387,20 +1387,11 @@ input[type="checkbox"]:disabled {
 }
 
 @keyframes rotatePetal {
-  0% {
-    transform: rotate(0deg) translateX(0);
+  from {
+    transform: rotate(0deg);
   }
-  25% {
-    transform: rotate(90deg) translateX(20px);
-  }
-  50% {
-    transform: rotate(180deg) translateX(0);
-  }
-  75% {
-    transform: rotate(270deg) translateX(-20px);
-  }
-  100% {
-    transform: rotate(360deg) translateX(0);
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -1426,7 +1417,7 @@ input[type="checkbox"]:disabled {
   0% {
     transform: scale(0);
   }
-  70% {
+  80% {
     transform: scale(1.1);
   }
   100% {
@@ -1608,40 +1599,6 @@ input[type="checkbox"]:disabled {
   box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
   transform: translateY(-2px);
   transition: all 0.3s ease;
-}
-
-@keyframes floatPetal {
-  0% {
-    transform: translateY(-10px) rotate(0deg);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0.3;
-  }
-}
-
-@keyframes floatBalloon {
-  0% {
-    transform: translateY(-10px) rotate(0deg) translateX(0);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  50% {
-    transform: translateY(50vh) rotate(5deg) translateX(20px);
-  }
-  75% {
-    transform: translateY(75vh) rotate(-5deg) translateX(-20px);
-  }
-  100% {
-    transform: translateY(110vh) rotate(0deg) translateX(0);
-    opacity: 0.5;
-  }
 }
 
 /* Print Button Styles */

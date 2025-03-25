@@ -13,6 +13,9 @@ import Reception from './components/Reception/Reception'
 import Service from './components/Services/Service'
 import Settings from './components/Settings/Setting'
 import Doctors from './components/Doctors/Doctors'
+import Landing from './authentication/Landing'
+import Login from './authentication/login'
+import Signin from './authentication/signin'
 
 
 function App() {
@@ -20,22 +23,38 @@ function App() {
     <>
     <BrowserRouter>
     <div className="app-container">
-      <Sidebar />
-      <div className="content-container">
-        <Routes>
-        <Route path="/" element= {<Dashboard />} />
-        <Route path="/appointment" element= {<Appointment />} />
-        <Route path="/campaign" element= {<Campaign />} />
-        <Route path="/doctors" element= {<Doctors />} />
-        <Route path="/invoices" element= {<Invoices />} />
-        <Route path="/medicine" element= {<Medecine />} />
-        <Route path="/payments" element= {<Payments />} />
-        <Route path="/profile" element= {<Profile />} />
-        <Route path="/reception" element= {<Reception />} />
-        <Route path="/service" element= {<Service />} />
-        <Route path="/settings" element= {<Settings />} />
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/landing" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/" element={
+          <>
+            <Sidebar />
+            <div className="content-container">
+              <Dashboard />
+            </div>
+          </>
+        } />
+        <Route path="/*" element={
+          <>
+            <Sidebar />
+            <div className="content-container">
+              <Routes>
+                <Route path="/appointment" element={<Appointment />} />
+                <Route path="/campaign" element={<Campaign />} />
+                <Route path="/doctors" element={<Doctors />} />
+                <Route path="/invoices" element={<Invoices />} />
+                <Route path="/medicine" element={<Medecine />} />
+                <Route path="/payments" element={<Payments />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/reception" element={<Reception />} />
+                <Route path="/services" element={<Service />} />
+                <Route path="/settings" element={<Settings />} />
+              </Routes>
+            </div>
+          </>
+        } />
+      </Routes>
     </div>
     </BrowserRouter>
     </>

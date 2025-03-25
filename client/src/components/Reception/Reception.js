@@ -2,25 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { FiUpload, FiSearch, FiDownload, FiEye, FiTrash2, FiMoreVertical, FiX, FiEdit2, FiClock, FiCalendar, FiBarChart2, FiCheck, FiAlertCircle, FiPrinter } from 'react-icons/fi';
 import './Reception.css';
 
-// Ye main Reception component function hai
 export default function Reception() {
-  // ---------- CELEBRATION ANIMATION KE LIYE STATE ----------
-  // Ye control karta hai ki welcome animation dikhana hai ya nahi
+  // Add state for celebration animation
   const [showCelebration, setShowCelebration] = useState(true);
 
-  // Ye useEffect celebration ko 4 seconds ke baad hide kar dega
+  // Set up effect to hide celebration after a few seconds
   useEffect(() => {
-    // Ek timer create karo jo automatically celebration ko hide karega
     const timer = setTimeout(() => {
       setShowCelebration(false);
-    }, 4000); // 4000 milliseconds = 4 seconds
+    }, 4000); // Hide after 4 seconds
 
-    // Ye function tab chalta hai jab component unmount hota hai (cleanup)
     return () => clearTimeout(timer);
   }, []);
 
-  // ---------- INITIAL DATA SETUP ----------
-  // Ye sample data hai receptionists ka jo app first time load hone par dikhega
+  // =============== Initial Data Setup ===============
+
+  // Sample data for receptionists
   const initialReceptionists = [
     {
       id: 1,
@@ -114,30 +111,29 @@ export default function Reception() {
     }
   ];
 
-  // ---------- STATE MANAGEMENT ----------
-  // Is state mein notification messages store hote hain jo user ko dikhte hain
+  // =============== State Management ===============
+
+  // Notification state - declare earlier to avoid reference errors
   const [notification, setNotification] = useState(null);
 
-  // Is state mein sabhi receptionist data store hota hai
-  // Pehle localStorage se data load karne ki koshish karega, nahi mila toh initialReceptionists ka use karega
+  // Main receptionists data state with localStorage
   const [receptionists, setReceptionists] = useState(() => {
     const savedData = localStorage.getItem('receptionists');
     return savedData ? JSON.parse(savedData) : initialReceptionists;
   });
   
-  // UI control states - ye control karte hain ki interface par kya dikhega
-  const [showAddModal, setShowAddModal] = useState(false);        // Add Staff modal ko control karta hai
-  const [showViewModal, setShowViewModal] = useState(false);      // View Staff modal ko control karta hai
-  const [searchQuery, setSearchQuery] = useState('');            // Search input ki value
-  const [showActionMenu, setShowActionMenu] = useState(null);    // Har row ke action menu ko control karta hai
-  const [editMode, setEditMode] = useState(false);               // View modal mein edit mode ko control karta hai
+  // UI state management 
+  const [showAddModal, setShowAddModal] = useState(false);        // Controls Add Staff modal
+  const [showViewModal, setShowViewModal] = useState(false);      // Controls View Staff modal
+  const [searchQuery, setSearchQuery] = useState('');            // Search input value
+  const [showActionMenu, setShowActionMenu] = useState(null);    // Controls action menu for each row
+  const [editMode, setEditMode] = useState(false);               // Controls edit mode in View modal
   
-  // Selected receptionist ke liye states
-  const [selectedReceptionist, setSelectedReceptionist] = useState(null);  // Abhi jo receptionist view ho raha hai
-  const [editedReceptionist, setEditedReceptionist] = useState(null);     // Edit kiya gaya receptionist data
+  // Selected receptionist states
+  const [selectedReceptionist, setSelectedReceptionist] = useState(null);  // Currently viewed receptionist
+  const [editedReceptionist, setEditedReceptionist] = useState(null);     // Edited receptionist data
   
-  // ---------- FORM STATES ----------
-  // New receptionist form ke liye default values
+  // Form default values
   const [newReceptionist, setNewReceptionist] = useState({
     name: '',
     title: 'Dr.',
@@ -153,66 +149,66 @@ export default function Reception() {
     }
   });
   
-  // ---------- ATTENDANCE AUR SHIFT STATES ----------
-  // Attendance aur shifts ko manage karne ke liye states
+  // States for attendance and shifts
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [showShiftModal, setShowShiftModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [attendanceData, setAttendanceData] = useState({});
+  
+  // Declare shift data state
   const [shiftData, setShiftData] = useState(() => {
     const savedShifts = localStorage.getItem('receptionistShifts');
     return savedShifts ? JSON.parse(savedShifts) : {};
   });
   
-  // Shift modal mein selected receptionist ke liye state
+  // State for selected shift receptionist - declare after notification state
   const [selectedShiftReceptionist, setSelectedShiftReceptionist] = useState(null);
   
-  // Print view functionality ke liye state
+  // Add state for print view
   const [showPrintView, setShowPrintView] = useState(false);
-
-  // ---------- EFFECTS (SIDE EFFECTS) ----------
-  // Ye useEffect receptionists data ko localStorage mein save karta hai jab bhi ye change hota hai
+  
+  // =============== Effects ===============
+  
+  // Save receptionists data to localStorage
   useEffect(() => {
     localStorage.setItem('receptionists', JSON.stringify(receptionists));
   }, [receptionists]);
   
-  // Ye useEffect shift data ko localStorage mein save karta hai jab bhi ye change hota hai
+  // Save shift data to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('receptionistShifts', JSON.stringify(shiftData));
   }, [shiftData]);
 
-  // ---------- EVENT HANDLERS ----------
-  // Ye function new receptionist ke liye profile image upload karne mein help karta hai
+  // ===============  Ab yaha ek event handler craete kiye hai  jisme profile img upload kr skte hai ===============
+  //Event Handlers 
+  // Handle profile image upload
   const handleImageUpload = (e) => {
-    const file = e.target.files[0]; // Selected file ko get karo
+    const file = e.target.files[0];
     if (file) {
-      // File ko read karne ke liye FileReader create karo
       const reader = new FileReader();
       reader.onloadend = () => {
-        // Jab reading complete ho jaye, tab newReceptionist state ko image ke sath update karo
         setNewReceptionist({ ...newReceptionist, profileImage: reader.result });
       };
-      // File ko data URL (base64 encoded string) ke roop mein read karna shuru karo
       reader.readAsDataURL(file);
     }
   };
 
-  // Ye function new receptionist add karne ka kaam karta hai
+  // aur Handle adding new receptionist
   const handleAddReceptionist = () => {
-    // Form validation - check karo ki required fields bhare gaye hain ya nahi
+    // Form validation
     if (!newReceptionist.name || !newReceptionist.email || !newReceptionist.phone || !newReceptionist.password) {
       alert('Please fill in all required fields (Name, Email, Phone, and Password)');
       return;
     }
 
-    // Email validation regular expression ke through
+    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(newReceptionist.email)) {
       alert('Please enter a valid email address');
       return;
     }
 
-    // Ek new receptionist object create karo
+    // Create new receptionist object
     const newId = receptionists.length > 0 ? Math.max(...receptionists.map(r => r.id)) + 1 : 1;
     const currentDate = new Date();
     const formattedDate = `${currentDate.getDate()} ${currentDate.toLocaleString('default', { month: 'short' })}, ${currentDate.getFullYear()}`;
@@ -225,7 +221,7 @@ export default function Reception() {
       phone: newReceptionist.phone,
       password: newReceptionist.password,
       createdAt: formattedDate,
-      profileImage: newReceptionist.profileImage || '/manjeet.jpg', // Agar koi image nahi di gai to default image use karo
+      profileImage: newReceptionist.profileImage || '/manjeet.jpg',
       permissions: {
         patient: { ...newReceptionist.permissions.patient },
         appointment: { ...newReceptionist.permissions.appointment },
@@ -234,12 +230,12 @@ export default function Reception() {
       }
     };
     
-    // State ko new receptionist ke saath update karo
+    // Update state and localStorage
     const updatedReceptionists = [...receptionists, receptionistToAdd];
     setReceptionists(updatedReceptionists);
     localStorage.setItem('receptionists', JSON.stringify(updatedReceptionists));
 
-    // Form reset karo aur modal band karo
+    // Reset form and close modal
     setNewReceptionist({
       name: '',
       title: 'Dr.',
@@ -258,18 +254,16 @@ export default function Reception() {
     alert('Staff member added successfully!');
   };
 
-  // Ye function receptionist delete karne ka kaam karta hai
+  // Handle deleting a receptionist
   const handleDelete = (id) => {
-    // Matching id wale receptionist ko filter out karo
     const updatedReceptionists = receptionists.filter(receptionist => receptionist.id !== id);
     setReceptionists(updatedReceptionists);
     localStorage.setItem('receptionists', JSON.stringify(updatedReceptionists));
-    setShowActionMenu(null); // Action menu band karo
+    setShowActionMenu(null);
   };
 
-  // Ye function receptionist ki details dekhne ka kaam karta hai
+  // Handle viewing a receptionist's details
   const handleViewReceptionist = (receptionist) => {
-    // Default permissions agar koi nahi hai to
     const defaultPermissions = {
       patient: { read: false, edit: false, create: false, delete: false },
       appointment: { read: false, edit: false, create: false, delete: false },
@@ -277,25 +271,23 @@ export default function Reception() {
       payments: { read: false, edit: false, create: false, delete: false }
     };
 
-    // Make sure permissions set hai (purane data ke saath errors se bachata hai)
     const receptionistWithPermissions = {
       ...receptionist,
       permissions: receptionist.permissions || defaultPermissions
     };
 
-    // Selected receptionist ko view aur edit karne ke liye set karo
     setSelectedReceptionist(receptionistWithPermissions);
     setEditedReceptionist(receptionistWithPermissions);
-    setShowViewModal(true); // View modal dikhao
-    setShowActionMenu(null); // Action menu band karo
+    setShowViewModal(true);
+    setShowActionMenu(null);
   };
 
-  // Ye function view modal mein edit mode ko toggle karta hai
+  // Handle toggling edit mode
   const handleEditToggle = () => {
     setEditMode(!editMode);
   };
 
-  // Ye function edit mode mein receptionist fields ke changes handle karta hai
+  // Handle editing receptionist fields
   const handleEditChange = (field, value) => {
     setEditedReceptionist(prev => ({
       ...prev,
@@ -303,7 +295,7 @@ export default function Reception() {
     }));
   };
 
-  // Ye function edit mode mein permission settings ke changes handle karta hai
+  // Handle editing permissions
   const handleEditPermissionChange = (category, action, value) => {
     setEditedReceptionist(prev => ({
       ...prev,
@@ -317,26 +309,22 @@ export default function Reception() {
     }));
   };
 
-  // Ye function edit mode mein kiye gaye changes ko save karta hai
+  // Handle saving edited changes
   const handleSaveChanges = () => {
-    // Receptionist ko edited values ke saath update karo
     const updatedReceptionists = receptionists.map(receptionist =>
       receptionist.id === editedReceptionist.id ? editedReceptionist : receptionist
     );
     setReceptionists(updatedReceptionists);
     localStorage.setItem('receptionists', JSON.stringify(updatedReceptionists));
-    
-    // UI state ko reset karo
     setEditMode(false);
     setShowViewModal(false);
     setSelectedReceptionist(null);
     setEditedReceptionist(null);
   };
 
-  // ---------- EXPORT AUR REPORT FUNCTIONS ----------
-  // Ye function receptionist data ko CSV file mein export karta hai
+  // Handle exporting data to CSV  jo dta export kr rhe hia  recpsnist se wo excel ke form me download hoga 
   const handleExport = () => {
-    // CSV file ke liye column headers define karo
+    // Define CSV column headers
     const headers = [
       'ID', 'Name', 'Title', 'Email', 'Phone', 'Created At',
       'Patient Read', 'Patient Edit', 'Patient Create', 'Patient Delete',
@@ -345,7 +333,7 @@ export default function Reception() {
       'Payments Read', 'Payments Edit', 'Payments Create', 'Payments Delete'
     ];
 
-    // Receptionist data ko CSV format mein convert karo
+    // jo palhe convert krega CSV formate me  
     const csvData = receptionists.map(receptionist => {
       return [
         receptionist.id,
@@ -354,7 +342,7 @@ export default function Reception() {
         receptionist.email,
         receptionist.phone,
         receptionist.createdAt,
-        // Boolean permission values ko Yes/No text mein convert karo
+        // Convert permissions to Yes/No format
         receptionist.permissions.patient.read ? 'Yes' : 'No',
         receptionist.permissions.patient.edit ? 'Yes' : 'No',
         receptionist.permissions.patient.create ? 'Yes' : 'No',
@@ -372,7 +360,6 @@ export default function Reception() {
         receptionist.permissions.payments.create ? 'Yes' : 'No',
         receptionist.permissions.payments.delete ? 'Yes' : 'No'
       ].map(value => {
-        // Text mein comma hai to usko quotes se surround karo
         if (typeof value === 'string' && value.includes(',')) {
           return `"${value}"`;
         }
@@ -380,22 +367,21 @@ export default function Reception() {
       });
     });
 
-    // Headers aur data ko join karke CSV content create karo
+    // Create CSV content
     const csvContent = [
       headers.join(','),
       ...csvData.map(row => row.join(','))
     ].join('\n');
 
-    // CSV content ke saath ek Blob (Binary Large Object) create karo
+    // Create and trigger download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     
-    // Current date ke saath filename set karo
+    // Set filename with current date
     const date = new Date();
     const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     
-    // Download link create karo aur download trigger karo
     link.setAttribute('href', url);
     link.setAttribute('download', `receptionists-${formattedDate}.csv`);
     document.body.appendChild(link);
@@ -404,9 +390,81 @@ export default function Reception() {
     URL.revokeObjectURL(url);
   };
 
-  // Ye function detailed shift report generate karta hai
+  // Filter receptionists based on search query
+  const filteredReceptionists = receptionists.filter(receptionist => 
+    receptionist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    receptionist.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Function to show notification
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    
+    // Auto hide notification after 3 seconds
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  };
+
+  // Handle attendance tracking
+  const handleAttendance = (receptionistId) => {
+    const currentDate = new Date().toISOString().split('T')[0];
+    const currentTime = new Date().toLocaleTimeString();
+    
+    // Find the receptionist name
+    const receptionist = receptionists.find(r => r.id === receptionistId);
+    const name = receptionist ? receptionist.name : 'Staff';
+    
+    setAttendanceData(prev => ({
+      ...prev,
+      [receptionistId]: {
+        ...prev[receptionistId],
+        [currentDate]: {
+          checkIn: currentTime,
+          status: 'present'
+        }
+      }
+    }));
+    
+    // Show success notification
+    showNotification(`Attendance marked for ${name}`);
+    
+    // Close action menu
+    setShowActionMenu(null);
+  };
+
+  // Handle shift management
+  const handleShiftChange = (receptionistId, shiftType) => {
+    // Create a copy of current shift data
+    const updatedShiftData = { ...shiftData };
+    
+    // Update shift for the receptionist
+    updatedShiftData[receptionistId] = {
+      ...updatedShiftData[receptionistId],
+      currentShift: shiftType,
+      assignedDate: new Date().toISOString().split('T')[0],
+      lastUpdated: new Date().toLocaleString()
+    };
+    
+    // Update state with new shift data
+    setShiftData(updatedShiftData);
+    
+    // Find the receptionist name for notification
+    const receptionist = receptionists.find(r => r.id === receptionistId);
+    const name = receptionist ? receptionist.name : 'Staff';
+    
+    // Show success notification with more details
+    showNotification(`${name}'s shift changed to ${shiftType}`, 'success');
+    
+    // Close action menu if open
+    if (showActionMenu === receptionistId) {
+      setShowActionMenu(null);
+    }
+  };
+
+  // Enhance the shift report generation function
   const handleGenerateShiftReport = () => {
-    // Detailed information ke saath CSV headers define karo
+    // Define CSV headers with more detailed information
     const headers = [
       'Staff ID', 
       'Name', 
@@ -420,7 +478,7 @@ export default function Reception() {
       'Status'
     ];
 
-    // Shift types ko readable hours format mein map karo
+    // Map shift types to readable hours
     const shiftHours = {
       'morning': '6AM-2PM',
       'afternoon': '2PM-10PM',
@@ -428,12 +486,12 @@ export default function Reception() {
       'offduty': 'Off Duty'
     };
 
-    // Detailed information ke saath CSV data rows create karo
+    // Create CSV data rows with more information
     const csvData = receptionists.map(receptionist => {
       const staffShift = shiftData[receptionist.id] || {};
       const shiftType = staffShift.currentShift || 'Not Assigned';
       
-      // Shift type ke basis par status determine karo
+      // Determine status based on shift type
       let status = 'Active';
       if (shiftType === 'offduty') {
         status = 'Off Duty';
@@ -453,7 +511,6 @@ export default function Reception() {
         staffShift.lastUpdated || 'Never',
         status
       ].map(value => {
-        // Text mein comma hai to usko quotes se surround karo
         if (typeof value === 'string' && value.includes(',')) {
           return `"${value}"`;
         }
@@ -461,13 +518,13 @@ export default function Reception() {
       });
     });
 
-    // Report mein summary statistics add karo
+    // Add a summary row with counts
     const morningCount = Object.values(shiftData).filter(s => s.currentShift === 'morning').length;
     const afternoonCount = Object.values(shiftData).filter(s => s.currentShift === 'afternoon').length;
     const nightCount = Object.values(shiftData).filter(s => s.currentShift === 'night').length;
     const offdutyCount = Object.values(shiftData).filter(s => s.currentShift === 'offduty').length;
     
-    // Empty rows aur summary section add karo
+    // Add empty rows and summary
     csvData.push([]);
     csvData.push(['SHIFT SUMMARY']);
     csvData.push(['Morning Shift', morningCount]);
@@ -477,18 +534,18 @@ export default function Reception() {
     csvData.push(['Total Staff', receptionists.length]);
     csvData.push(['Report Generated', new Date().toLocaleString()]);
 
-    // CSV content create karo
+    // Create CSV content
     const csvContent = [
       headers.join(','),
       ...csvData.map(row => row.join(','))
     ].join('\n');
 
-    // CSV file ke liye download link create karo
+    // Create and trigger download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     
-    // Current date ke saath filename set karo
+    // Set filename with current date
     const date = new Date();
     const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     
@@ -499,110 +556,32 @@ export default function Reception() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    // Success notification dikhao
+    // Show success notification
     showNotification('Detailed shift report has been generated and downloaded!', 'success');
     
-    // Modal band karo
+    // Close the modal
     setShowShiftModal(false);
     setSelectedShiftReceptionist(null);
   };
 
-  // Ye function shift report print karne ka kaam karta hai
+  // Function to toggle print view
   const handlePrintReport = () => {
-    // Print view dikhao
     setShowPrintView(true);
     
-    // Rendering complete ho jaye iske liye delay ke baad print karo
+    // Print after rendering
     setTimeout(() => {
       window.print();
-      // Print dialog close hone ke baad normal view par wapas jao
+      // Return to normal view after print dialog closes
       setTimeout(() => {
         setShowPrintView(false);
       }, 1000);
     }, 500);
   };
 
-  // ---------- UTILITY FUNCTIONS ----------
-  // Search query ke basis par receptionists ko filter karo
-  const filteredReceptionists = receptionists.filter(receptionist => 
-    receptionist.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    receptionist.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // =============== Component Render ===============
 
-  // Ye function notification message dikhata hai
-  const showNotification = (message, type = 'success') => {
-    // Message aur type ke saath notification state set karo
-    setNotification({ message, type });
-    
-    // 3 seconds ke baad notification auto hide karo
-    setTimeout(() => {
-      setNotification(null);
-    }, 3000);
-  };
-
-  // ---------- ATTENDANCE AUR SHIFT FUNCTIONS ----------
-  // Ye function receptionist ki attendance mark karne ka kaam karta hai
-  const handleAttendance = (receptionistId) => {
-    // Current date aur time get karo
-    const currentDate = new Date().toISOString().split('T')[0];
-    const currentTime = new Date().toLocaleTimeString();
-    
-    // Receptionist ka name dhundo
-    const receptionist = receptionists.find(r => r.id === receptionistId);
-    const name = receptionist ? receptionist.name : 'Staff';
-    
-    // Attendance data update karo
-    setAttendanceData(prev => ({
-      ...prev,
-      [receptionistId]: {
-        ...prev[receptionistId],
-        [currentDate]: {
-          checkIn: currentTime,
-          status: 'present'
-        }
-      }
-    }));
-    
-    // Success notification dikhao
-    showNotification(`Attendance marked for ${name}`);
-    
-    // Action menu band karo
-    setShowActionMenu(null);
-  };
-
-  // Ye function receptionist ka shift change karne ka kaam karta hai
-  const handleShiftChange = (receptionistId, shiftType) => {
-    // Current shift data ka copy create karo
-    const updatedShiftData = { ...shiftData };
-    
-    // Receptionist ke liye shift update karo
-    updatedShiftData[receptionistId] = {
-      ...updatedShiftData[receptionistId],
-      currentShift: shiftType,
-      assignedDate: new Date().toISOString().split('T')[0],
-      lastUpdated: new Date().toLocaleString()
-    };
-    
-    // New shift data ke saath state update karo
-    setShiftData(updatedShiftData);
-    
-    // Notification ke liye receptionist ka name dhundo
-    const receptionist = receptionists.find(r => r.id === receptionistId);
-    const name = receptionist ? receptionist.name : 'Staff';
-    
-    // More details ke saath success notification dikhao
-    showNotification(`${name}'s shift changed to ${shiftType}`, 'success');
-    
-    // Agar action menu open hai to use band karo
-    if (showActionMenu === receptionistId) {
-      setShowActionMenu(null);
-    }
-  };
-
-  // ---------- RENDER FUNCTIONS ----------
-  // Ye function celebration animation render karta hai
+  // Render celebration component
   const renderCelebration = () => {
-    // Agar showCelebration false hai to kuch bhi render mat karo
     if (!showCelebration) return null;
     
     return (
@@ -611,32 +590,72 @@ export default function Reception() {
         <div className="celebration-content">
           <h2 className="celebration-message">Welcome to Reception!</h2>
         </div>
-        {/* Flower ke petal jo screen ke top se niche girte hain */}
+        
+        {/* Petals 1-18 */}
         <div className="petal petal-1"></div>
         <div className="petal petal-2"></div>
         <div className="petal petal-3"></div>
-        {/* ... Aur bhi petals ... */}
+        <div className="petal petal-4"></div>
+        <div className="petal petal-5"></div>
+        <div className="petal petal-6"></div>
+        <div className="petal petal-7"></div>
+        <div className="petal petal-8"></div>
+        <div className="petal petal-9"></div>
+        <div className="petal petal-10"></div>
+        <div className="petal petal-11"></div>
+        <div className="petal petal-12"></div>
+        <div className="petal petal-13"></div>
+        <div className="petal petal-14"></div>
+        <div className="petal petal-15"></div>
+        <div className="petal petal-16"></div>
+        <div className="petal petal-17"></div>
+        <div className="petal petal-18"></div>
         
-        {/* Balloons jo screen ke bottom se upar uthte hain */}
+        {/* Additional petals 19-30 */}
+        <div className="petal petal-19"></div>
+        <div className="petal petal-20"></div>
+        <div className="petal petal-21"></div>
+        <div className="petal petal-22"></div>
+        <div className="petal petal-23"></div>
+        <div className="petal petal-24"></div>
+        <div className="petal petal-25"></div>
+        <div className="petal petal-26"></div>
+        <div className="petal petal-27"></div>
+        <div className="petal petal-28"></div>
+        <div className="petal petal-29"></div>
+        <div className="petal petal-30"></div>
+        
+        {/* Balloons 1-9 */}
         <div className="balloon balloon-1"></div>
         <div className="balloon balloon-2"></div>
         <div className="balloon balloon-3"></div>
-        {/* ... Aur bhi balloons ... */}
+        <div className="balloon balloon-4"></div>
+        <div className="balloon balloon-5"></div>
+        <div className="balloon balloon-6"></div>
+        <div className="balloon balloon-7"></div>
+        <div className="balloon balloon-8"></div>
+        <div className="balloon balloon-9"></div>
+        
+        {/* Additional balloons 10-15 */}
+        <div className="balloon balloon-10"></div>
+        <div className="balloon balloon-11"></div>
+        <div className="balloon balloon-12"></div>
+        <div className="balloon balloon-13"></div>
+        <div className="balloon balloon-14"></div>
+        <div className="balloon balloon-15"></div>
       </div>
     );
   };
 
-  // ---------- MAIN COMPONENT RENDER ----------
-  // Ye main component render function hai
+  // ha ur yaha se component ko render krna prega taki sb data line by line show ho 
   return (
     <div className="receptions-container">
-      {/* Agar jarurat hai to celebration animation render karo */}
+      {/* Render celebration animation */}
       {renderCelebration()}
       
-      {/* Page title */}
       <h1>Receptions</h1>
       
-      {/* Notification message (showNotification call hone par dikhta hai) */}
+      {/* Notification */}
       {notification && (
         <div className={`notification ${notification.type}`}>
           <span className="notification-icon">
@@ -652,11 +671,10 @@ export default function Reception() {
         </div>
       )}
       
-      {/* Table aur actions ke saath main card */}
+      {/* Main Card */}
       <div className="receptions-card">
-        {/* Search aur actions ke saath header */}
+        {/* Header with Search and Export */}
         <div className="receptions-header">
-          {/* Search bar */}
           <div className="search-container">
             <input 
               type="text" 
@@ -667,7 +685,6 @@ export default function Reception() {
             />
           </div>
           
-          {/* Header action buttons */}
           <div className="header-actions">
             <button className="action-btn" onClick={() => setShowAttendanceModal(true)}>
               <FiClock /> Attendance
@@ -681,7 +698,7 @@ export default function Reception() {
           </div>
         </div>
         
-        {/* Receptionists dikhane ke liye table */}
+        {/* Receptionists Table */}
         <div className="receptions-table">
           <table>
             <thead>
@@ -696,7 +713,6 @@ export default function Reception() {
               </tr>
             </thead>
             <tbody>
-              {/* Filtered receptionists ko map karke table rows create karo */}
               {filteredReceptionists.map((receptionist) => (
                 <tr key={receptionist.id}>
                   <td>{receptionist.id}</td>
@@ -709,7 +725,6 @@ export default function Reception() {
                   <td>{receptionist.title}</td>
                   <td>{receptionist.email}</td>
                   <td>
-                    {/* Actions cell with dropdown menu */}
                     <div className="actions-cell">
                       <button 
                         className="more-actions-btn" 
@@ -718,7 +733,6 @@ export default function Reception() {
                         <FiMoreVertical />
                       </button>
                       
-                      {/* Dropdown menu jo more-actions click hone par dikhta hai */}
                       {showActionMenu === receptionist.id && (
                         <div className="actions-menu">
                           <button onClick={() => handleViewReceptionist(receptionist)}>
@@ -741,7 +755,7 @@ export default function Reception() {
         </div>
       </div>
 
-      {/* Floating Add button */}
+      {/* Add Button */}
       <button className="add-btn" onClick={() => setShowAddModal(true)}>+</button>
 
       {/* Add Staff Modal */}
