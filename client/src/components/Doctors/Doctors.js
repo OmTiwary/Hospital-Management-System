@@ -9,13 +9,37 @@ const Doctors = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
 
   const doctorsList = [
-    { id: 1, name: "Dr. M.J. Mical", specialization: "Health Checkup", availability: "Mon-Fri, 9AM-5PM", image: '/images/mj-mical.jpg' },
-    { id: 2, name: "Dr. Sanath Deo", specialization: "Health Checkup", availability: "Mon-Wed, 10AM-4PM", image: '/images/sanath-deo.jpg' },
-    { id: 3, name: "Dr. Lokara Phanj", specialization: "Pediatrics", availability: "Tue-Sat, 8AM-2PM", image: '/images/lokara-phanj.jpg' },
-    { id: 4, name: "Dr. Komola Haris", specialization: "Common Cold", availability: "Mon-Fri, 11AM-7PM", image: '/images/komola-haris.jpg' },
-    { id: 5, name: "Dr. Maria Sarafat", specialization: "Cardiology", availability: "Wed-Sun, 9AM-6PM", image: '/images/maria-sarafat.jpg' },
-    { id: 6, name: "Dr. Jhon Deo", specialization: "Orthopedics", availability: "Mon-Fri, 8AM-4PM", image: '/images/jhon-deo.jpg' }
-  ];
+    { id: 1, name: "Dr. Rajesh Malhotra", specialization: "Health Checkup", availability: "Mon-Fri, 9AM-5PM", image: '/images/rajesh-malhotra.jpg' },
+    { id: 2, name: "Dr. Anjali Verma", specialization: "Health Checkup", availability: "Mon-Wed, 10AM-4PM", image: '/images/anjali-verma.jpg' },
+    { id: 3, name: "Dr. Vikram Choudhary", specialization: "Pediatrics", availability: "Tue-Sat, 8AM-2PM", image: '/images/vikram-choudhary.jpg' },
+    { id: 4, name: "Dr. Sneha Kapoor", specialization: "Common Cold", availability: "Mon-Fri, 11AM-7PM", image: '/images/sneha-kapoor.jpg' },
+    { id: 5, name: "Dr. Manoj Tiwari", specialization: "Cardiology", availability: "Wed-Sun, 9AM-6PM", image: '/images/manoj-tiwari.jpg' },
+    { id: 6, name: "Dr. Priya Nair", specialization: "Orthopedics", availability: "Mon-Fri, 8AM-4PM", image: '/images/priya-nair.jpg' },
+    { id: 7, name: "Dr. Arjun Deshmukh", specialization: "Neurology", availability: "Tue-Sat, 7AM-3PM", image: '/images/arjun-deshmukh.jpg' },
+    { id: 8, name: "Dr. Pooja Mehta", specialization: "Dermatology", availability: "Mon-Fri, 10AM-6PM", image: '/images/pooja-mehta.jpg' },
+    { id: 9, name: "Dr. Kiran Joshi", specialization: "ENT", availability: "Wed-Sun, 9AM-4PM", image: '/images/kiran-joshi.jpg' },
+    { id: 10, name: "Dr. Ramesh Iyer", specialization: "Gastroenterology", availability: "Mon-Fri, 8AM-2PM", image: '/images/ramesh-iyer.jpg' },
+    { id: 11, name: "Dr. Neha Sharma", specialization: "General Medicine", availability: "Mon-Fri, 9AM-5PM", image: '/images/neha-sharma.jpg' },
+    { id: 12, name: "Dr. Aditya Rao", specialization: "Psychiatry", availability: "Tue-Sat, 10AM-4PM", image: '/images/aditya-rao.jpg' },
+    { id: 13, name: "Dr. Meenakshi Pillai", specialization: "Gynaecology", availability: "Mon-Wed, 9AM-6PM", image: '/images/meenakshi-pillai.jpg' },
+    { id: 14, name: "Dr. Sanjay Sinha", specialization: "Nephrology", availability: "Wed-Sun, 8AM-2PM", image: '/images/sanjay-sinha.jpg' },
+    { id: 15, name: "Dr. Ritu Agrawal", specialization: "Pulmonology", availability: "Mon-Fri, 10AM-7PM", image: '/images/ritu-agrawal.jpg' },
+    { id: 16, name: "Dr. Anil Bansal", specialization: "Endocrinology", availability: "Tue-Sat, 8AM-4PM", image: '/images/anil-bansal.jpg' },
+    { id: 17, name: "Dr. Kavita Reddy", specialization: "Oncology", availability: "Mon-Fri, 9AM-5PM", image: '/images/kavita-reddy.jpg' },
+    { id: 18, name: "Dr. Suresh Patel", specialization: "Radiology", availability: "Wed-Sun, 8AM-3PM", image: '/images/suresh-patel.jpg' },
+    { id: 19, name: "Dr. Deepak Das", specialization: "Hematology", availability: "Mon-Fri, 9AM-4PM", image: '/images/deepak-das.jpg' },
+    { id: 20, name: "Dr. Swati Saxena", specialization: "Urology", availability: "Tue-Sat, 10AM-6PM", image: '/images/swati-saxena.jpg' },
+    { id: 21, name: "Dr. Rohan Menon", specialization: "Cardiothoracic Surgery", availability: "Mon-Fri, 8AM-4PM", image: '/images/rohan-menon.jpg' },
+    { id: 22, name: "Dr. Varsha Prasad", specialization: "Geriatrics", availability: "Wed-Sun, 9AM-5PM", image: '/images/varsha-prasad.jpg' },
+    { id: 23, name: "Dr. Amit Mishra", specialization: "Rheumatology", availability: "Mon-Fri, 10AM-3PM", image: '/images/amit-mishra.jpg' },
+    { id: 24, name: "Dr. Seema Dutta", specialization: "Ophthalmology", availability: "Tue-Sat, 7AM-2PM", image: '/images/seema-dutta.jpg' },
+    { id: 25, name: "Dr. Nitin Kapoor", specialization: "Plastic Surgery", availability: "Mon-Fri, 10AM-6PM", image: '/images/nitin-kapoor.jpg' },
+    { id: 26, name: "Dr. Alok Pandey", specialization: "Dentistry", availability: "Wed-Sun, 8AM-4PM", image: '/images/alok-pandey.jpg' },
+    { id: 27, name: "Dr. Tanya Srivastava", specialization: "Neurology", availability: "Mon-Fri, 9AM-5PM", image: '/images/tanya-srivastava.jpg' },
+    { id: 28, name: "Dr. Sunil Rathi", specialization: "Neurosurgery", availability: "Tue-Sat, 8AM-2PM", image: '/images/sunil-rathi.jpg' },
+    { id: 29, name: "Dr. Radha Joshi", specialization: "Psychology", availability: "Mon-Wed, 10AM-5PM", image: '/images/radha-joshi.jpg' },
+    { id: 30, name: "Dr. Keshav Agarwal", specialization: "Neonatology", availability: "Wed-Sun, 9AM-6PM", image: '/images/keshav-agarwal.jpg' },
+];
 
   const emergencyDoctors = [
     { id: 1, name: "Dr. Adam Scott", specialization: "Emergency", availability: "24/7", image: '/images/default-doctor.jpg' },
