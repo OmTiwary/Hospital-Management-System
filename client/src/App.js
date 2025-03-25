@@ -44,7 +44,7 @@ function App() {
                 <Route path="/payments" element={<Payments />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/reception" element={<Reception />} />
-                <Route path="/service" element={<Service />} />
+                <Route path="/services" element={<Service />} />
                 <Route path="/settings" element={<Settings />} />
               </Routes>
             </div>
