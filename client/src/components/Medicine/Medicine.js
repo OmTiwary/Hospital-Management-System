@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './Medicine.css';
 import { FaStar, FaStarHalfAlt, FaShoppingCart } from 'react-icons/fa';
 
-// Import images from asset folder
 import medicineImg1 from '../asset/Med1.jpg';
 import medicineImg2 from '../asset/Med2.jpg';
 import medicineImg3 from '../asset/Med3.jpg';
@@ -11,7 +10,6 @@ export default function Medicine() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cart, setCart] = useState([]);
 
-  // Slider data with medicine images and descriptions
   const medicineSlider = [
     {
       id: 1,
@@ -32,8 +30,6 @@ export default function Medicine() {
       description: "These medicines block the action of histamine, a substance in the body that can cause allergy symptoms such as sneezing, itching, runny nose, and watery eyes. They're used to treat seasonal allergies and allergic reactions."
     }
   ];
-
-  // Extended medicine products data with price and rating
   const medicineProducts = [
     {
       id: 1,
@@ -84,8 +80,6 @@ export default function Medicine() {
       rating: 4.4
     }
   ];
-
-  // Function to render star ratings
   const renderRatingStars = (rating) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -101,25 +95,19 @@ export default function Medicine() {
 
     return stars;
   };
-
-  // Function to add product to cart
   const addToCart = (product) => {
     setCart([...cart, product]);
     alert(`${product.title} added to cart!`);
   };
-
-  // Auto-slide functionality
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide(prevSlide => 
         prevSlide === medicineSlider.length - 1 ? 0 : prevSlide + 1
       );
-    }, 5000); // Change slide every 5 seconds
+    }, 5000); 
 
-    return () => clearInterval(interval); // Clean up on component unmount
+    return () => clearInterval(interval);
   }, []);
-
-  // Functions to control the slider
   const goToNextSlide = () => {
     setCurrentSlide(prevSlide => 
       prevSlide === medicineSlider.length - 1 ? 0 : prevSlide + 1
@@ -139,8 +127,6 @@ export default function Medicine() {
   return (
     <div className="medicine-container">
       <h1 className="medicine-title">Popular Medicines</h1>
-      
-      {/* Medicine Slider */}
       <div className="medicine-slider">
         <button className="prev-btn slider-btn" onClick={goToPrevSlide}>&#10094;</button>
         
@@ -161,7 +147,6 @@ export default function Medicine() {
         
         <button className="next-btn slider-btn" onClick={goToNextSlide}>&#10095;</button>
         
-        {/* Dots/indicators */}
         <div className="slider-dots">
           {medicineSlider.map((_, index) => (
             <span 
@@ -173,13 +158,11 @@ export default function Medicine() {
         </div>
       </div>
 
-      {/* Additional content can go here */}
       <div className="medicine-info">
         <h2>About Our Medications</h2>
         <p>We provide high-quality medications from trusted pharmaceutical companies. Our pharmacy offers a wide range of prescription drugs, over-the-counter medicines, and health supplements to meet your healthcare needs.</p>
       </div>
 
-      {/* Medicine Products Grid */}
       <div className="medicine-products-section">
         <h2>Our Products</h2>
         <div className="medicine-products-grid">
@@ -209,8 +192,6 @@ export default function Medicine() {
           ))}
         </div>
       </div>
-
-      {/* Pharmacy Footer */}
       <footer className="pharmacy-footer">
         <div className="footer-container">
           <div className="footer-section">
