@@ -758,183 +758,28 @@ export default function Reception() {
       {/* Add Button */}
       <button className="add-btn" onClick={() => setShowAddModal(true)}>+</button>
 
-      {/* Add Staff Modal */}
-      {showAddModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            {/* Modal Header */}
-            <div className="modal-header">
-              <h2>Add Staff</h2>
-              <button className="close-btn" onClick={() => setShowAddModal(false)}>
-                <FiX />
-              </button>
-            </div>
-
-            {/* Modal Content */}
-            <div className="modal-content">
-              {/* Profile Image Upload */}
-              <div className="form-group profile-image-group">
-                <label>Profile Image</label>
-                <div className="image-upload-container">
-                  {newReceptionist.profileImage ? (
-                    <div className="image-preview">
-                      <img src={newReceptionist.profileImage} alt="Profile preview" />
-                      <button 
-                        className="change-image-btn" 
-                        onClick={() => setNewReceptionist({...newReceptionist, profileImage: null})}
-                      >
-                        Change Image
-                      </button>
-                    </div>
-                  ) : (
-                    <div className="upload-box">
-                      <FiUpload size={40} />
-                      <p>Drag your image here</p>
-                      <small>(Only *.jpeg and *.png images will be accepted)</small>
-                      <input 
-                        type="file" 
-                        accept=".jpeg,.jpg,.png" 
-                        onChange={handleImageUpload} 
-                        className="file-input"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Name and Title */}
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Full Name</label>
-                  <input 
-                    type="text" 
-                    value={newReceptionist.name}
-                    onChange={(e) => setNewReceptionist({...newReceptionist, name: e.target.value})}
-                    placeholder="Manjeet Singh"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Title</label>
-                  <select 
-                    value={newReceptionist.title}
-                    onChange={(e) => setNewReceptionist({...newReceptionist, title: e.target.value})}
-                  >
-                    <option value="Dr.">Dr.</option>
-                    <option value="Mr.">Mr.</option>
-                    <option value="Mrs.">Mrs.</option>
-                    <option value="Ms.">Ms.</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Email and Phone */}
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Email</label>
-                  <input 
-                    type="email" 
-                    value={newReceptionist.email}
-                    onChange={(e) => setNewReceptionist({...newReceptionist, email: e.target.value})}
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  <input 
-                    type="text" 
-                    value={newReceptionist.phone}
-                    onChange={(e) => setNewReceptionist({...newReceptionist, phone: e.target.value})}
-                  />
-                </div>
-              </div>
-
-              {/* Password */}
-              <div className="form-group">
-                <label>Password</label>
-                <input 
-                  type="password" 
-                  value={newReceptionist.password}
-                  onChange={(e) => setNewReceptionist({...newReceptionist, password: e.target.value})}
-                />
-              </div>
-
-              {/* Permissions Table */}
-              <div className="form-group">
-                <label>Access</label>
-                <div className="permissions-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>Read</th>
-                        <th>Edit</th>
-                        <th>Create</th>
-                        <th>Delete</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.keys(newReceptionist.permissions).map(permKey => (
-                        <tr key={permKey}>
-                          <td className="permission-name">
-                            {permKey.charAt(0).toUpperCase() + permKey.slice(1)}
-                          </td>
-                          {Object.keys(newReceptionist.permissions[permKey]).map(action => (
-                            <td key={action}>
-                              <input 
-                                type="checkbox" 
-                                checked={newReceptionist.permissions[permKey][action]}
-                                onChange={(e) => {
-                                  const updatedPermissions = {...newReceptionist.permissions};
-                                  updatedPermissions[permKey][action] = e.target.checked;
-                                  setNewReceptionist({...newReceptionist, permissions: updatedPermissions});
-                                }}
-                              />
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="modal-footer">
-              <button className="cancel-btn" onClick={() => setShowAddModal(false)}>
-                Cancel
-              </button>
-              <button className="save-btn" onClick={handleAddReceptionist}>
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* View/Edit Staff Modal */}
       {showViewModal && (
         <div className="modal-overlay">
           <div className="modal">
             {/* Modal Header */}
             <div className="modal-header">
-              <h2>{editMode ? 'Edit Staff' : 'View Staff'}</h2>
-              <div className="modal-header-actions">
+              <div className="modal-header-actions" style={{position: 'absolute', left: '25px'}}>
                 {!editMode && (
                   <button className="edit-btn" onClick={handleEditToggle}>
                     <FiEdit2 /> Edit
                   </button>
                 )}
-                <button className="close-btn" onClick={() => {
-                  setShowViewModal(false);
-                  setEditMode(false);
-                  setSelectedReceptionist(null);
-                  setEditedReceptionist(null);
-                }}>
-                  <FiX />
-                </button>
               </div>
+              <h2>{editMode ? 'Edit Staff' : 'View Staff'}</h2>
+              <button className="close-btn" onClick={() => {
+                setShowViewModal(false);
+                setEditMode(false);
+                setSelectedReceptionist(null);
+                setEditedReceptionist(null);
+              }} style={{position: 'absolute', right: '25px'}}>
+                <FiX />
+              </button>
             </div>
 
             {/* Modal Content */}
@@ -1001,7 +846,7 @@ export default function Reception() {
 
               {/* Permissions Table */}
               <div className="form-group">
-                <label>Access</label>
+                <label>Access Permissions</label>
                 <div className="permissions-table">
                   <table>
                     <thead>
@@ -1037,7 +882,7 @@ export default function Reception() {
               </div>
             </div>
 
-            {/* {footer of model ka } */}
+            {/* Modal Footer */}
             <div className="modal-footer">
               {editMode ? (
                 <>
@@ -1057,6 +902,166 @@ export default function Reception() {
         </div>
       )}
 
+      {/* Add Staff Modal */}
+      {showAddModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            {/* Modal Header */}
+            <div className="modal-header">
+              <div style={{width: '40px'}}></div> {/* Spacer for alignment */}
+              <h2>Add Staff</h2>
+              <button className="close-btn" onClick={() => setShowAddModal(false)} style={{position: 'absolute', right: '25px'}}>
+                <FiX />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="modal-content">
+              {/* Profile Image Upload */}
+              <div className="form-group profile-image-group">
+                <label>Profile Image</label>
+                <div className="image-upload-container">
+                  {newReceptionist.profileImage ? (
+                    <div className="image-preview">
+                      <img src={newReceptionist.profileImage} alt="Profile preview" />
+                      <button 
+                        className="change-image-btn" 
+                        onClick={() => setNewReceptionist({...newReceptionist, profileImage: null})}
+                      >
+                        Change Image
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="upload-box">
+                      <FiUpload size={40} />
+                      <p>Drag your image here</p>
+                      <small>(Only *.jpeg and *.png images will be accepted)</small>
+                      <input 
+                        type="file" 
+                        accept=".jpeg,.jpg,.png" 
+                        onChange={handleImageUpload} 
+                        className="file-input"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Name and Title */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Full Name</label>
+                  <input 
+                    type="text" 
+                    value={newReceptionist.name}
+                    onChange={(e) => setNewReceptionist({...newReceptionist, name: e.target.value})}
+                    placeholder="Enter full name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Title</label>
+                  <select 
+                    value={newReceptionist.title}
+                    onChange={(e) => setNewReceptionist({...newReceptionist, title: e.target.value})}
+                  >
+                    <option value="Dr.">Dr.</option>
+                    <option value="Mr.">Mr.</option>
+                    <option value="Mrs.">Mrs.</option>
+                    <option value="Ms.">Ms.</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Email and Phone */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Email</label>
+                  <input 
+                    type="email" 
+                    value={newReceptionist.email}
+                    onChange={(e) => setNewReceptionist({...newReceptionist, email: e.target.value})}
+                    placeholder="email@example.com"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Phone Number</label>
+                  <input 
+                    type="text" 
+                    value={newReceptionist.phone}
+                    onChange={(e) => setNewReceptionist({...newReceptionist, phone: e.target.value})}
+                    placeholder="+91 9905350850"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="form-group">
+                <label>Password</label>
+                <input 
+                  type="password" 
+                  value={newReceptionist.password}
+                  onChange={(e) => setNewReceptionist({...newReceptionist, password: e.target.value})}
+                  placeholder="Enter password"
+                />
+              </div>
+
+              {/* Permissions Table */}
+              <div className="form-group">
+                <label>Access Permissions</label>
+                <div className="permissions-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Read</th>
+                        <th>Edit</th>
+                        <th>Create</th>
+                        <th>Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.keys(newReceptionist.permissions).map(permKey => (
+                        <tr key={permKey}>
+                          <td className="permission-name">
+                            {permKey.charAt(0).toUpperCase() + permKey.slice(1)}
+                          </td>
+                          {Object.keys(newReceptionist.permissions[permKey]).map(action => (
+                            <td key={action}>
+                              <input 
+                                type="checkbox" 
+                                checked={newReceptionist.permissions[permKey][action]}
+                                onChange={(e) => {
+                                  const updatedPermissions = {...newReceptionist.permissions};
+                                  updatedPermissions[permKey][action] = e.target.checked;
+                                  setNewReceptionist({...newReceptionist, permissions: updatedPermissions});
+                                }}
+                              />
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="modal-footer">
+              <button className="cancel-btn" onClick={() => setShowAddModal(false)}>
+                Cancel
+              </button>
+              <button className="save-btn" onClick={handleAddReceptionist}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Attendance Modal */}
       {showAttendanceModal && (
         <div className="modal-overlay">
           <div className="modal">
@@ -1098,10 +1103,16 @@ export default function Reception() {
                 })}
               </div>
             </div>
+            <div className="modal-footer">
+              <button className="cancel-btn" onClick={() => setShowAttendanceModal(false)}>
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
 
+      {/* Shift Management Modal */}
       {showShiftModal && (
         <div className="modal-overlay">
           <div className="modal">
