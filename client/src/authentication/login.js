@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './login.css';
 import logo from '../components/asset/logo.png';
-// The CSS references back.jpg from components/asset/ for the decorative circular element
 import { FaEnvelope, FaLock, FaUser, FaArrowRight } from 'react-icons/fa';
 
 const Login = () => {
@@ -12,14 +11,12 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add login logic here
     console.log('Login attempt with:', { email, password, rememberMe });
   };
 
   return (
     <div className="login-container">
       <div className="login-grid">
-        {/* Left Side - About */}
         <div className="login-about">
           <div className="login-logo">
             <img src={logo} alt="Xeno Health Logo" />
@@ -51,7 +48,6 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Right Side - Login Form */}
         <div className="login-form-container">
           <div className="login-form-wrapper">
             <div className="login-header">

@@ -61,8 +61,88 @@
     box-shadow: none;
 }
 
-@media (max-width: 768px) {
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .settings-list {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
     .settings-list {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .setting-item {
+        padding: 15px;
+    }
+
+    .setting-item i {
+        font-size: 1.8rem;
+    }
+
+    .setting-item span {
+        font-size: 1.1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .settings-list {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    .setting-container {
+        padding: 20px;
+    }
+
+    .setting-item {
+        min-height: 100px;
+        padding: 12px;
+    }
+
+    .setting-item i {
+        font-size: 1.5rem;
+    }
+
+    .setting-item span {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .settings-list {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .setting-item {
+        min-height: 90px;
+        padding: 10px;
+    }
+
+    .setting-item i {
+        font-size: 1.3rem;
+    }
+
+    .setting-item span {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .settings-list {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .setting-item {
+        min-height: 80px;
+        padding: 8px;
+    }
+
+    .setting-item i {
+        font-size: 1.2rem;
+    }
+
+    .setting-item span {
+        font-size: 0.8rem;
     }
 }

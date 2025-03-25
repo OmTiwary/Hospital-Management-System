@@ -1,4 +1,3 @@
-/* Login Page Styles */
 .login-container {
   min-height: 100vh;
   width: 100%;
@@ -30,7 +29,6 @@
   position: relative;
 }
 
-/* Add decorative image at grid border */
 .login-grid::after {
   content: '';
   position: absolute;
@@ -48,7 +46,6 @@
   transition: all 0.5s ease;
 }
 
-/* Add a glowing effect around the image */
 .login-grid::before {
   content: '';
   position: absolute;
@@ -80,7 +77,6 @@
   border-color: #63E6BE;
 }
 
-/* Left Side - About Section */
 .login-about {
   background: linear-gradient(135deg, #2c3e50, #4a6583);
   color: white;
@@ -177,7 +173,6 @@
   opacity: 0.9;
 }
 
-/* Right Side - Login Form */
 .login-form-container {
   display: flex;
   align-items: center;
@@ -421,7 +416,6 @@
   transform: translateX(3px);
 }
 
-/* Responsive Styles */
 @media (max-width: 992px) {
   .login-grid {
     width: 100%;
@@ -536,7 +530,7 @@
   .login-form input[type="password"] {
     height: 48px;
     padding: 0 10px 0 40px;
-    font-size: 16px; /* Prevents zooming on iOS */
+    font-size: 16px;
     width: 100%;
     box-sizing: border-box;
   }

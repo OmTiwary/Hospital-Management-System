@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './signin.css';
 import logo from '../components/asset/logo.png';
-// The CSS references Stethoscope.jpg from components/asset/ for the decorative circular element
 import { FaEnvelope, FaLock, FaUser, FaArrowRight, FaPhone, FaUserMd } from 'react-icons/fa';
 
 const Signin = () => {
@@ -16,14 +15,12 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add sign-up logic here
     console.log('Sign-up attempt with:', { firstName, lastName, email, phone, password, confirmPassword, agreeTerms });
   };
 
   return (
     <div className="signin-container">
       <div className="signin-grid">
-        {/* Left Side - About */}
         <div className="signin-about">
           <div className="signin-logo">
             <img src={logo} alt="Xeno Health Logo" />
@@ -55,7 +52,6 @@ const Signin = () => {
           </div>
         </div>
 
-        {/* Right Side - Signin Form */}
         <div className="signin-form-container">
           <div className="signin-form-wrapper">
             <div className="signin-header">
@@ -72,6 +68,7 @@ const Signin = () => {
                     <input
                       type="text"
                       id="firstName"
+                      autoComplete='off'
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                       placeholder="Enter your first name"
@@ -87,6 +84,7 @@ const Signin = () => {
                     <input
                       type="text"
                       id="lastName"
+                      autoComplete='off'
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                       placeholder="Enter your last name"
@@ -103,6 +101,7 @@ const Signin = () => {
                   <input
                     type="email"
                     id="email"
+                    autoComplete='off'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
@@ -118,6 +117,7 @@ const Signin = () => {
                   <input
                     type="tel"
                     id="phone"
+                    autoComplete='off'
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="Enter your phone number"
@@ -134,6 +134,7 @@ const Signin = () => {
                     <input
                       type="password"
                       id="password"
+                      autoComplete='off'
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Create a password"
@@ -149,6 +150,7 @@ const Signin = () => {
                     <input
                       type="password"
                       id="confirmPassword"
+                      autoComplete='off'
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Confirm your password"
