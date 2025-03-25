@@ -38,47 +38,239 @@ export default function Medicine() {
       description: "Broad-spectrum antibiotic used to treat various bacterial infections.",
       price: 12.99,
       rating: 4.5
-    },
-    {
+  },
+  {
       id: 2,
       image: medicineImg2,
       title: "Ibuprofen",
-      description: "Non-steroidal anti-inflammatory drug (NSAID) used to relieve pain and reduce inflammation.",
+      description: "NSAID used to relieve pain and reduce inflammation.",
       price: 8.49,
       rating: 4.7
-    },
-    {
+  },
+  {
       id: 3,
       image: medicineImg3,
       title: "Cetirizine",
-      description: "Antihistamine used to relieve allergy symptoms such as runny nose, sneezing, and itchy eyes.",
+      description: "Antihistamine used to relieve allergy symptoms.",
       price: 9.99,
       rating: 4.3
-    },
-    {
+  },
+  {
       id: 4,
       image: medicineImg1,
       title: "Azithromycin",
-      description: "Antibiotic used to treat various bacterial infections including respiratory infections.",
+      description: "Antibiotic used for bacterial infections, including respiratory infections.",
       price: 15.99,
       rating: 4.6
-    },
-    {
+  },
+  {
       id: 5,
       image: medicineImg2,
       title: "Acetaminophen",
-      description: "Pain reliever and fever reducer used to treat mild to moderate pain and fever.",
+      description: "Pain reliever and fever reducer.",
       price: 7.99,
       rating: 4.8
-    },
-    {
+  },
+  {
       id: 6,
       image: medicineImg3,
       title: "Loratadine",
-      description: "Non-drowsy antihistamine used to relieve allergy symptoms such as sneezing and runny nose.",
+      description: "Non-drowsy antihistamine for allergy relief.",
       price: 10.49,
       rating: 4.4
-    }
+  },
+  {
+      id: 7,
+      image: medicineImg1,
+      title: "Metformin",
+      description: "Used to control high blood sugar in type 2 diabetes.",
+      price: 11.99,
+      rating: 4.6
+  },
+  {
+      id: 8,
+      image: medicineImg2,
+      title: "Atorvastatin",
+      description: "Medication to lower cholesterol and triglyceride levels.",
+      price: 14.99,
+      rating: 4.5
+  },
+  {
+      id: 9,
+      image: medicineImg3,
+      title: "Losartan",
+      description: "Used to treat high blood pressure and protect the kidneys.",
+      price: 13.49,
+      rating: 4.7
+  },
+  {
+      id: 10,
+      image: medicineImg1,
+      title: "Prednisone",
+      description: "Corticosteroid used to reduce inflammation and suppress the immune system.",
+      price: 16.99,
+      rating: 4.3
+  },
+  {
+      id: 11,
+      image: medicineImg2,
+      title: "Aspirin",
+      description: "Pain reliever and blood thinner used to prevent heart attacks.",
+      price: 5.99,
+      rating: 4.9
+  },
+  {
+      id: 12,
+      image: medicineImg3,
+      title: "Ciprofloxacin",
+      description: "Antibiotic used to treat bacterial infections.",
+      price: 18.99,
+      rating: 4.5
+  },
+  {
+      id: 13,
+      image: medicineImg1,
+      title: "Fexofenadine",
+      description: "Non-drowsy antihistamine for seasonal allergies.",
+      price: 10.99,
+      rating: 4.6
+  },
+  {
+      id: 14,
+      image: medicineImg2,
+      title: "Omeprazole",
+      description: "Reduces stomach acid to treat acid reflux and ulcers.",
+      price: 9.49,
+      rating: 4.8
+  },
+  {
+      id: 15,
+      image: medicineImg3,
+      title: "Clindamycin",
+      description: "Antibiotic used to treat serious bacterial infections.",
+      price: 17.99,
+      rating: 4.4
+  },
+  {
+      id: 16,
+      image: medicineImg1,
+      title: "Ranitidine",
+      description: "Used to reduce stomach acid and treat GERD.",
+      price: 8.99,
+      rating: 4.2
+  },
+  {
+      id: 17,
+      image: medicineImg2,
+      title: "Doxycycline",
+      description: "Antibiotic used to treat infections and acne.",
+      price: 14.99,
+      rating: 4.7
+  },
+  {
+      id: 18,
+      image: medicineImg3,
+      title: "Warfarin",
+      description: "Blood thinner used to prevent blood clots.",
+      price: 19.99,
+      rating: 4.6
+  },
+  {
+      id: 19,
+      image: medicineImg1,
+      title: "Hydrochlorothiazide",
+      description: "Diuretic used to treat high blood pressure and fluid retention.",
+      price: 12.49,
+      rating: 4.5
+  },
+  {
+      id: 20,
+      image: medicineImg2,
+      title: "Levothyroxine",
+      description: "Thyroid hormone used to treat hypothyroidism.",
+      price: 13.99,
+      rating: 4.8
+  },
+  {
+      id: 21,
+      image: medicineImg3,
+      title: "Fluconazole",
+      description: "Antifungal medication used to treat yeast infections.",
+      price: 11.99,
+      rating: 4.7
+  },
+  {
+      id: 22,
+      image: medicineImg1,
+      title: "Melatonin",
+      description: "Supplement used to improve sleep quality.",
+      price: 6.99,
+      rating: 4.9
+  },
+  {
+      id: 23,
+      image: medicineImg2,
+      title: "Albuterol",
+      description: "Inhaler medication used to relieve asthma symptoms.",
+      price: 20.99,
+      rating: 4.6
+  },
+  {
+      id: 24,
+      image: medicineImg3,
+      title: "Insulin",
+      description: "Hormone used to control blood sugar levels in diabetes.",
+      price: 25.99,
+      rating: 4.9
+  },
+  {
+      id: 25,
+      image: medicineImg1,
+      title: "Sertraline",
+      description: "Antidepressant used to treat depression and anxiety disorders.",
+      price: 15.49,
+      rating: 4.5
+  },
+  {
+      id: 26,
+      image: medicineImg2,
+      title: "Gabapentin",
+      description: "Used to treat nerve pain and seizures.",
+      price: 18.99,
+      rating: 4.3
+  },
+  {
+      id: 27,
+      image: medicineImg3,
+      title: "Simvastatin",
+      description: "Medication to lower cholesterol levels.",
+      price: 13.49,
+      rating: 4.6
+  },
+  {
+      id: 28,
+      image: medicineImg1,
+      title: "Bupropion",
+      description: "Antidepressant and smoking cessation aid.",
+      price: 17.49,
+      rating: 4.5
+  },
+  {
+      id: 29,
+      image: medicineImg2,
+      title: "Clonazepam",
+      description: "Used to treat anxiety and panic disorders.",
+      price: 14.99,
+      rating: 4.4
+  },
+  {
+      id: 30,
+      image: medicineImg3,
+      title: "Montelukast",
+      description: "Used to manage asthma and allergy symptoms.",
+      price: 12.99,
+      rating: 4.7
+  }
   ];
   const renderRatingStars = (rating) => {
     const stars = [];
