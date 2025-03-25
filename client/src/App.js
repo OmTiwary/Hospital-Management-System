@@ -14,6 +14,8 @@ import Service from './components/Services/Service'
 import Settings from './components/Settings/Setting'
 import Doctors from './components/Doctors/Doctors'
 import Landing from './authentication/Landing'
+import Login from './authentication/login'
+import Signin from './authentication/signin'
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
     <div className="app-container">
       <Routes>
         <Route path="/landing" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signin" element={<Signin />} />
         <Route path="/" element={
           <>
             <Sidebar />
