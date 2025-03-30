@@ -50,7 +50,7 @@ const Landing = () => {
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
             <div className="hero-buttons">
               <Link to="/login" className="primary-btn">Login</Link>
-              <Link to="/signup" className="secondary-btn">Sign Up</Link>
+              <Link to="/signin" className="secondary-btn">Sign In</Link>
             </div>
           </div>
           <div className="hero-image">
