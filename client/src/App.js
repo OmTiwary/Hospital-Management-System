@@ -1,6 +1,7 @@
 import './App.css';
 import Sidebar from './components/Sidebar/Sidebar';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CartProvider } from './context/CartContext';
 
 import Dashboard from './components/Dashboard/Dashboard'
 import Appointment from './components/Appointment/Appointment'
@@ -16,48 +17,49 @@ import Doctors from './components/Doctors/Doctors'
 import Landing from './authentication/Landing'
 import Login from './authentication/login'
 import Signin from './authentication/signin'
-
+import Cart from './components/Cart/Cart'
 
 function App() {
   return (
-    <>
-    <BrowserRouter>
-    <div className="app-container">
-      <Routes>
-        <Route path="/landing" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/" element={
-          <>
-            <Sidebar />
-            <div className="content-container">
-              <Dashboard />
-            </div>
-          </>
-        } />
-        <Route path="/*" element={
-          <>
-            <Sidebar />
-            <div className="content-container">
-              <Routes>
-                <Route path="/appointment" element={<Appointment />} />
-                <Route path="/campaign" element={<Campaign />} />
-                <Route path="/doctors" element={<Doctors />} />
-                <Route path="/invoices" element={<Invoices />} />
-                <Route path="/medicine" element={<Medecine />} />
-                <Route path="/payments" element={<Payments />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/reception" element={<Reception />} />
-                <Route path="/services" element={<Service />} />
-                <Route path="/settings" element={<Settings />} />
-              </Routes>
-            </div>
-          </>
-        } />
-      </Routes>
-    </div>
-    </BrowserRouter>
-    </>
+    <CartProvider>
+      <BrowserRouter>
+        <div className="app-container">
+          <Routes>
+            <Route path="/landing" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signin" element={<Signin />} />
+            <Route path="/" element={
+              <>
+                <Sidebar />
+                <div className="content-container">
+                  <Dashboard />
+                </div>
+              </>
+            } />
+            <Route path="/*" element={
+              <>
+                <Sidebar />
+                <div className="content-container">
+                  <Routes>
+                    <Route path="/appointment" element={<Appointment />} />
+                    <Route path="/campaign" element={<Campaign />} />
+                    <Route path="/doctors" element={<Doctors />} />
+                    <Route path="/invoices" element={<Invoices />} />
+                    <Route path="/medicine" element={<Medecine />} />
+                    <Route path="/payments" element={<Payments />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/reception" element={<Reception />} />
+                    <Route path="/services" element={<Service />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/cart" element={<Cart />} />
+                  </Routes>
+                </div>
+              </>
+            } />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </CartProvider>
   );
 }
 

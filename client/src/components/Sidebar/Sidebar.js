@@ -81,6 +81,14 @@ export default function Sidebar() {
                         </Link>
                     </li>
                     <li>
+                        <Link to='/cart'>
+                        <span>
+                            <i class="fa-solid fa-cart-shopping" style={{ color: "#63E6BE" }}></i>
+                        </span>
+                        Cart
+                        </Link>
+                    </li>
+                    <li>
                         <Link to='/campaign'>
                         <span>
                             <i class="fa-solid fa-campground" style={{ color: "#63E6BE" }}></i>

@@ -3,7 +3,7 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 2rem;
     font-family: 'Arial', sans-serif;
   }
   
@@ -149,7 +149,7 @@
   
   /* Medicine Info Section */
   .medicine-info {
-    padding: 30px;
+    padding: 1.5rem;
     background-color: #f8f9fa;
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -255,6 +255,7 @@
   .medicine-card-image {
     height: 200px;
     overflow: hidden;
+    position: relative;
   }
   
   .medicine-card-image img {
@@ -320,49 +321,112 @@
     color: #2c3e50;
   }
   
-  .add-to-cart-btn {
+  .medicine-card-actions {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
     display: flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(to right, #63E6BE, #2c3e50);
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 2;
+  }
+  
+  .add-to-cart-btn {
+    background: #63E6BE;
     color: white;
     border: none;
-    padding: 8px 15px;
-    border-radius: 30px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    font-weight: 500;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
   
   .add-to-cart-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    background: #4CD3AB;
+    transform: scale(1.1);
   }
   
-  /* Responsive styles for product grid */
+  .add-to-cart-btn.added {
+    background: #28a745;
+    animation: pulse 0.5s ease;
+  }
+  
+  .move-to-cart-btn {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    animation: slideIn 0.3s ease;
+  }
+  
+  .move-to-cart-btn:hover {
+    background: #34495e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  /* Update responsive styles */
   @media (max-width: 768px) {
-    .medicine-products-grid {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
+    .medicine-card-actions {
+      flex-direction: row;
+      top: auto;
+      bottom: 1rem;
+      right: 1rem;
+      left: 1rem;
+      justify-content: center;
     }
-    
-    .medicine-card-image {
-      height: 180px;
-    }
-    
-    .medicine-card-content {
-      padding: 15px;
+  
+    .move-to-cart-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
     }
   }
   
   @media (max-width: 576px) {
-    .medicine-products-grid {
-      grid-template-columns: 1fr;
-      gap: 15px;
-    }
-    
-    .medicine-products-section h2 {
-      font-size: 24px;
+    .medicine-card-actions {
+      flex-direction: column;
+      align-items: flex-end;
+      bottom: 1rem;
+      right: 1rem;
+      left: auto;
     }
   }
   

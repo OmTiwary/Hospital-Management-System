@@ -1,14 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import './Medicine.css';
-import { FaStar, FaStarHalfAlt, FaShoppingCart } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt, FaShoppingCart, FaCheck, FaArrowRight } from 'react-icons/fa';
+import { useCart } from '../../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 import medicineImg1 from '../asset/Med1.jpg';
 import medicineImg2 from '../asset/Med2.jpg';
 import medicineImg3 from '../asset/Med3.jpg';
+import medicineImg4 from '../asset/Med4.jpg';
+import medicineImg5 from '../asset/Med5.jpg';
+import medicineImg6 from '../asset/Med6.jpg';
+import medicineImg7 from '../asset/Med7.jpg';
+import medicineImg8 from '../asset/Med8.jpg';
+import medicineImg9 from '../asset/Med9.jpg';
+import medicineImg10 from '../asset/Med10.jpg';
+import medicineImg11 from '../asset/Med11.jpg';
+import medicineImg12 from '../asset/Med12.jpg';
+import medicineImg13 from '../asset/Med13.jpg';
+import medicineImg14 from '../asset/Med14.jpg';
+import medicineImg15 from '../asset/Med15.jpg';
+import medicineImg16 from '../asset/Med16.jpg';
+import medicineImg17 from '../asset/Med17.jpg';
+import medicineImg18 from '../asset/Med18.jpg';
+import medicineImg19 from '../asset/Med19.jpg';
+import medicineImg20 from '../asset/Med20.jpg';
+import medicineImg21 from '../asset/Med21.jpg';
+import medicineImg22 from '../asset/Med22.jpg';
+import medicineImg23 from '../asset/Med23.jpg';
+import medicineImg24 from '../asset/Med24.jpg';
+import medicineImg25 from '../asset/Med25.jpg';
+import medicineImg26 from '../asset/Med26.jpg';
+import medicineImg27 from '../asset/Med27.jpg';
+import medicineImg28 from '../asset/Med28.jpg';
+import medicineImg29 from '../asset/Med29.jpg';
+import medicineImg30 from '../asset/Med30.jpg';
 
 export default function Medicine() {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cart, setCart] = useState([]);
+  const [addedItems, setAddedItems] = useState({});
+  const [showMoveToCart, setShowMoveToCart] = useState({});
 
   const medicineSlider = [
     {
@@ -34,243 +67,243 @@ export default function Medicine() {
     {
       id: 1,
       image: medicineImg1,
-      title: "Amoxicillin",
-      description: "Broad-spectrum antibiotic used to treat various bacterial infections.",
-      price: 12.99,
+      title: "Antibiotics",
+      description: "Broad-spectrum antibiotics for bacterial infections",
+      price: 29.99,
       rating: 4.5
-  },
-  {
+    },
+    {
       id: 2,
       image: medicineImg2,
-      title: "Ibuprofen",
-      description: "NSAID used to relieve pain and reduce inflammation.",
-      price: 8.49,
-      rating: 4.7
-  },
-  {
+      title: "Pain Relievers",
+      description: "Effective pain relief medication",
+      price: 19.99,
+      rating: 4.8
+    },
+    {
       id: 3,
       image: medicineImg3,
-      title: "Cetirizine",
-      description: "Antihistamine used to relieve allergy symptoms.",
-      price: 9.99,
-      rating: 4.3
-  },
-  {
-      id: 4,
-      image: medicineImg1,
-      title: "Azithromycin",
-      description: "Antibiotic used for bacterial infections, including respiratory infections.",
-      price: 15.99,
-      rating: 4.6
-  },
-  {
-      id: 5,
-      image: medicineImg2,
-      title: "Acetaminophen",
-      description: "Pain reliever and fever reducer.",
-      price: 7.99,
-      rating: 4.8
-  },
-  {
-      id: 6,
-      image: medicineImg3,
-      title: "Loratadine",
-      description: "Non-drowsy antihistamine for allergy relief.",
-      price: 10.49,
-      rating: 4.4
-  },
-  {
-      id: 7,
-      image: medicineImg1,
-      title: "Metformin",
-      description: "Used to control high blood sugar in type 2 diabetes.",
-      price: 11.99,
-      rating: 4.6
-  },
-  {
-      id: 8,
-      image: medicineImg2,
-      title: "Atorvastatin",
-      description: "Medication to lower cholesterol and triglyceride levels.",
-      price: 14.99,
-      rating: 4.5
-  },
-  {
-      id: 9,
-      image: medicineImg3,
-      title: "Losartan",
-      description: "Used to treat high blood pressure and protect the kidneys.",
-      price: 13.49,
-      rating: 4.7
-  },
-  {
-      id: 10,
-      image: medicineImg1,
-      title: "Prednisone",
-      description: "Corticosteroid used to reduce inflammation and suppress the immune system.",
-      price: 16.99,
-      rating: 4.3
-  },
-  {
-      id: 11,
-      image: medicineImg2,
-      title: "Aspirin",
-      description: "Pain reliever and blood thinner used to prevent heart attacks.",
-      price: 5.99,
-      rating: 4.9
-  },
-  {
-      id: 12,
-      image: medicineImg3,
-      title: "Ciprofloxacin",
-      description: "Antibiotic used to treat bacterial infections.",
-      price: 18.99,
-      rating: 4.5
-  },
-  {
-      id: 13,
-      image: medicineImg1,
-      title: "Fexofenadine",
-      description: "Non-drowsy antihistamine for seasonal allergies.",
-      price: 10.99,
-      rating: 4.6
-  },
-  {
-      id: 14,
-      image: medicineImg2,
-      title: "Omeprazole",
-      description: "Reduces stomach acid to treat acid reflux and ulcers.",
-      price: 9.49,
-      rating: 4.8
-  },
-  {
-      id: 15,
-      image: medicineImg3,
-      title: "Clindamycin",
-      description: "Antibiotic used to treat serious bacterial infections.",
-      price: 17.99,
-      rating: 4.4
-  },
-  {
-      id: 16,
-      image: medicineImg1,
-      title: "Ranitidine",
-      description: "Used to reduce stomach acid and treat GERD.",
-      price: 8.99,
+      title: "Antihistamines",
+      description: "Relief from allergies and cold symptoms",
+      price: 24.99,
       rating: 4.2
-  },
-  {
-      id: 17,
-      image: medicineImg2,
-      title: "Doxycycline",
-      description: "Antibiotic used to treat infections and acne.",
-      price: 14.99,
+    },
+    {
+      id: 4,
+      image: medicineImg4,
+      title: "Anti-inflammatory",
+      description: "Reduce inflammation and swelling",
+      price: 34.99,
+      rating: 4.6
+    },
+    {
+      id: 5,
+      image: medicineImg5,
+      title: "Vitamins & Supplements",
+      description: "Essential nutrients for better health",
+      price: 39.99,
       rating: 4.7
-  },
-  {
-      id: 18,
-      image: medicineImg3,
-      title: "Warfarin",
-      description: "Blood thinner used to prevent blood clots.",
-      price: 19.99,
-      rating: 4.6
-  },
-  {
-      id: 19,
-      image: medicineImg1,
-      title: "Hydrochlorothiazide",
-      description: "Diuretic used to treat high blood pressure and fluid retention.",
-      price: 12.49,
-      rating: 4.5
-  },
-  {
-      id: 20,
-      image: medicineImg2,
-      title: "Levothyroxine",
-      description: "Thyroid hormone used to treat hypothyroidism.",
-      price: 13.99,
-      rating: 4.8
-  },
-  {
-      id: 21,
-      image: medicineImg3,
-      title: "Fluconazole",
-      description: "Antifungal medication used to treat yeast infections.",
-      price: 11.99,
-      rating: 4.7
-  },
-  {
-      id: 22,
-      image: medicineImg1,
-      title: "Melatonin",
-      description: "Supplement used to improve sleep quality.",
-      price: 6.99,
-      rating: 4.9
-  },
-  {
-      id: 23,
-      image: medicineImg2,
-      title: "Albuterol",
-      description: "Inhaler medication used to relieve asthma symptoms.",
-      price: 20.99,
-      rating: 4.6
-  },
-  {
-      id: 24,
-      image: medicineImg3,
-      title: "Insulin",
-      description: "Hormone used to control blood sugar levels in diabetes.",
-      price: 25.99,
-      rating: 4.9
-  },
-  {
-      id: 25,
-      image: medicineImg1,
-      title: "Sertraline",
-      description: "Antidepressant used to treat depression and anxiety disorders.",
-      price: 15.49,
-      rating: 4.5
-  },
-  {
-      id: 26,
-      image: medicineImg2,
-      title: "Gabapentin",
-      description: "Used to treat nerve pain and seizures.",
-      price: 18.99,
-      rating: 4.3
-  },
-  {
-      id: 27,
-      image: medicineImg3,
-      title: "Simvastatin",
-      description: "Medication to lower cholesterol levels.",
-      price: 13.49,
-      rating: 4.6
-  },
-  {
-      id: 28,
-      image: medicineImg1,
-      title: "Bupropion",
-      description: "Antidepressant and smoking cessation aid.",
-      price: 17.49,
-      rating: 4.5
-  },
-  {
-      id: 29,
-      image: medicineImg2,
-      title: "Clonazepam",
-      description: "Used to treat anxiety and panic disorders.",
-      price: 14.99,
+    },
+    {
+      id: 6,
+      image: medicineImg6,
+      title: "Digestive Health",
+      description: "Support for digestive system",
+      price: 27.99,
       rating: 4.4
-  },
-  {
-      id: 30,
-      image: medicineImg3,
-      title: "Montelukast",
-      description: "Used to manage asthma and allergy symptoms.",
-      price: 12.99,
+    },
+    {
+      id: 7,
+      image: medicineImg7,
+      title: "Respiratory Care",
+      description: "Relief for respiratory conditions",
+      price: 31.99,
+      rating: 4.5
+    },
+    {
+      id: 8,
+      image: medicineImg8,
+      title: "Cardiovascular Health",
+      description: "Support for heart health",
+      price: 45.99,
+      rating: 4.8
+    },
+    {
+      id: 9,
+      image: medicineImg9,
+      title: "Diabetes Management",
+      description: "Blood sugar control medication",
+      price: 42.99,
+      rating: 4.6
+    },
+    {
+      id: 10,
+      image: medicineImg10,
+      title: "Mental Health",
+      description: "Support for mental well-being",
+      price: 38.99,
       rating: 4.7
-  }
+    },
+    {
+      id: 11,
+      image: medicineImg11,
+      title: "Skin Care",
+      description: "Treatment for skin conditions",
+      price: 33.99,
+      rating: 4.5
+    },
+    {
+      id: 12,
+      image: medicineImg12,
+      title: "Eye Care",
+      description: "Vision health products",
+      price: 29.99,
+      rating: 4.4
+    },
+    {
+      id: 13,
+      image: medicineImg13,
+      title: "Bone Health",
+      description: "Support for bone strength",
+      price: 36.99,
+      rating: 4.6
+    },
+    {
+      id: 14,
+      image: medicineImg14,
+      title: "Immune Support",
+      description: "Boost your immune system",
+      price: 32.99,
+      rating: 4.7
+    },
+    {
+      id: 15,
+      image: medicineImg15,
+      title: "Sleep Aid",
+      description: "Natural sleep support",
+      price: 28.99,
+      rating: 4.3
+    },
+    {
+      id: 16,
+      image: medicineImg16,
+      title: "Joint Health",
+      description: "Support for joint mobility",
+      price: 41.99,
+      rating: 4.6
+    },
+    {
+      id: 17,
+      image: medicineImg17,
+      title: "Thyroid Support",
+      description: "Thyroid health management",
+      price: 35.99,
+      rating: 4.5
+    },
+    {
+      id: 18,
+      image: medicineImg18,
+      title: "Liver Health",
+      description: "Liver support supplements",
+      price: 37.99,
+      rating: 4.4
+    },
+    {
+      id: 19,
+      image: medicineImg19,
+      title: "Kidney Health",
+      description: "Kidney function support",
+      price: 39.99,
+      rating: 4.6
+    },
+    {
+      id: 20,
+      image: medicineImg20,
+      title: "Hormone Balance",
+      description: "Hormonal health support",
+      price: 43.99,
+      rating: 4.7
+    },
+    {
+      id: 21,
+      image: medicineImg21,
+      title: "Prostate Health",
+      description: "Men's health support",
+      price: 46.99,
+      rating: 4.5
+    },
+    {
+      id: 22,
+      image: medicineImg22,
+      title: "Women's Health",
+      description: "Women's wellness products",
+      price: 44.99,
+      rating: 4.6
+    },
+    {
+      id: 23,
+      image: medicineImg23,
+      title: "Children's Health",
+      description: "Pediatric healthcare products",
+      price: 25.99,
+      rating: 4.8
+    },
+    {
+      id: 24,
+      image: medicineImg24,
+      title: "Elder Care",
+      description: "Senior health support",
+      price: 47.99,
+      rating: 4.7
+    },
+    {
+      id: 25,
+      image: medicineImg25,
+      title: "Sports Nutrition",
+      description: "Athletic performance support",
+      price: 49.99,
+      rating: 4.6
+    },
+    {
+      id: 26,
+      image: medicineImg26,
+      title: "Weight Management",
+      description: "Healthy weight support",
+      price: 33.99,
+      rating: 4.5
+    },
+    {
+      id: 27,
+      image: medicineImg27,
+      title: "Dental Care",
+      description: "Oral health products",
+      price: 27.99,
+      rating: 4.4
+    },
+    {
+      id: 28,
+      image: medicineImg28,
+      title: "Hair Care",
+      description: "Hair health products",
+      price: 31.99,
+      rating: 4.6
+    },
+    {
+      id: 29,
+      image: medicineImg29,
+      title: "Nail Health",
+      description: "Nail care products",
+      price: 24.99,
+      rating: 4.3
+    },
+    {
+      id: 30,
+      image: medicineImg30,
+      title: "First Aid",
+      description: "Emergency care products",
+      price: 29.99,
+      rating: 4.7
+    }
   ];
   const renderRatingStars = (rating) => {
     const stars = [];
@@ -287,9 +320,16 @@ export default function Medicine() {
 
     return stars;
   };
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-    alert(`${product.title} added to cart!`);
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    setAddedItems(prev => ({ ...prev, [product.id]: true }));
+    setShowMoveToCart(prev => ({ ...prev, [product.id]: true }));
+    setTimeout(() => {
+      setAddedItems(prev => ({ ...prev, [product.id]: false }));
+    }, 2000);
+  };
+  const handleMoveToCart = () => {
+    navigate('/cart');
   };
   useEffect(() => {
     const interval = setInterval(() => {
@@ -362,6 +402,22 @@ export default function Medicine() {
             <div className="medicine-card" key={product.id}>
               <div className="medicine-card-image">
                 <img src={product.image} alt={product.title} />
+                <div className="medicine-card-actions">
+                  <button 
+                    className={`add-to-cart-btn ${addedItems[product.id] ? 'added' : ''}`}
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    {addedItems[product.id] ? <FaCheck /> : <FaShoppingCart />}
+                  </button>
+                  {showMoveToCart[product.id] && (
+                    <button 
+                      className="move-to-cart-btn"
+                      onClick={handleMoveToCart}
+                    >
+                      <FaArrowRight /> Move to Cart
+                    </button>
+                  )}
+                </div>
               </div>
               <div className="medicine-card-content">
                 <h3>{product.title}</h3>
@@ -372,12 +428,6 @@ export default function Medicine() {
                 <p className="medicine-card-description">{product.description}</p>
                 <div className="medicine-card-footer">
                   <span className="medicine-card-price">₹{Math.round(product.price * 83).toLocaleString('en-IN')}</span>
-                  <button 
-                    className="add-to-cart-btn"
-                    onClick={() => addToCart(product)}
-                  >
-                    <FaShoppingCart /> Add to Cart
-                  </button>
                 </div>
               </div>
             </div>
