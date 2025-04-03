@@ -741,16 +741,15 @@
   position: relative;
   display: flex;
   margin-bottom: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   border-radius: 50px;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .newsletter-form input {
   flex: 1;
   padding: 18px 25px;
   border: 1px solid #eaeaea;
-  border-radius: 50px 0 0 50px;
+  border-radius: 50px;
   font-size: 1rem;
   outline: none;
   transition: all 0.3s ease;
@@ -761,7 +760,7 @@
 }
 
 .subscribe-btn {
-  background: linear-gradient(to right, #63E6BE, #4CD3AB);
+  background: linear-gradient(to right, #63E6BE, #2D3F52);
   color: white;
   border: none;
   padding: 0 30px;
@@ -769,7 +768,7 @@
   cursor: pointer;
   font-size: 1rem;
   transition: all 0.3s ease;
-  border-radius: 0 50px 50px 0;
+  border-radius:50px;
 }
 
 .subscribe-btn:hover {
@@ -854,17 +853,17 @@
   
   .form-group {
     flex-direction: column;
-    border-radius: 10px;
+    /* border-radius: 10px; */
   }
   
   .newsletter-form input {
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
     text-align: center;
     padding: 15px;
   }
   
   .subscribe-btn {
-    border-radius: 0 0 10px 10px;
+    border-radius: 10px;
     padding: 15px;
   }
 }
