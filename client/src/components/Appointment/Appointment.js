@@ -4,16 +4,26 @@ import './Appointment.css';
 import { doctorsList } from '../Doctors/Doctors';
 
 export default function Appointment() {
+  // ---------- STATES KI SETUP ---------- //
+  
+  // Calendar ke liye current date ka state
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState('grid'); // 'grid', 'week', 'day'
+  // View type ke liye state (grid/week/day)
+  const [view, setView] = useState('grid');
+  
+  // Forms dikhane/hide karne ke liye states
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+  
+  // Selected appointment ko store karne ke liye
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  
+  // New appointment ka data store karne ke liye
   const [newAppointment, setNewAppointment] = useState({
     name: '',
     startDate: new Date(),
     endDate: new Date(),
-    date: new Date(), // keeping for backward compatibility
+    date: new Date(),
     startTime: '09:00',
     endTime: '10:00',
     purpose: '',
@@ -26,12 +36,15 @@ export default function Appointment() {
       whatsapp: false
     }
   });
+
+  // Calendar view ke liye selected day
   const [selectedDay, setSelectedDay] = useState(new Date());
-  // List of available doctors
+  
+  // Doctors ki list store karne ke liye
   const [doctors, setDoctors] = useState([]);
   const [currentDoctor, setCurrentDoctor] = useState(null);
   
-  // List of purpose options
+  // Purpose of visit ke options
   const purposeOptions = [
     "Checkup",
     "Root Canal",
@@ -45,30 +58,35 @@ export default function Appointment() {
     "Teeth Whitening"
   ];
   
-  // Sample data for appointments
+  // Appointments ki list store karne ke liye
   const [appointments, setAppointments] = useState([]);
+  // Search functionality ke liye
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   
-  // Load appointments from localStorage on component mount
+  // Add new state for showing appointments list
+  const [showAppointmentsList, setShowAppointmentsList] = useState(false);
+
+  // ---------- LIFECYCLE METHODS ---------- //
+  
+  // Component load hone par appointments ko localStorage se fetch karo
   useEffect(() => {
-    // Try to get appointments from localStorage
+    // LocalStorage se appointments ko get karo
     const savedAppointments = localStorage.getItem('appointments');
     
     if (savedAppointments) {
-      // If appointments exist in localStorage, parse and convert date strings back to Date objects
+      // Agar appointments hai to unko parse karo
       const parsedAppointments = JSON.parse(savedAppointments);
       
-      // Convert string dates back to Date objects
+      // Date strings ko Date objects me convert karo
       const appointmentsWithDates = parsedAppointments.map(appointment => ({
         ...appointment,
         date: new Date(appointment.date)
       }));
       
-      // Set the appointments state
       setAppointments(appointmentsWithDates);
     } else {
-      // If no saved appointments exist, use the sample data
+      // Agar koi appointments nahi hai to sample data use karo
       const sampleAppointments = [
         { 
           id: 1, 
@@ -87,15 +105,14 @@ export default function Appointment() {
           },
           more: 2 
         },
-        
       ];
       
       setAppointments(sampleAppointments);
-      // Save the sample data to localStorage for future visits
+      // Sample data ko localStorage me save karo
       localStorage.setItem('appointments', JSON.stringify(sampleAppointments));
     }
 
-    // Fetch doctors list
+    // Doctors ki list ko set karo
     if (Array.isArray(doctorsList)) {
       setDoctors(doctorsList.map(doctor => ({
         id: doctor.id,
@@ -103,26 +120,27 @@ export default function Appointment() {
       })));
     }
 
-    // Add useEffect to set current doctor
+    // Current doctor ko set karo
     if (Array.isArray(doctorsList) && doctorsList.length > 0) {
       const dentist = doctorsList.find(doc => doc.name === "Dr. Alok Pandey");
       setCurrentDoctor(dentist || doctorsList[0]);
     }
   }, []);
   
-  // Save appointments to localStorage whenever they change
+  // Jab bhi appointments update ho, localStorage me save karo
   useEffect(() => {
     if (appointments.length > 0) {
-      // Need to convert Date objects to strings before saving to localStorage
       const appointmentsToSave = appointments.map(appointment => ({
         ...appointment,
-        date: appointment.date.toISOString() // Convert Date to ISO string for storage
+        date: appointment.date.toISOString()
       }));
       localStorage.setItem('appointments', JSON.stringify(appointmentsToSave));
     }
   }, [appointments]);
-  
-  // Navigate to previous period (month or week)
+
+  // ---------- HELPER FUNCTIONS ---------- //
+
+  // Previous month/week pe jane ke liye
   const prevPeriod = () => {
     if (view === 'grid') {
       setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
@@ -137,7 +155,7 @@ export default function Appointment() {
     }
   };
 
-  // Navigate to next period (month or week)
+  // Next month/week pe jane ke liye
   const nextPeriod = () => {
     if (view === 'grid') {
       setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
@@ -152,34 +170,28 @@ export default function Appointment() {
     }
   };
 
-  // Format month and year
+  // Current period (month/week) ko format karne ke liye
   const formatCurrentPeriod = () => {
     if (view === 'grid') {
       return currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
     } else if (view === 'week') {
-      // Get the week start and end dates
       const weekStart = getWeekStartDate(currentDate);
-      const weekEnd = new Date(weekStart);
-      weekEnd.setDate(weekEnd.getDate() + 6);
-      
-      // Format as "July 2023"
       return weekStart.toLocaleString('default', { month: 'long', year: 'numeric' });
     } else if (view === 'day') {
-      // Format as "July 14, 2023"
       return selectedDay.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' });
     }
     return '';
   };
 
-  // Get the start date of the week (Sunday)
+  // Week ke start date ko get karne ke liye (Sunday)
   const getWeekStartDate = (date) => {
     const d = new Date(date);
     const day = d.getDay(); // 0 for Sunday
-    d.setDate(d.getDate() - day); // Go to the beginning of the week
+    d.setDate(d.getDate() - day); // Week ke start me jao
     return d;
   };
 
-  // Get days in month
+  // Month ke sare din get karne ke liye
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
@@ -187,10 +199,10 @@ export default function Appointment() {
     
     const days = [];
     
-    // Get the first day of the month
+    // Month ka first day get karo
     const firstDay = new Date(year, month, 1).getDay();
     
-    // Add days from previous month
+    // Previous month ke din add karo
     const prevMonthDays = new Date(year, month, 0).getDate();
     for (let i = 0; i < firstDay; i++) {
       days.push({
@@ -200,7 +212,7 @@ export default function Appointment() {
       });
     } 
     
-    // Add days from current month
+    // Current month ke din add karo
     for (let i = 1; i <= daysInMonth; i++) {
       days.push({
         date: new Date(year, month, i),
@@ -209,7 +221,7 @@ export default function Appointment() {
       });
     }
     
-    // Add days from next month
+    // Next month ke din add karo
     const remainingCells = 42 - days.length;
     for (let i = 1; i <= remainingCells; i++) {
       days.push({
@@ -222,7 +234,7 @@ export default function Appointment() {
     return days;
   };
 
-  // Get appointment for a day
+  // Ek specific din ke liye appointments get karne ke liye
   const getAppointmentsForDay = (date) => {
     return filteredAppointments.filter(a => 
       a.date.getDate() === date.getDate() && 
@@ -231,15 +243,15 @@ export default function Appointment() {
     );
   };
 
-  // Format to double digits
+  // Din ko double digit me format karne ke liye (e.g., 1 -> 01)
   const formatDay = (day) => {
     return day < 10 ? `0${day}` : day;
   };
 
-  // Get week days
+  // Week ke din
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  // Get days of the week for the week view
+  // Week view ke liye din get karne ke liye
   const getWeekDays = () => {
     const weekStart = getWeekStartDate(currentDate);
     const days = [];
@@ -257,7 +269,7 @@ export default function Appointment() {
     return days;
   };
 
-  // Get time slots
+  // Time slots get karne ke liye (24 hours)
   const getTimeSlots = () => {
     const slots = [];
     for (let hour = 0; hour < 24; hour++) {
@@ -271,7 +283,7 @@ export default function Appointment() {
     return slots;
   };
 
-  // Get appointments for a specific day and hour
+  // Specific din aur hour ke liye appointments get karne ke liye
   const getAppointmentsForTimeSlot = (date, hour) => {
     const formattedHour = hour.toString().padStart(2, '0');
     return filteredAppointments.filter(a => {
@@ -286,13 +298,15 @@ export default function Appointment() {
     });
   };
 
-  // Set to today
+  // Today ke date pe jane ke liye
   const goToToday = () => {
     setCurrentDate(new Date());
     setSelectedDay(new Date());
   };
 
-  // Handle appointment form input change
+  // ---------- FORM HANDLING ---------- //
+
+  // Form input change handle karne ke liye
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewAppointment(prev => ({
@@ -301,7 +315,7 @@ export default function Appointment() {
     }));
   };
 
-  // Handle share options change
+  // Share options (email/sms/whatsapp) ko handle karne ke liye
   const handleShareChange = (option) => {
     setNewAppointment(prev => ({
       ...prev,
@@ -312,39 +326,19 @@ export default function Appointment() {
     }));
   };
 
-  // Format date for display in form
-  const formatDateForInput = (date) => {
-    if (!date) return '';
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  // Format date for display (MM/DD/YYYY)
-  const formatDateDisplay = (date) => {
-    if (!date) return '';
-    const d = new Date(date);
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const year = d.getFullYear();
-    return `${month}/${day}/${year}`;
-  };
-
-  // Handle form submit to add new appointment
+  // New appointment add karne ke liye
   const handleAddAppointment = (e) => {
     e.preventDefault();
     
-    // Create a new appointment
+    // New appointment create karo
     const startDateObj = new Date(newAppointment.startDate);
     const endDateObj = new Date(newAppointment.endDate);
     const appointment = {
-      id: Date.now(), // Use timestamp as unique ID for reliability
+      id: Date.now(),
       name: newAppointment.name,
       startDate: startDateObj,
       endDate: endDateObj,
-      date: startDateObj, // keeping for backward compatibility
+      date: startDateObj,
       startTime: newAppointment.startTime,
       endTime: newAppointment.endTime,
       purpose: newAppointment.purpose,
@@ -354,30 +348,30 @@ export default function Appointment() {
       shareVia: newAppointment.shareVia
     };
     
-    // Add to appointments
+    // Appointments list me add karo
     const updatedAppointments = [...appointments, appointment];
     setAppointments(updatedAppointments);
     
-    // Save to localStorage
+    // LocalStorage me save karo
     localStorage.setItem('appointments', JSON.stringify(updatedAppointments));
     
-    // Reset form and close it
+    // Form reset karo
     resetForm();
     setShowAddForm(false);
   };
 
-  // Handle editing an appointment
+  // Appointment ko edit karne ke liye
   const handleEditAppointment = (e) => {
     e.preventDefault();
     
-    // Update the appointment
+    // Selected appointment ko update karo
     const updatedAppointments = appointments.map(app => 
       app.id === selectedAppointment.id 
         ? { ...app, 
             name: newAppointment.name,
             startDate: new Date(newAppointment.startDate),
             endDate: new Date(newAppointment.endDate),
-            date: new Date(newAppointment.startDate), // keeping for backward compatibility
+            date: new Date(newAppointment.startDate),
             startTime: newAppointment.startTime,
             endTime: newAppointment.endTime,
             purpose: newAppointment.purpose,
@@ -390,26 +384,23 @@ export default function Appointment() {
     );
     
     setAppointments(updatedAppointments);
-    
-    // Save to localStorage
     localStorage.setItem('appointments', JSON.stringify(updatedAppointments));
     
-    // Reset form and close it
+    // Form reset karke close karo
     resetForm();
     setShowEditForm(false);
     setSelectedAppointment(null);
   };
 
-  // Delete an appointment
+  // Appointment ko delete karne ke liye
   const handleDeleteAppointment = (id) => {
     if (window.confirm('Are you sure you want to delete this appointment?')) {
       const updatedAppointments = appointments.filter(app => app.id !== id);
       setAppointments(updatedAppointments);
-      // No need to explicitly save to localStorage here, as the useEffect will handle it
     }
   };
 
-  // Open edit modal
+  // Edit modal ko open karne ke liye
   const openEditModal = (appointment) => {
     setSelectedAppointment(appointment);
     setNewAppointment({
@@ -428,7 +419,7 @@ export default function Appointment() {
     setShowEditForm(true);
   };
 
-  // Reset form
+  // Form ko reset karne ke liye
   const resetForm = () => {
     setNewAppointment({
       name: '',
@@ -449,7 +440,7 @@ export default function Appointment() {
     });
   };
 
-  // Check if a date is today
+  // Check karne ke liye ki kya date aaj ki hai
   const isToday = (date) => {
     const today = new Date();
     return date.getDate() === today.getDate() && 
@@ -457,7 +448,7 @@ export default function Appointment() {
            date.getFullYear() === today.getFullYear();
   };
 
-  // Format time 24h to 12h for display
+  // Time ko 24 hour se 12 hour format me convert karne ke liye
   const formatTime = (time) => {
     if (!time) return '';
     const [hour, minute] = time.split(':');
@@ -467,7 +458,7 @@ export default function Appointment() {
     return `${hour12}:${minute} ${ampm}`;
   };
 
-  // Get appointments for the selected day in day view
+  // Selected day ke liye appointments ko get karne ke liye
   const getAppointmentsForSelectedDay = () => {
     return filteredAppointments.filter(a => {
       const appDate = new Date(a.date);
@@ -475,17 +466,17 @@ export default function Appointment() {
              appDate.getMonth() === selectedDay.getMonth() && 
              appDate.getFullYear() === selectedDay.getFullYear();
     }).sort((a, b) => {
-      // Sort by start time
+      // Start time ke hisab se sort karo
       return a.startTime.localeCompare(b.startTime);
     });
   };
 
-  // Format day of week
+  // Week ke din ko format karne ke liye
   const formatDayOfWeek = (date) => {
     return date.toLocaleString('default', { weekday: 'long' });
   };
 
-  // Function to handle clicking on a day in month view
+  // Month view me din pe click karne par
   const handleDayClick = (date) => {
     setSelectedDay(date);
     setView('day');
@@ -496,13 +487,14 @@ export default function Appointment() {
     setFilteredAppointments(appointments);
   }, [appointments]);
 
-  // Add search filter functionality
+  // Search filter ko handle karne ke liye
   useEffect(() => {
     if (!searchQuery) {
       setFilteredAppointments(appointments);
       return;
     }
     
+    // Name, doctor ya purpose ke basis pe filter karo
     const filtered = appointments.filter(appointment => {
       const searchLower = searchQuery.toLowerCase();
       return (
@@ -514,9 +506,52 @@ export default function Appointment() {
     setFilteredAppointments(filtered);
   }, [searchQuery, appointments]);
 
-  // Add search handler
+  // Search input ko handle karne ke liye
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
+  };
+
+  // ---------- DATE FORMATTING FUNCTIONS ---------- //
+
+  // Date ko form ke liye format karne ke liye (YYYY-MM-DD format me)
+  const formatDateForInput = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Date ko display ke liye format karne ke liye (MM/DD/YYYY format me)
+  const formatDateDisplay = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  // Add function to determine time period and color
+  const getTimePeriod = (time) => {
+    const hour = parseInt(time.split(':')[0]);
+    if (hour >= 5 && hour < 12) return { period: 'Morning', color: '#4a90e2' };
+    if (hour >= 12 && hour < 17) return { period: 'Afternoon', color: '#f39c12' };
+    if (hour >= 17 && hour < 20) return { period: 'Evening', color: '#8e44ad' };
+    return { period: 'Night', color: '#2c3e50' };
+  };
+
+  // Add function to sort appointments by date and time
+  const getSortedAppointments = () => {
+    return [...appointments].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      if (dateA.getTime() !== dateB.getTime()) {
+        return dateA - dateB;
+      }
+      return a.startTime.localeCompare(b.startTime);
+    });
   };
 
   return (
@@ -531,6 +566,76 @@ export default function Appointment() {
           />
         </div>
         <div className="user-profile">
+          <div 
+            className="total-appointments"
+            onClick={() => setShowAppointmentsList(!showAppointmentsList)}
+            style={{ cursor: 'pointer' }}
+          >
+            <span className="total-count">
+              <i className="fas fa-calendar-check"></i>
+              <span className="count-number">{appointments.length}</span>
+            </span>
+            <span className="count-label">Total Appointments</span>
+          </div>
+
+          {showAppointmentsList && (
+            <div 
+              className="add-appointment-modal" 
+              onClick={() => setShowAppointmentsList(false)}
+            >
+              <div 
+                className="appointments-list-popup"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="popup-header">
+                  <h3>All Appointments</h3>
+                  <button 
+                    className="close-btn" 
+                    onClick={() => setShowAppointmentsList(false)}
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                </div>
+                <div className="popup-content">
+                  {getSortedAppointments().map((appointment) => {
+                    const { period } = getTimePeriod(appointment.startTime);
+                    return (
+                      <div 
+                        key={appointment.id} 
+                        className="appointment-item"
+                        onClick={() => {
+                          setShowAppointmentsList(false);
+                          openEditModal(appointment);
+                        }}
+                      >
+                        <div className="appointment-time-info">
+                          <span className="appointment-date">
+                            {formatDateDisplay(appointment.date)}
+                          </span>
+                          <span className="appointment-time">
+                            {formatTime(appointment.startTime)} - {formatTime(appointment.endTime)}
+                          </span>
+                          <span className={`time-period ${period.toLowerCase()}`}>
+                            {period}
+                          </span>
+                        </div>
+                        <div className="appointment-details">
+                          <span className="patient-name">
+                            {appointment.name}
+                          </span>
+                          <span className="appointment-with">
+                            <i className="fas fa-user-md"></i>
+                            {appointment.doctor}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="notifications">
             <span className="notification-icon">
               <i className="fas fa-bell"></i>
