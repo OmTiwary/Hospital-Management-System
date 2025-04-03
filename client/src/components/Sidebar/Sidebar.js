@@ -136,7 +136,7 @@ export default function Sidebar() {
                     <div className="user-profile">
                     <img src={profile} alt="" />
                         <div className="user-detail">
-                            <h3>Ayush Mishra</h3>
+                            <h3>Manjeet Singh</h3>
                         </div>
                     </div>
                 </div>
