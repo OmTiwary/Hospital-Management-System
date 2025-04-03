@@ -11,7 +11,9 @@ export default function Appointment() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [newAppointment, setNewAppointment] = useState({
     name: '',
-    date: new Date(),
+    startDate: new Date(),
+    endDate: new Date(),
+    date: new Date(), // keeping for backward compatibility
     startTime: '09:00',
     endTime: '10:00',
     purpose: '',
@@ -42,10 +44,55 @@ export default function Appointment() {
     "Teeth Whitening"
   ];
   
-  // Fetch doctors from Doctors component on mount
+  // Sample data for appointments
+  const [appointments, setAppointments] = useState([]);
+  
+  // Load appointments from localStorage on component mount
   useEffect(() => {
-    // If doctorsList is available as an export, use it directly
-    // Otherwise use the placeholder data
+    // Try to get appointments from localStorage
+    const savedAppointments = localStorage.getItem('appointments');
+    
+    if (savedAppointments) {
+      // If appointments exist in localStorage, parse and convert date strings back to Date objects
+      const parsedAppointments = JSON.parse(savedAppointments);
+      
+      // Convert string dates back to Date objects
+      const appointmentsWithDates = parsedAppointments.map(appointment => ({
+        ...appointment,
+        date: new Date(appointment.date)
+      }));
+      
+      // Set the appointments state
+      setAppointments(appointmentsWithDates);
+    } else {
+      // If no saved appointments exist, use the sample data
+      const sampleAppointments = [
+        { 
+          id: 1, 
+          name: 'Manjeet Singh', 
+          date: new Date(2025, 6, 14), 
+          startTime: '07:00', 
+          endTime: '09:00', 
+          purpose: 'x-ray',
+          doctor: 'Abhishek Kr',
+          status: 'Confirmed',
+          description: 'He is not sure about the time',
+          shareVia: {
+            email: true,
+            sms: true,
+            whatsapp: false
+          },
+          more: 2 
+        },
+        
+      ];
+      
+      setAppointments(sampleAppointments);
+      // Save the sample data to localStorage for future visits
+      localStorage.setItem('appointments', JSON.stringify(sampleAppointments));
+    }
+
+    // Fetch doctors list
     if (Array.isArray(doctorsList)) {
       setDoctors(doctorsList.map(doctor => ({
         id: doctor.id,
@@ -54,59 +101,18 @@ export default function Appointment() {
     }
   }, []);
   
-  // Sample data for appointments
-  const [appointments, setAppointments] = useState([
-    { 
-      id: 1, 
-      name: 'John Doe', 
-      date: new Date(2023, 6, 14), 
-      startTime: '07:00', 
-      endTime: '09:00', 
-      purpose: 'Root Canal',
-      doctor: 'Hugo Lloris',
-      status: 'Confirmed',
-      description: 'He is not sure about the time',
-      shareVia: {
-        email: true,
-        sms: true,
-        whatsapp: false
-      },
-      more: 2 
-    },
-    { 
-      id: 2, 
-      name: 'Minah Mmassy', 
-      date: new Date(2023, 6, 14), 
-      startTime: '12:00', 
-      endTime: '13:00', 
-      purpose: 'Checkup',
-      doctor: 'Dr. Smith',
-      status: 'Confirmed',
-      description: '',
-      shareVia: {
-        email: true,
-        sms: true,
-        whatsapp: false
-      }
-    },
-    { 
-      id: 3, 
-      name: 'Irene P. Smith', 
-      date: new Date(2023, 6, 14), 
-      startTime: '14:00', 
-      endTime: '15:00', 
-      purpose: 'Consultation',
-      doctor: 'Dr. Johnson',
-      status: 'Confirmed',
-      description: '',
-      shareVia: {
-        email: true,
-        sms: false,
-        whatsapp: true
-      }
+  // Save appointments to localStorage whenever they change
+  useEffect(() => {
+    if (appointments.length > 0) {
+      // Need to convert Date objects to strings before saving to localStorage
+      const appointmentsToSave = appointments.map(appointment => ({
+        ...appointment,
+        date: appointment.date.toISOString() // Convert Date to ISO string for storage
+      }));
+      localStorage.setItem('appointments', JSON.stringify(appointmentsToSave));
     }
-  ]);
-
+  }, [appointments]);
+  
   // Navigate to previous period (month or week)
   const prevPeriod = () => {
     if (view === 'grid') {
@@ -322,11 +328,14 @@ export default function Appointment() {
     e.preventDefault();
     
     // Create a new appointment
-    const dateObj = new Date(newAppointment.date);
+    const startDateObj = new Date(newAppointment.startDate);
+    const endDateObj = new Date(newAppointment.endDate);
     const appointment = {
-      id: appointments.length + 1,
+      id: Date.now(), // Use timestamp as unique ID for reliability
       name: newAppointment.name,
-      date: dateObj,
+      startDate: startDateObj,
+      endDate: endDateObj,
+      date: startDateObj, // keeping for backward compatibility
       startTime: newAppointment.startTime,
       endTime: newAppointment.endTime,
       purpose: newAppointment.purpose,
@@ -337,7 +346,11 @@ export default function Appointment() {
     };
     
     // Add to appointments
-    setAppointments([...appointments, appointment]);
+    const updatedAppointments = [...appointments, appointment];
+    setAppointments(updatedAppointments);
+    
+    // Save to localStorage
+    localStorage.setItem('appointments', JSON.stringify(updatedAppointments));
     
     // Reset form and close it
     resetForm();
@@ -353,7 +366,9 @@ export default function Appointment() {
       app.id === selectedAppointment.id 
         ? { ...app, 
             name: newAppointment.name,
-            date: new Date(newAppointment.date),
+            startDate: new Date(newAppointment.startDate),
+            endDate: new Date(newAppointment.endDate),
+            date: new Date(newAppointment.startDate), // keeping for backward compatibility
             startTime: newAppointment.startTime,
             endTime: newAppointment.endTime,
             purpose: newAppointment.purpose,
@@ -367,10 +382,22 @@ export default function Appointment() {
     
     setAppointments(updatedAppointments);
     
+    // Save to localStorage
+    localStorage.setItem('appointments', JSON.stringify(updatedAppointments));
+    
     // Reset form and close it
     resetForm();
     setShowEditForm(false);
     setSelectedAppointment(null);
+  };
+
+  // Delete an appointment
+  const handleDeleteAppointment = (id) => {
+    if (window.confirm('Are you sure you want to delete this appointment?')) {
+      const updatedAppointments = appointments.filter(app => app.id !== id);
+      setAppointments(updatedAppointments);
+      // No need to explicitly save to localStorage here, as the useEffect will handle it
+    }
   };
 
   // Open edit modal
@@ -378,6 +405,8 @@ export default function Appointment() {
     setSelectedAppointment(appointment);
     setNewAppointment({
       name: appointment.name,
+      startDate: appointment.startDate || appointment.date,
+      endDate: appointment.endDate || appointment.date,
       date: appointment.date,
       startTime: appointment.startTime,
       endTime: appointment.endTime,
@@ -394,6 +423,8 @@ export default function Appointment() {
   const resetForm = () => {
     setNewAppointment({
       name: '',
+      startDate: new Date(),
+      endDate: new Date(),
       date: new Date(),
       startTime: '09:00',
       endTime: '10:00',
@@ -639,7 +670,7 @@ export default function Appointment() {
         <div className="add-appointment-modal">
           <div className="modal-content">
             <div className="modal-header">
-              <h2>Add New Appointment</h2>
+              <h2>New Appointment</h2>
               <button className="close-btn" onClick={() => setShowAddForm(false)}>
                 <i className="fas fa-times"></i>
               </button>
@@ -647,90 +678,123 @@ export default function Appointment() {
             <form onSubmit={handleAddAppointment}>
               <div className="form-group">
                 <label>Patient Name</label>
-                <input 
-                  type="text" 
-                  name="name" 
-                  value={newAppointment.name} 
-                  onChange={handleInputChange} 
-                  required 
-                />
+                <div className="input-with-add">
+                  <input 
+                    type="text" 
+                    name="name" 
+                    value={newAppointment.name} 
+                    onChange={handleInputChange} 
+                    required 
+                    placeholder="Select Patient and patient name will appear here"
+                  />
+                  <button type="button" className="add-btn">+ Add</button>
+                </div>
               </div>
+              
               <div className="form-row">
                 <div className="form-group">
-                  <label>Purpose of Visit</label>
+                  <label>Purpose of visit</label>
                   <select 
                     name="purpose" 
                     value={newAppointment.purpose} 
                     onChange={handleInputChange}
+                    className="dropdown-select"
+                    placeholder="Select service.."
                   >
-                    <option value="">Select purpose</option>
-                    <option value="Checkup">Checkup</option>
-                    <option value="Root Canal">Root Canal</option>
-                    <option value="Cleaning">Cleaning</option>
-                    <option value="Surgery">Surgery</option>
+                    <option value="">Select service..</option>
+                    {purposeOptions.map((purpose, index) => (
+                      <option key={index} value={purpose}>{purpose}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Date</label>
+                  <label>Start Date</label>
                   <input 
                     type="date" 
-                    name="date" 
-                    value={newAppointment.date instanceof Date ? formatDateForInput(newAppointment.date) : newAppointment.date} 
-                    onChange={handleInputChange} 
-                    required 
+                    name="startDate" 
+                    value={formatDateForInput(newAppointment.startDate || newAppointment.date)}
+                    onChange={handleInputChange}
+                    min={formatDateForInput(new Date())}
+                    required
                   />
                 </div>
               </div>
+              
               <div className="form-row">
                 <div className="form-group">
-                  <label>Start Time</label>
+                  <label>End Date</label>
+                  <input 
+                    type="date" 
+                    name="endDate" 
+                    value={formatDateForInput(newAppointment.endDate || newAppointment.date)}
+                    onChange={handleInputChange}
+                    min={formatDateForInput(newAppointment.startDate || new Date())}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Start time</label>
                   <input 
                     type="time" 
                     name="startTime" 
-                    value={newAppointment.startTime} 
-                    onChange={handleInputChange} 
-                    required 
-                  />
-                </div>
-                <div className="form-group">
-                  <label>End Time</label>
-                  <input 
-                    type="time" 
-                    name="endTime" 
-                    value={newAppointment.endTime} 
+                    value={newAppointment.startTime}
                     onChange={handleInputChange} 
                     required 
                   />
                 </div>
               </div>
+              
               <div className="form-row">
+                <div className="form-group">
+                  <label>End time</label>
+                  <input 
+                    type="time" 
+                    name="endTime" 
+                    value={newAppointment.endTime}
+                    onChange={handleInputChange} 
+                    required 
+                  />
+                </div>
                 <div className="form-group">
                   <label>Doctor</label>
                   <select 
                     name="doctor" 
                     value={newAppointment.doctor} 
                     onChange={handleInputChange}
+                    className="dropdown-select"
                   >
                     <option value="">Select doctor</option>
-                    <option value="Hugo Lloris">Hugo Lloris</option>
-                    <option value="Dr. Smith">Dr. Smith</option>
-                    <option value="Dr. Johnson">Dr. Johnson</option>
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Status</label>
-                  <select 
-                    name="status" 
-                    value={newAppointment.status} 
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Select status</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Cancelled">Cancelled</option>
+                    {doctors && doctors.length > 0 ? (
+                      doctors.map(doctor => (
+                        <option key={doctor.id} value={doctor.name}>{doctor.name}</option>
+                      ))
+                    ) : (
+                      // Fallback options if doctors list is not available
+                      <>
+                        <option value="Hugo Lloris">Hugo Lloris</option>
+                        <option value="Dr. Smith">Dr. Smith</option>
+                        <option value="Dr. Johnson">Dr. Johnson</option>
+                      </>
+                    )}
                   </select>
                 </div>
               </div>
+              
+              <div className="form-group">
+                <label>Status</label>
+                <select 
+                  name="status" 
+                  value={newAppointment.status} 
+                  onChange={handleInputChange}
+                  className="dropdown-select"
+                >
+                  <option value="">Status...</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+              
               <div className="form-group">
                 <label>Description</label>
                 <textarea 
@@ -738,8 +802,10 @@ export default function Appointment() {
                   value={newAppointment.description} 
                   onChange={handleInputChange}
                   rows="3"
+                  placeholder="She will be coming for a checkup...."
                 ></textarea>
               </div>
+              
               <div className="form-group">
                 <label>Share with patient via</label>
                 <div className="share-options">
@@ -769,9 +835,12 @@ export default function Appointment() {
                   </label>
                 </div>
               </div>
-              <div className="form-buttons">
-                <button type="button" className="cancel-btn" onClick={() => setShowAddForm(false)}>Cancel</button>
-                <button type="submit" className="submit-btn">Save Appointment</button>
+              
+              <div className="form-buttons edit-buttons">
+                <button type="button" className="discard-btn" onClick={() => setShowAddForm(false)}>Cancel</button>
+                <button type="submit" className="save-btn">
+                  Save <i className="fas fa-check-circle"></i>
+                </button>
               </div>
             </form>
           </div>
@@ -822,41 +891,53 @@ export default function Appointment() {
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Date of visit</label>
+                  <label>Start Date</label>
                   <input 
-                    type="text" 
-                    name="date" 
-                    value={formatDateDisplay(newAppointment.date)}
-                    readOnly
-                    placeholder="07/14/2023"
+                    type="date" 
+                    name="startDate" 
+                    value={formatDateForInput(newAppointment.startDate || newAppointment.date)}
+                    onChange={handleInputChange}
+                    min={formatDateForInput(new Date())}
+                    required
                   />
                 </div>
               </div>
               
               <div className="form-row">
+                <div className="form-group">
+                  <label>End Date</label>
+                  <input 
+                    type="date" 
+                    name="endDate" 
+                    value={formatDateForInput(newAppointment.endDate || newAppointment.date)}
+                    onChange={handleInputChange}
+                    min={formatDateForInput(newAppointment.startDate || new Date())}
+                    required
+                  />
+                </div>
                 <div className="form-group">
                   <label>Start time</label>
                   <input 
-                    type="text" 
+                    type="time" 
                     name="startTime" 
-                    value={formatTime(newAppointment.startTime)}
-                    readOnly
-                    placeholder="7:00 AM"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>End time</label>
-                  <input 
-                    type="text" 
-                    name="endTime" 
-                    value={formatTime(newAppointment.endTime)}
-                    readOnly
-                    placeholder="9:00 AM"
+                    value={newAppointment.startTime}
+                    onChange={handleInputChange} 
+                    required 
                   />
                 </div>
               </div>
               
               <div className="form-row">
+                <div className="form-group">
+                  <label>End time</label>
+                  <input 
+                    type="time" 
+                    name="endTime" 
+                    value={newAppointment.endTime}
+                    onChange={handleInputChange} 
+                    required 
+                  />
+                </div>
                 <div className="form-group">
                   <label>Doctor</label>
                   <select 
@@ -880,20 +961,21 @@ export default function Appointment() {
                     )}
                   </select>
                 </div>
-                <div className="form-group">
-                  <label>Status</label>
-                  <select 
-                    name="status" 
-                    value={newAppointment.status} 
-                    onChange={handleInputChange}
-                    className="dropdown-select"
-                  >
-                    <option value="">Status...</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Cancelled">Cancelled</option>
-                  </select>
-                </div>
+              </div>
+              
+              <div className="form-group">
+                <label>Status</label>
+                <select 
+                  name="status" 
+                  value={newAppointment.status} 
+                  onChange={handleInputChange}
+                  className="dropdown-select"
+                >
+                  <option value="">Status...</option>
+                  <option value="Confirmed">Confirmed</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
               </div>
               
               <div className="form-group">
@@ -938,10 +1020,29 @@ export default function Appointment() {
               </div>
               
               <div className="form-buttons edit-buttons">
-                <button type="button" className="discard-btn" onClick={() => {
-                  setShowEditForm(false);
-                  setSelectedAppointment(null);
-                }}>Discard</button>
+                <div className="left-buttons">
+                  <button 
+                    type="button" 
+                    className="delete-btn" 
+                    onClick={() => {
+                      handleDeleteAppointment(selectedAppointment.id);
+                      setShowEditForm(false);
+                      setSelectedAppointment(null);
+                    }}
+                  >
+                    <i className="fas fa-trash-alt"></i> Delete
+                  </button>
+                  <button 
+                    type="button" 
+                    className="discard-btn" 
+                    onClick={() => {
+                      setShowEditForm(false);
+                      setSelectedAppointment(null);
+                    }}
+                  >
+                    Discard
+                  </button>
+                </div>
                 <button type="submit" className="save-btn">
                   Save <i className="fas fa-check-circle"></i>
                 </button>
