@@ -46,6 +46,8 @@ export default function Appointment() {
   
   // Sample data for appointments
   const [appointments, setAppointments] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredAppointments, setFilteredAppointments] = useState([]);
   
   // Load appointments from localStorage on component mount
   useEffect(() => {
@@ -215,7 +217,7 @@ export default function Appointment() {
 
   // Get appointment for a day
   const getAppointmentsForDay = (date) => {
-    return appointments.filter(a => 
+    return filteredAppointments.filter(a => 
       a.date.getDate() === date.getDate() && 
       a.date.getMonth() === date.getMonth() && 
       a.date.getFullYear() === date.getFullYear()
@@ -265,7 +267,7 @@ export default function Appointment() {
   // Get appointments for a specific day and hour
   const getAppointmentsForTimeSlot = (date, hour) => {
     const formattedHour = hour.toString().padStart(2, '0');
-    return appointments.filter(a => {
+    return filteredAppointments.filter(a => {
       const appointmentDate = new Date(a.date);
       const appointmentStartHour = parseInt(a.startTime.split(':')[0]);
       return (
@@ -460,7 +462,7 @@ export default function Appointment() {
 
   // Get appointments for the selected day in day view
   const getAppointmentsForSelectedDay = () => {
-    return appointments.filter(a => {
+    return filteredAppointments.filter(a => {
       const appDate = new Date(a.date);
       return appDate.getDate() === selectedDay.getDate() && 
              appDate.getMonth() === selectedDay.getMonth() && 
@@ -482,24 +484,60 @@ export default function Appointment() {
     setView('day');
   };
 
+  // Initialize filteredAppointments with all appointments
+  useEffect(() => {
+    setFilteredAppointments(appointments);
+  }, [appointments]);
+
+  // Add search filter functionality
+  useEffect(() => {
+    if (!searchQuery) {
+      setFilteredAppointments(appointments);
+      return;
+    }
+    
+    const filtered = appointments.filter(appointment => {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        (appointment.name && appointment.name.toLowerCase().includes(searchLower)) ||
+        (appointment.doctor && appointment.doctor.toLowerCase().includes(searchLower)) ||
+        (appointment.purpose && appointment.purpose.toLowerCase().includes(searchLower))
+      );
+    });
+    setFilteredAppointments(filtered);
+  }, [searchQuery, appointments]);
+
+  // Add search handler
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
   return (
     <div className="appointment-container">
       <div className="appointment-header">
         <div className="search-bar">
-          <input type="search" name="search" id="search" placeholder="Search 'Patients'" />
+          <input 
+            type="text" 
+            placeholder="Search appointments by patient, doctor or purpose..."
+            value={searchQuery}
+            onChange={handleSearch}
+          />
         </div>
         <div className="user-profile">
           <div className="notifications">
             <span className="notification-icon">
               <i className="fas fa-bell"></i>
-              <span className="notification-badge">5</span>
             </span>
+            <span className="notification-badge">3</span>
           </div>
           <div className="profile">
             <div className="profile-image">
-              <img src="https://via.placeholder.com/40" alt="Dr. Daudi" />
+              <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Dr. John Smith" />
             </div>
-            <div className="profile-name">Dr. Daudi</div>
+            <div className="profile-info">
+              <div className="profile-name">Dr. John Smith</div>
+              <div className="profile-specialty">Dental Surgeon</div>
+            </div>
           </div>
         </div>
       </div>
