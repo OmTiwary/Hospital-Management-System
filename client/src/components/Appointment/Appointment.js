@@ -67,6 +67,10 @@ export default function Appointment() {
   // Add new state for showing appointments list
   const [showAppointmentsList, setShowAppointmentsList] = useState(false);
 
+  // Add new state for notifications
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+
   // ---------- LIFECYCLE METHODS ---------- //
   
   // Component load hone par appointments ko localStorage se fetch karo
@@ -554,6 +558,58 @@ export default function Appointment() {
     });
   };
 
+  // Add function to get notifications
+  const getNotifications = () => {
+    const today = new Date();
+    const upcomingAppointments = appointments.filter(appointment => {
+      const appointmentDate = new Date(appointment.date);
+      const timeDiff = appointmentDate.getTime() - today.getTime();
+      const daysDiff = timeDiff / (1000 * 3600 * 24);
+      return daysDiff >= 0 && daysDiff <= 3; // Show appointments within next 3 days
+    });
+
+    return upcomingAppointments.map(appointment => {
+      const appointmentDate = new Date(appointment.date);
+      const timeDiff = appointmentDate.getTime() - today.getTime();
+      const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+      
+      let type = 'upcoming';
+      if (daysDiff === 0) type = 'today';
+      if (daysDiff === 1) type = 'tomorrow';
+
+      return {
+        id: appointment.id,
+        type,
+        title: `Appointment with ${appointment.name}`,
+        time: `${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)}`,
+        date: formatDateDisplay(appointment.date),
+        doctor: appointment.doctor,
+        isRead: false
+      };
+    });
+  };
+
+  // Update notifications when appointments change
+  useEffect(() => {
+    setNotifications(getNotifications());
+  }, [appointments]);
+
+  // Add function to mark notification as read
+  const markAsRead = (notificationId) => {
+    setNotifications(prevNotifications =>
+      prevNotifications.map(notification =>
+        notification.id === notificationId
+          ? { ...notification, isRead: true }
+          : notification
+      )
+    );
+  };
+
+  // Add function to get notification badge count
+  const getUnreadCount = () => {
+    return notifications.filter(notification => !notification.isRead).length;
+  };
+
   return (
     <div className="appointment-container">
       <div className="appointment-header">
@@ -637,10 +693,81 @@ export default function Appointment() {
           )}
 
           <div className="notifications">
-            <span className="notification-icon">
+            <span 
+              className="notification-icon"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
               <i className="fas fa-bell"></i>
+              {getUnreadCount() > 0 && (
+                <span className="notification-badge">{getUnreadCount()}</span>
+              )}
             </span>
-            <span className="notification-badge">3</span>
+            
+            {showNotifications && (
+              <div className="notifications-dropdown" onClick={(e) => e.stopPropagation()}>
+                <div className="notifications-header">
+                  <h3>Notifications ({getUnreadCount()} unread)</h3>
+                  <button 
+                    className="close-btn"
+                    onClick={() => setShowNotifications(false)}
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                </div>
+                <div className="notifications-content">
+                  {notifications.length > 0 ? (
+                    notifications.map(notification => (
+                      <div 
+                        key={notification.id}
+                        className={`notification-item ${notification.type} ${notification.isRead ? 'read' : 'unread'}`}
+                        onClick={() => {
+                          markAsRead(notification.id);
+                          const appointment = appointments.find(a => a.id === notification.id);
+                          if (appointment) {
+                            openEditModal(appointment);
+                          }
+                          setShowNotifications(false);
+                        }}
+                      >
+                        <div className="notification-icon">
+                          {notification.type === 'today' && <i className="fas fa-exclamation-circle"></i>}
+                          {notification.type === 'tomorrow' && <i className="fas fa-clock"></i>}
+                          {notification.type === 'upcoming' && <i className="fas fa-calendar-alt"></i>}
+                        </div>
+                        <div className="notification-details">
+                          <div className="notification-title">
+                            {notification.isRead ? (
+                              notification.title
+                            ) : (
+                              <strong>{notification.title}</strong>
+                            )}
+                          </div>
+                          <div className="notification-time">
+                            <i className="far fa-clock"></i> {notification.time}
+                          </div>
+                          <div className="notification-date">
+                            <i className="far fa-calendar"></i> {notification.date}
+                          </div>
+                          <div className="notification-doctor">
+                            <i className="fas fa-user-md"></i> {notification.doctor}
+                          </div>
+                        </div>
+                        {!notification.isRead && (
+                          <div className="unread-indicator">
+                            <span className="dot"></span>
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-notifications">
+                      <i className="far fa-bell-slash"></i>
+                      <p>No upcoming appointments</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
           {currentDoctor && (
             <div className="profile">
