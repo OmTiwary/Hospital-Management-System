@@ -1,7 +1,911 @@
-import React from 'react'
+import React, { useState } from 'react';
+import './Appointment.css';
 
 export default function Appointment() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState('grid'); // 'grid', 'week', 'day'
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [newAppointment, setNewAppointment] = useState({
+    name: '',
+    date: new Date(),
+    startTime: '09:00',
+    endTime: '10:00',
+    purpose: '',
+    doctor: '',
+    status: '',
+    description: '',
+    shareVia: {
+      email: true,
+      sms: true,
+      whatsapp: false
+    }
+  });
+  const [selectedDay, setSelectedDay] = useState(new Date());
+  
+  // Sample data for appointments
+  const [appointments, setAppointments] = useState([
+    { 
+      id: 1, 
+      name: 'John Doe', 
+      date: new Date(2023, 6, 14), 
+      startTime: '07:00', 
+      endTime: '09:00', 
+      purpose: 'Root Canal',
+      doctor: 'Hugo Lloris',
+      status: 'Confirmed',
+      description: 'He is not sure about the time',
+      shareVia: {
+        email: true,
+        sms: true,
+        whatsapp: false
+      },
+      more: 2 
+    },
+    { 
+      id: 2, 
+      name: 'Minah Mmassy', 
+      date: new Date(2023, 6, 14), 
+      startTime: '12:00', 
+      endTime: '13:00', 
+      purpose: 'Checkup',
+      doctor: 'Dr. Smith',
+      status: 'Confirmed',
+      description: '',
+      shareVia: {
+        email: true,
+        sms: true,
+        whatsapp: false
+      }
+    },
+    { 
+      id: 3, 
+      name: 'Irene P. Smith', 
+      date: new Date(2023, 6, 14), 
+      startTime: '14:00', 
+      endTime: '15:00', 
+      purpose: 'Consultation',
+      doctor: 'Dr. Johnson',
+      status: 'Confirmed',
+      description: '',
+      shareVia: {
+        email: true,
+        sms: false,
+        whatsapp: true
+      }
+    }
+  ]);
+
+  // Navigate to previous period (month or week)
+  const prevPeriod = () => {
+    if (view === 'grid') {
+      setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+    } else if (view === 'week') {
+      const newDate = new Date(currentDate);
+      newDate.setDate(newDate.getDate() - 7);
+      setCurrentDate(newDate);
+    } else if (view === 'day') {
+      const newDate = new Date(selectedDay);
+      newDate.setDate(newDate.getDate() - 1);
+      setSelectedDay(newDate);
+    }
+  };
+
+  // Navigate to next period (month or week)
+  const nextPeriod = () => {
+    if (view === 'grid') {
+      setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+    } else if (view === 'week') {
+      const newDate = new Date(currentDate);
+      newDate.setDate(newDate.getDate() + 7);
+      setCurrentDate(newDate);
+    } else if (view === 'day') {
+      const newDate = new Date(selectedDay);
+      newDate.setDate(newDate.getDate() + 1);
+      setSelectedDay(newDate);
+    }
+  };
+
+  // Format month and year
+  const formatCurrentPeriod = () => {
+    if (view === 'grid') {
+      return currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+    } else if (view === 'week') {
+      // Get the week start and end dates
+      const weekStart = getWeekStartDate(currentDate);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekEnd.getDate() + 6);
+      
+      // Format as "July 2023"
+      return weekStart.toLocaleString('default', { month: 'long', year: 'numeric' });
+    } else if (view === 'day') {
+      // Format as "July 14, 2023"
+      return selectedDay.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+    return '';
+  };
+
+  // Get the start date of the week (Sunday)
+  const getWeekStartDate = (date) => {
+    const d = new Date(date);
+    const day = d.getDay(); // 0 for Sunday
+    d.setDate(d.getDate() - day); // Go to the beginning of the week
+    return d;
+  };
+
+  // Get days in month
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+    const days = [];
+    
+    // Get the first day of the month
+    const firstDay = new Date(year, month, 1).getDay();
+    
+    // Add days from previous month
+    const prevMonthDays = new Date(year, month, 0).getDate();
+    for (let i = 0; i < firstDay; i++) {
+      days.push({
+        date: new Date(year, month - 1, prevMonthDays - firstDay + i + 1),
+        isCurrentMonth: false,
+        day: prevMonthDays - firstDay + i + 1
+      });
+    }
+    
+    // Add days from current month
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push({
+        date: new Date(year, month, i),
+        isCurrentMonth: true,
+        day: i
+      });
+    }
+    
+    // Add days from next month
+    const remainingCells = 42 - days.length;
+    for (let i = 1; i <= remainingCells; i++) {
+      days.push({
+        date: new Date(year, month + 1, i),
+        isCurrentMonth: false,
+        day: i
+      });
+    }
+    
+    return days;
+  };
+
+  // Get appointment for a day
+  const getAppointmentsForDay = (date) => {
+    return appointments.filter(a => 
+      a.date.getDate() === date.getDate() && 
+      a.date.getMonth() === date.getMonth() && 
+      a.date.getFullYear() === date.getFullYear()
+    );
+  };
+
+  // Format to double digits
+  const formatDay = (day) => {
+    return day < 10 ? `0${day}` : day;
+  };
+
+  // Get week days
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  // Get days of the week for the week view
+  const getWeekDays = () => {
+    const weekStart = getWeekStartDate(currentDate);
+    const days = [];
+    
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(weekStart);
+      date.setDate(date.getDate() + i);
+      days.push({
+        date,
+        dayName: weekDays[i],
+        dayNumber: date.getDate()
+      });
+    }
+    
+    return days;
+  };
+
+  // Get time slots
+  const getTimeSlots = () => {
+    const slots = [];
+    for (let hour = 0; hour < 24; hour++) {
+      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+      const period = hour < 12 ? 'am' : 'pm';
+      slots.push({
+        time: `${displayHour}:00 ${period}`,
+        hour
+      });
+    }
+    return slots;
+  };
+
+  // Get appointments for a specific day and hour
+  const getAppointmentsForTimeSlot = (date, hour) => {
+    const formattedHour = hour.toString().padStart(2, '0');
+    return appointments.filter(a => {
+      const appointmentDate = new Date(a.date);
+      const appointmentStartHour = parseInt(a.startTime.split(':')[0]);
+      return (
+        appointmentDate.getDate() === date.getDate() &&
+        appointmentDate.getMonth() === date.getMonth() &&
+        appointmentDate.getFullYear() === date.getFullYear() &&
+        appointmentStartHour === hour
+      );
+    });
+  };
+
+  // Set to today
+  const goToToday = () => {
+    setCurrentDate(new Date());
+    setSelectedDay(new Date());
+  };
+
+  // Handle appointment form input change
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewAppointment(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Handle share options change
+  const handleShareChange = (option) => {
+    setNewAppointment(prev => ({
+      ...prev,
+      shareVia: {
+        ...prev.shareVia,
+        [option]: !prev.shareVia[option]
+      }
+    }));
+  };
+
+  // Format date for display in form
+  const formatDateForInput = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Format date for display (MM/DD/YYYY)
+  const formatDateDisplay = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
+
+  // Handle form submit to add new appointment
+  const handleAddAppointment = (e) => {
+    e.preventDefault();
+    
+    // Create a new appointment
+    const dateObj = new Date(newAppointment.date);
+    const appointment = {
+      id: appointments.length + 1,
+      name: newAppointment.name,
+      date: dateObj,
+      startTime: newAppointment.startTime,
+      endTime: newAppointment.endTime,
+      purpose: newAppointment.purpose,
+      doctor: newAppointment.doctor,
+      status: newAppointment.status,
+      description: newAppointment.description,
+      shareVia: newAppointment.shareVia
+    };
+    
+    // Add to appointments
+    setAppointments([...appointments, appointment]);
+    
+    // Reset form and close it
+    resetForm();
+    setShowAddForm(false);
+  };
+
+  // Handle editing an appointment
+  const handleEditAppointment = (e) => {
+    e.preventDefault();
+    
+    // Update the appointment
+    const updatedAppointments = appointments.map(app => 
+      app.id === selectedAppointment.id 
+        ? { ...app, 
+            name: newAppointment.name,
+            date: new Date(newAppointment.date),
+            startTime: newAppointment.startTime,
+            endTime: newAppointment.endTime,
+            purpose: newAppointment.purpose,
+            doctor: newAppointment.doctor,
+            status: newAppointment.status,
+            description: newAppointment.description,
+            shareVia: newAppointment.shareVia
+          } 
+        : app
+    );
+    
+    setAppointments(updatedAppointments);
+    
+    // Reset form and close it
+    resetForm();
+    setShowEditForm(false);
+    setSelectedAppointment(null);
+  };
+
+  // Open edit modal
+  const openEditModal = (appointment) => {
+    setSelectedAppointment(appointment);
+    setNewAppointment({
+      name: appointment.name,
+      date: appointment.date,
+      startTime: appointment.startTime,
+      endTime: appointment.endTime,
+      purpose: appointment.purpose,
+      doctor: appointment.doctor,
+      status: appointment.status,
+      description: appointment.description,
+      shareVia: appointment.shareVia
+    });
+    setShowEditForm(true);
+  };
+
+  // Reset form
+  const resetForm = () => {
+    setNewAppointment({
+      name: '',
+      date: new Date(),
+      startTime: '09:00',
+      endTime: '10:00',
+      purpose: '',
+      doctor: '',
+      status: '',
+      description: '',
+      shareVia: {
+        email: true,
+        sms: true,
+        whatsapp: false
+      }
+    });
+  };
+
+  // Check if a date is today
+  const isToday = (date) => {
+    const today = new Date();
+    return date.getDate() === today.getDate() && 
+           date.getMonth() === today.getMonth() && 
+           date.getFullYear() === today.getFullYear();
+  };
+
+  // Format time 24h to 12h for display
+  const formatTime = (time) => {
+    if (!time) return '';
+    const [hour, minute] = time.split(':');
+    const hourInt = parseInt(hour);
+    const ampm = hourInt >= 12 ? 'PM' : 'AM';
+    const hour12 = hourInt % 12 || 12;
+    return `${hour12}:${minute} ${ampm}`;
+  };
+
+  // Get appointments for the selected day in day view
+  const getAppointmentsForSelectedDay = () => {
+    return appointments.filter(a => {
+      const appDate = new Date(a.date);
+      return appDate.getDate() === selectedDay.getDate() && 
+             appDate.getMonth() === selectedDay.getMonth() && 
+             appDate.getFullYear() === selectedDay.getFullYear();
+    }).sort((a, b) => {
+      // Sort by start time
+      return a.startTime.localeCompare(b.startTime);
+    });
+  };
+
+  // Format day of week
+  const formatDayOfWeek = (date) => {
+    return date.toLocaleString('default', { weekday: 'long' });
+  };
+
+  // Function to handle clicking on a day in month view
+  const handleDayClick = (date) => {
+    setSelectedDay(date);
+    setView('day');
+  };
+
   return (
-    <div>Appointment</div>
-  )
+    <div className="appointment-container">
+      <div className="appointment-header">
+        <div className="search-bar">
+          <input type="search" name="search" id="search" placeholder="Search 'Patients'" />
+        </div>
+        <div className="user-profile">
+          <div className="notifications">
+            <span className="notification-icon">
+              <i className="fas fa-bell"></i>
+              <span className="notification-badge">5</span>
+            </span>
+          </div>
+          <div className="profile">
+            <div className="profile-image">
+              <img src="https://via.placeholder.com/40" alt="Dr. Daudi" />
+            </div>
+            <div className="profile-name">Dr. Daudi</div>
+          </div>
+        </div>
+      </div>
+      
+      <h1 className="appointments-title">Appointments</h1>
+      
+      <div className="calendar-controls">
+        <div className="left-controls">
+          <button className="today-btn" onClick={goToToday}>Today</button>
+        </div>
+        
+        <div className="month-navigation">
+          <button className="nav-btn prev" onClick={prevPeriod}><i className="fas fa-chevron-left"></i></button>
+          <div className="current-month">{formatCurrentPeriod()}</div>
+          <button className="nav-btn next" onClick={nextPeriod}><i className="fas fa-chevron-right"></i></button>
+        </div>
+        
+        <div className="view-options">
+          <button className={`view-btn ${view === 'grid' ? 'active' : ''}`} onClick={() => setView('grid')}>
+            <i className="fas fa-th"></i>
+          </button>
+          <button className={`view-btn ${view === 'week' ? 'active' : ''}`} onClick={() => setView('week')}>
+            <i className="far fa-calendar-alt"></i>
+          </button>
+          <button className={`view-btn ${view === 'day' ? 'active' : ''}`} onClick={() => setView('day')}>
+            <i className="far fa-clock"></i>
+          </button>
+        </div>
+      </div>
+      
+      {view === 'grid' && (
+        <div className="calendar-grid">
+          <div className="weekdays">
+            {weekDays.map((day, index) => (
+              <div key={index} className="weekday">{day}</div>
+            ))}
+          </div>
+          
+          <div className="days">
+            {getDaysInMonth(currentDate).map((dayInfo, index) => {
+              const dayAppointments = getAppointmentsForDay(dayInfo.date);
+              return (
+                <div 
+                  key={index} 
+                  className={`day ${!dayInfo.isCurrentMonth ? 'other-month' : ''} ${isToday(dayInfo.date) ? 'today' : ''}`}
+                  onClick={() => handleDayClick(dayInfo.date)}
+                >
+                  <div className="day-number">{formatDay(dayInfo.day)}</div>
+                  {dayAppointments.length > 0 && (
+                    <div className="day-appointments">
+                      <div 
+                        className="appointment-preview"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openEditModal(dayAppointments[0]);
+                        }}
+                      >
+                        <div className="appointment-item">{dayAppointments[0].name}</div>
+                      </div>
+                      {dayAppointments.length > 1 && (
+                        <div className="more-appointments">+{dayAppointments.length - 1} more</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {view === 'week' && (
+        <div className="week-view">
+          <div className="week-header">
+            <div className="time-column-header"></div>
+            {getWeekDays().map((day, index) => (
+              <div 
+                key={index} 
+                className={`day-column-header ${isToday(day.date) ? 'today' : ''}`}
+              >
+                <div className="day-name">{day.dayNumber} {day.dayName}</div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="week-body">
+            {getTimeSlots().map((slot, slotIndex) => (
+              <div key={slotIndex} className="time-row">
+                <div className="time-label">{slot.time}</div>
+                {getWeekDays().map((day, dayIndex) => {
+                  const appts = getAppointmentsForTimeSlot(day.date, slot.hour);
+                  return (
+                    <div key={dayIndex} className="day-slot">
+                      {appts.map((appt, apptIndex) => (
+                        <div 
+                          key={apptIndex} 
+                          className="week-appointment" 
+                          onClick={() => openEditModal(appt)}
+                        >
+                          <div className="time-range">
+                            {formatTime(appt.startTime)} - {formatTime(appt.endTime)}
+                          </div>
+                          <div className="patient-name">{appt.name}</div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {view === 'day' && (
+        <div className="day-view">
+          <div className="day-view-header">
+            <h3>{formatDayOfWeek(selectedDay)}</h3>
+            <p className="day-date">{selectedDay.toLocaleString('default', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+          </div>
+          
+          <div className="day-view-content">
+            <div className="time-slots">
+              {getTimeSlots().map((slot, slotIndex) => {
+                const timeAppts = appointments.filter(a => {
+                  const appointmentDate = new Date(a.date);
+                  const appointmentStartHour = parseInt(a.startTime.split(':')[0]);
+                  return (
+                    appointmentDate.getDate() === selectedDay.getDate() &&
+                    appointmentDate.getMonth() === selectedDay.getMonth() &&
+                    appointmentDate.getFullYear() === selectedDay.getFullYear() &&
+                    appointmentStartHour === slot.hour
+                  );
+                });
+                
+                return (
+                  <div key={slotIndex} className="day-time-slot">
+                    <div className="time-slot-label">{slot.time}</div>
+                    <div className="time-slot-content">
+                      {timeAppts.map((appt, apptIndex) => (
+                        <div 
+                          key={apptIndex} 
+                          className="day-appointment" 
+                          onClick={() => openEditModal(appt)}
+                        >
+                          <div className="time-range">
+                            {formatTime(appt.startTime)} - {formatTime(appt.endTime)}
+                          </div>
+                          <div className="patient-name">{appt.name}</div>
+                          <div className="appointment-purpose">{appt.purpose}</div>
+                          <div className="appointment-doctor">{appt.doctor}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <button className="add-appointment-btn" onClick={() => setShowAddForm(true)}>
+        <i className="fas fa-plus"></i>
+      </button>
+
+      {showAddForm && (
+        <div className="add-appointment-modal">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2>Add New Appointment</h2>
+              <button className="close-btn" onClick={() => setShowAddForm(false)}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <form onSubmit={handleAddAppointment}>
+              <div className="form-group">
+                <label>Patient Name</label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  value={newAppointment.name} 
+                  onChange={handleInputChange} 
+                  required 
+                />
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Purpose of Visit</label>
+                  <select 
+                    name="purpose" 
+                    value={newAppointment.purpose} 
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select purpose</option>
+                    <option value="Checkup">Checkup</option>
+                    <option value="Root Canal">Root Canal</option>
+                    <option value="Cleaning">Cleaning</option>
+                    <option value="Surgery">Surgery</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Date</label>
+                  <input 
+                    type="date" 
+                    name="date" 
+                    value={newAppointment.date instanceof Date ? formatDateForInput(newAppointment.date) : newAppointment.date} 
+                    onChange={handleInputChange} 
+                    required 
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Start Time</label>
+                  <input 
+                    type="time" 
+                    name="startTime" 
+                    value={newAppointment.startTime} 
+                    onChange={handleInputChange} 
+                    required 
+                  />
+                </div>
+                <div className="form-group">
+                  <label>End Time</label>
+                  <input 
+                    type="time" 
+                    name="endTime" 
+                    value={newAppointment.endTime} 
+                    onChange={handleInputChange} 
+                    required 
+                  />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Doctor</label>
+                  <select 
+                    name="doctor" 
+                    value={newAppointment.doctor} 
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select doctor</option>
+                    <option value="Hugo Lloris">Hugo Lloris</option>
+                    <option value="Dr. Smith">Dr. Smith</option>
+                    <option value="Dr. Johnson">Dr. Johnson</option>
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Status</label>
+                  <select 
+                    name="status" 
+                    value={newAppointment.status} 
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Select status</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Description</label>
+                <textarea 
+                  name="description" 
+                  value={newAppointment.description} 
+                  onChange={handleInputChange}
+                  rows="3"
+                ></textarea>
+              </div>
+              <div className="form-group">
+                <label>Share with patient via</label>
+                <div className="share-options">
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      checked={newAppointment.shareVia.email} 
+                      onChange={() => handleShareChange('email')} 
+                    />
+                    <span className="checkbox-text">Email</span>
+                  </label>
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      checked={newAppointment.shareVia.sms} 
+                      onChange={() => handleShareChange('sms')} 
+                    />
+                    <span className="checkbox-text">SMS</span>
+                  </label>
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      checked={newAppointment.shareVia.whatsapp} 
+                      onChange={() => handleShareChange('whatsapp')} 
+                    />
+                    <span className="checkbox-text">WhatsApp</span>
+                  </label>
+                </div>
+              </div>
+              <div className="form-buttons">
+                <button type="button" className="cancel-btn" onClick={() => setShowAddForm(false)}>Cancel</button>
+                <button type="submit" className="submit-btn">Save Appointment</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showEditForm && selectedAppointment && (
+        <div className="edit-appointment-modal">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2>Edit Appointment</h2>
+              <button className="close-btn" onClick={() => {
+                setShowEditForm(false);
+                setSelectedAppointment(null);
+              }}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+            <div className="edit-form-container">
+              <form onSubmit={handleEditAppointment}>
+                <div className="form-group">
+                  <label>Patient Name</label>
+                  <div className="input-with-add">
+                    <input 
+                      type="text" 
+                      name="name" 
+                      value={newAppointment.name} 
+                      onChange={handleInputChange} 
+                      required 
+                    />
+                    <button type="button" className="add-btn">+ Add</button>
+                  </div>
+                </div>
+                
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Purpose of visit</label>
+                    <select 
+                      name="purpose" 
+                      value={newAppointment.purpose} 
+                      onChange={handleInputChange}
+                    >
+                      <option value="">Select purpose</option>
+                      <option value="Checkup">Checkup</option>
+                      <option value="Root Canal">Root Canal</option>
+                      <option value="Cleaning">Cleaning</option>
+                      <option value="Surgery">Surgery</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Date of visit</label>
+                    <input 
+                      type="text" 
+                      name="date" 
+                      value={formatDateDisplay(newAppointment.date)}
+                      readOnly
+                    />
+                  </div>
+                </div>
+                
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Start time</label>
+                    <input 
+                      type="text" 
+                      name="startTime" 
+                      value={newAppointment.startTime + " AM"} 
+                      readOnly
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>End time</label>
+                    <input 
+                      type="text" 
+                      name="endTime" 
+                      value={newAppointment.endTime + " AM"} 
+                      readOnly
+                    />
+                  </div>
+                </div>
+                
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Doctor</label>
+                    <select 
+                      name="doctor" 
+                      value={newAppointment.doctor} 
+                      onChange={handleInputChange}
+                    >
+                      <option value="">Select doctor</option>
+                      <option value="Hugo Lloris">Hugo Lloris</option>
+                      <option value="Dr. Smith">Dr. Smith</option>
+                      <option value="Dr. Johnson">Dr. Johnson</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Status</label>
+                    <select 
+                      name="status" 
+                      value={newAppointment.status} 
+                      onChange={handleInputChange}
+                    >
+                      <option value="">Status...</option>
+                      <option value="Confirmed">Confirmed</option>
+                      <option value="Pending">Pending</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea 
+                    name="description" 
+                    value={newAppointment.description} 
+                    onChange={handleInputChange}
+                    rows="3"
+                  ></textarea>
+                </div>
+                
+                <div className="form-group">
+                  <label>Share with patient via</label>
+                  <div className="share-options">
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={newAppointment.shareVia.email} 
+                        onChange={() => handleShareChange('email')} 
+                      />
+                      <span className="checkbox-text">Email</span>
+                    </label>
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={newAppointment.shareVia.sms} 
+                        onChange={() => handleShareChange('sms')} 
+                      />
+                      <span className="checkbox-text">SMS</span>
+                    </label>
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={newAppointment.shareVia.whatsapp} 
+                        onChange={() => handleShareChange('whatsapp')} 
+                      />
+                      <span className="checkbox-text">WhatsApp</span>
+                    </label>
+                  </div>
+                </div>
+                
+                <div className="form-buttons edit-buttons">
+                  <button type="button" className="discard-btn" onClick={() => {
+                    setShowEditForm(false);
+                    setSelectedAppointment(null);
+                  }}>Discard</button>
+                  <button type="submit" className="save-btn">
+                    Save <i className="fas fa-check-circle"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
