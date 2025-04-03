@@ -29,6 +29,7 @@ export default function Appointment() {
   const [selectedDay, setSelectedDay] = useState(new Date());
   // List of available doctors
   const [doctors, setDoctors] = useState([]);
+  const [currentDoctor, setCurrentDoctor] = useState(null);
   
   // List of purpose options
   const purposeOptions = [
@@ -100,6 +101,12 @@ export default function Appointment() {
         id: doctor.id,
         name: doctor.name
       })));
+    }
+
+    // Add useEffect to set current doctor
+    if (Array.isArray(doctorsList) && doctorsList.length > 0) {
+      const dentist = doctorsList.find(doc => doc.name === "Dr. Alok Pandey");
+      setCurrentDoctor(dentist || doctorsList[0]);
     }
   }, []);
   
@@ -191,7 +198,7 @@ export default function Appointment() {
         isCurrentMonth: false,
         day: prevMonthDays - firstDay + i + 1
       });
-    }
+    } 
     
     // Add days from current month
     for (let i = 1; i <= daysInMonth; i++) {
@@ -530,15 +537,24 @@ export default function Appointment() {
             </span>
             <span className="notification-badge">3</span>
           </div>
-          <div className="profile">
-            <div className="profile-image">
-              <img src="https://randomuser.me/api/portraits/men/36.jpg" alt="Dr. John Smith" />
+          {currentDoctor && (
+            <div className="profile">
+              <div className="profile-image">
+                <img 
+                  src={currentDoctor.image} 
+                  alt={currentDoctor.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://img.freepik.com/free-vector/doctor-character-background_1270-84.jpg";
+                  }}
+                />
+              </div>
+              <div className="profile-info">
+                <div className="profile-name">{currentDoctor.name}</div>
+                <div className="profile-specialty">{currentDoctor.specialization}</div>
+              </div>
             </div>
-            <div className="profile-info">
-              <div className="profile-name">Dr. John Smith</div>
-              <div className="profile-specialty">Dental Surgeon</div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
       

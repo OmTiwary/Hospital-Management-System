@@ -5,7 +5,7 @@ import Modal from '../Doctors/Modal';
 
 // Export doctors list to be used in other components
 export const doctorsList = [
-  { id: 1, name: "Dr. Rajesh Malhotra", specialization: "Health Checkup", availability: "Mon-Fri, 9AM-5PM", image: '/images/rajesh-malhotra.jpg' },
+  { id: 1, name: "Dr. Rajesh Malhotra", specialization: "Health Checkup", availability: "Mon-Fri, 9AM-5PM", image: "https://img.freepik.com/free-photo/young-doctor-with-stethoscope-white-background_1157-36569.jpg" },
   { id: 2, name: "Dr. Anjali Verma", specialization: "Health Checkup", availability: "Mon-Wed, 10AM-4PM", image: '/images/anjali-verma.jpg' },
   { id: 3, name: "Dr. Vikram Choudhary", specialization: "Pediatrics", availability: "Tue-Sat, 8AM-2PM", image: '/images/vikram-choudhary.jpg' },
   { id: 4, name: "Dr. Sneha Kapoor", specialization: "Common Cold", availability: "Mon-Fri, 11AM-7PM", image: '/images/sneha-kapoor.jpg' },
@@ -30,7 +30,7 @@ export const doctorsList = [
   { id: 23, name: "Dr. Amit Mishra", specialization: "Rheumatology", availability: "Mon-Fri, 10AM-3PM", image: '/images/amit-mishra.jpg' },
   { id: 24, name: "Dr. Seema Dutta", specialization: "Ophthalmology", availability: "Tue-Sat, 7AM-2PM", image: '/images/seema-dutta.jpg' },
   { id: 25, name: "Dr. Nitin Kapoor", specialization: "Plastic Surgery", availability: "Mon-Fri, 10AM-6PM", image: '/images/nitin-kapoor.jpg' },
-  { id: 26, name: "Dr. Alok Pandey", specialization: "Dentistry", availability: "Wed-Sun, 8AM-4PM", image: '/images/alok-pandey.jpg' },
+  { id: 26, name: "Dr. Alok Pandey", specialization: "Dentistry", availability: "Wed-Sun, 8AM-4PM", image: "https://img.freepik.com/free-photo/doctor-with-his-arms-crossed-white-background_1368-5790.jpg" },
   { id: 27, name: "Dr. Tanya Srivastava", specialization: "Neurology", availability: "Mon-Fri, 9AM-5PM", image: '/images/tanya-srivastava.jpg' },
   { id: 28, name: "Dr. Sunil Rathi", specialization: "Neurosurgery", availability: "Tue-Sat, 8AM-2PM", image: '/images/sunil-rathi.jpg' },
   { id: 29, name: "Dr. Radha Joshi", specialization: "Psychology", availability: "Mon-Wed, 10AM-5PM", image: '/images/radha-joshi.jpg' },

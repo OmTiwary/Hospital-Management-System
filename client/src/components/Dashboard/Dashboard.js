@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import './Dashboard.css'
 
 import { Bar, Line } from 'react-chartjs-2';
@@ -16,6 +16,36 @@ ChartJS.register(
 );
 
 export default function Dashboard() {
+  const [appointmentData, setAppointmentData] = useState({
+    labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+    datasets: [{
+      label: "Appointments",
+      data: [0],
+      backgroundColor: 'orange',
+    }]
+  });
+
+  useEffect(() => {
+    // Get appointments from localStorage
+    const savedAppointments = localStorage.getItem('appointments');
+    if (savedAppointments) {
+      const parsedAppointments = JSON.parse(savedAppointments);
+      
+      // Now 2 appointments = 1 unit (max 20 appointments for full scale)
+      const scaledValue = Math.min(10, parsedAppointments.length / 2);
+      
+      // Update appointment data
+      setAppointmentData({
+        labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        datasets: [{
+          label: "Total Appointments: " + parsedAppointments.length,
+          data: [scaledValue],
+          backgroundColor: 'orange',
+        }]
+      });
+    }
+  }, []);
+
   const patientData = {
     labels: ['', '', '', '', '', '', '', '', '', ''],
     datasets: [
@@ -27,16 +57,6 @@ export default function Dashboard() {
     ],
   };
 
-  const appointment = {
-    labels: ['', '', '', '', '', '', '', '', '', ''],
-    datasets: [
-      {
-        label: "Appointments",
-        data: [7200, 5500, 4220, 1000, 10050, 2000, 5000, 1350, 2000, 2300],
-        backgroundColor: 'orange',
-      },
-    ],
-  };
   const prescriptions = {
     labels: ['', '', '', '', '', '', '', '', '', ''],
     datasets: [
@@ -110,7 +130,6 @@ export default function Dashboard() {
     ],
   };
 
-
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -138,6 +157,40 @@ export default function Dashboard() {
     },
   };
 
+  const appointmentOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 1000,
+      easing: 'linear',
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          stepSize: 1
+        }
+      },
+      y: {
+        grid: {
+          display: false,
+        },
+        beginAtZero: true,
+        max: 10,
+        ticks: {
+          stepSize: 1
+        }
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+  };
+
   const doctors = [
     { id: 1, name: "Ayush Mishra", role: "Cardiologist", image: pat1, time: "2:20PM" },
     { id: 2, name: "Abhishek", role: "General Physician", image: pat2, time: "3:15PM" },
@@ -156,8 +209,7 @@ export default function Dashboard() {
         <div className="box1">
           <div className="layout">
             <span>
-              <i class="fa-regular fa-user" style={{ color: "#63E6BE" }}>
-              </i>
+              <i className="fa-regular fa-user" style={{ color: "#63E6BE" }}></i>
             </span>
             <h3>Total Patient</h3>
           </div>
@@ -168,18 +220,18 @@ export default function Dashboard() {
         <div className="box2">
           <div className="layout">
             <span>
-              <i class="fa-solid fa-calendar-check" style={{ color: "#63E6BE" }}></i>
+              <i className="fa-solid fa-calendar-check" style={{ color: "#63E6BE" }}></i>
             </span>
             <h3>Total Appointments</h3>
           </div>
           <div className="data">
-            <Bar data={appointment} options={options} />
+            <Bar data={appointmentData} options={appointmentOptions} />
           </div>
         </div>
         <div className="box3">
           <div className="layout">
             <span>
-              <i class="fa-solid fa-file-prescription" style={{ color: "#63E6BE" }}></i>
+              <i className="fa-solid fa-file-prescription" style={{ color: "#63E6BE" }}></i>
             </span>
             <h3>Total Prescriptions</h3>
           </div>
@@ -190,7 +242,7 @@ export default function Dashboard() {
         <div className="box4">
           <div className="layout">
             <span>
-              <i class="fa-solid fa-arrow-up-right-dots" style={{ color: "#63E6BE" }}></i>
+              <i className="fa-solid fa-arrow-up-right-dots" style={{ color: "#63E6BE" }}></i>
             </span>
             <h3>Total Growth</h3>
           </div>
@@ -202,7 +254,7 @@ export default function Dashboard() {
         <div className="cure">
           <div className="layout">
             <span>
-              <i class="fa-solid fa-notes-medical" style={{ color: "#63E6BE" }}></i>
+              <i className="fa-solid fa-notes-medical" style={{ color: "#63E6BE" }}></i>
             </span>
             <h3>Total Person Cured</h3>
           </div>
