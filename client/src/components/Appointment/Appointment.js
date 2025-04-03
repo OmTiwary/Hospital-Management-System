@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Appointment.css';
+// Import doctorsList from Doctors component
+import { doctorsList } from '../Doctors/Doctors';
 
 export default function Appointment() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -23,6 +25,34 @@ export default function Appointment() {
     }
   });
   const [selectedDay, setSelectedDay] = useState(new Date());
+  // List of available doctors
+  const [doctors, setDoctors] = useState([]);
+  
+  // List of purpose options
+  const purposeOptions = [
+    "Checkup",
+    "Root Canal",
+    "Cleaning",
+    "Surgery",
+    "Consultation",
+    "Follow-up",
+    "X-Ray",
+    "Dental Implant",
+    "Tooth Extraction",
+    "Teeth Whitening"
+  ];
+  
+  // Fetch doctors from Doctors component on mount
+  useEffect(() => {
+    // If doctorsList is available as an export, use it directly
+    // Otherwise use the placeholder data
+    if (Array.isArray(doctorsList)) {
+      setDoctors(doctorsList.map(doctor => ({
+        id: doctor.id,
+        name: doctor.name
+      })));
+    }
+  }, []);
   
   // Sample data for appointments
   const [appointments, setAppointments] = useState([
@@ -760,149 +790,163 @@ export default function Appointment() {
                 <i className="fas fa-times"></i>
               </button>
             </div>
-            <div className="edit-form-container">
-              <form onSubmit={handleEditAppointment}>
+            <form onSubmit={handleEditAppointment}>
+              <div className="form-group">
+                <label>Patient Name</label>
+                <div className="input-with-add">
+                  <input 
+                    type="text" 
+                    name="name" 
+                    value={newAppointment.name} 
+                    onChange={handleInputChange} 
+                    required 
+                    placeholder="John Doe"
+                  />
+                  <button type="button" className="add-btn">+ Add</button>
+                </div>
+              </div>
+              
+              <div className="form-row">
                 <div className="form-group">
-                  <label>Patient Name</label>
-                  <div className="input-with-add">
-                    <input 
-                      type="text" 
-                      name="name" 
-                      value={newAppointment.name} 
-                      onChange={handleInputChange} 
-                      required 
-                    />
-                    <button type="button" className="add-btn">+ Add</button>
-                  </div>
-                </div>
-                
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Purpose of visit</label>
-                    <select 
-                      name="purpose" 
-                      value={newAppointment.purpose} 
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Select purpose</option>
-                      <option value="Checkup">Checkup</option>
-                      <option value="Root Canal">Root Canal</option>
-                      <option value="Cleaning">Cleaning</option>
-                      <option value="Surgery">Surgery</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Date of visit</label>
-                    <input 
-                      type="text" 
-                      name="date" 
-                      value={formatDateDisplay(newAppointment.date)}
-                      readOnly
-                    />
-                  </div>
-                </div>
-                
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Start time</label>
-                    <input 
-                      type="text" 
-                      name="startTime" 
-                      value={newAppointment.startTime + " AM"} 
-                      readOnly
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>End time</label>
-                    <input 
-                      type="text" 
-                      name="endTime" 
-                      value={newAppointment.endTime + " AM"} 
-                      readOnly
-                    />
-                  </div>
-                </div>
-                
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Doctor</label>
-                    <select 
-                      name="doctor" 
-                      value={newAppointment.doctor} 
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Select doctor</option>
-                      <option value="Hugo Lloris">Hugo Lloris</option>
-                      <option value="Dr. Smith">Dr. Smith</option>
-                      <option value="Dr. Johnson">Dr. Johnson</option>
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Status</label>
-                    <select 
-                      name="status" 
-                      value={newAppointment.status} 
-                      onChange={handleInputChange}
-                    >
-                      <option value="">Status...</option>
-                      <option value="Confirmed">Confirmed</option>
-                      <option value="Pending">Pending</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div className="form-group">
-                  <label>Description</label>
-                  <textarea 
-                    name="description" 
-                    value={newAppointment.description} 
+                  <label>Purpose of visit</label>
+                  <select 
+                    name="purpose" 
+                    value={newAppointment.purpose} 
                     onChange={handleInputChange}
-                    rows="3"
-                  ></textarea>
+                    className="dropdown-select"
+                  >
+                    <option value="">Select purpose</option>
+                    {purposeOptions.map((purpose, index) => (
+                      <option key={index} value={purpose}>{purpose}</option>
+                    ))}
+                  </select>
                 </div>
-                
                 <div className="form-group">
-                  <label>Share with patient via</label>
-                  <div className="share-options">
-                    <label className="checkbox-label">
-                      <input 
-                        type="checkbox" 
-                        checked={newAppointment.shareVia.email} 
-                        onChange={() => handleShareChange('email')} 
-                      />
-                      <span className="checkbox-text">Email</span>
-                    </label>
-                    <label className="checkbox-label">
-                      <input 
-                        type="checkbox" 
-                        checked={newAppointment.shareVia.sms} 
-                        onChange={() => handleShareChange('sms')} 
-                      />
-                      <span className="checkbox-text">SMS</span>
-                    </label>
-                    <label className="checkbox-label">
-                      <input 
-                        type="checkbox" 
-                        checked={newAppointment.shareVia.whatsapp} 
-                        onChange={() => handleShareChange('whatsapp')} 
-                      />
-                      <span className="checkbox-text">WhatsApp</span>
-                    </label>
-                  </div>
+                  <label>Date of visit</label>
+                  <input 
+                    type="text" 
+                    name="date" 
+                    value={formatDateDisplay(newAppointment.date)}
+                    readOnly
+                    placeholder="07/14/2023"
+                  />
                 </div>
-                
-                <div className="form-buttons edit-buttons">
-                  <button type="button" className="discard-btn" onClick={() => {
-                    setShowEditForm(false);
-                    setSelectedAppointment(null);
-                  }}>Discard</button>
-                  <button type="submit" className="save-btn">
-                    Save <i className="fas fa-check-circle"></i>
-                  </button>
+              </div>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Start time</label>
+                  <input 
+                    type="text" 
+                    name="startTime" 
+                    value={formatTime(newAppointment.startTime)}
+                    readOnly
+                    placeholder="7:00 AM"
+                  />
                 </div>
-              </form>
-            </div>
+                <div className="form-group">
+                  <label>End time</label>
+                  <input 
+                    type="text" 
+                    name="endTime" 
+                    value={formatTime(newAppointment.endTime)}
+                    readOnly
+                    placeholder="9:00 AM"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Doctor</label>
+                  <select 
+                    name="doctor" 
+                    value={newAppointment.doctor} 
+                    onChange={handleInputChange}
+                    className="dropdown-select"
+                  >
+                    <option value="">Select doctor</option>
+                    {doctors && doctors.length > 0 ? (
+                      doctors.map(doctor => (
+                        <option key={doctor.id} value={doctor.name}>{doctor.name}</option>
+                      ))
+                    ) : (
+                      // Fallback options if doctors list is not available
+                      <>
+                        <option value="Hugo Lloris">Hugo Lloris</option>
+                        <option value="Dr. Smith">Dr. Smith</option>
+                        <option value="Dr. Johnson">Dr. Johnson</option>
+                      </>
+                    )}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Status</label>
+                  <select 
+                    name="status" 
+                    value={newAppointment.status} 
+                    onChange={handleInputChange}
+                    className="dropdown-select"
+                  >
+                    <option value="">Status...</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <label>Description</label>
+                <textarea 
+                  name="description" 
+                  value={newAppointment.description} 
+                  onChange={handleInputChange}
+                  rows="3"
+                  placeholder="He is not sure about the time"
+                ></textarea>
+              </div>
+              
+              <div className="form-group">
+                <label>Share with patient via</label>
+                <div className="share-options">
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      checked={newAppointment.shareVia.email} 
+                      onChange={() => handleShareChange('email')} 
+                    />
+                    <span className="checkbox-text">Email</span>
+                  </label>
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      checked={newAppointment.shareVia.sms} 
+                      onChange={() => handleShareChange('sms')} 
+                    />
+                    <span className="checkbox-text">SMS</span>
+                  </label>
+                  <label className="checkbox-label">
+                    <input 
+                      type="checkbox" 
+                      checked={newAppointment.shareVia.whatsapp} 
+                      onChange={() => handleShareChange('whatsapp')} 
+                    />
+                    <span className="checkbox-text">WhatsApp</span>
+                  </label>
+                </div>
+              </div>
+              
+              <div className="form-buttons edit-buttons">
+                <button type="button" className="discard-btn" onClick={() => {
+                  setShowEditForm(false);
+                  setSelectedAppointment(null);
+                }}>Discard</button>
+                <button type="submit" className="save-btn">
+                  Save <i className="fas fa-check-circle"></i>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
