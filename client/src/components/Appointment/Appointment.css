@@ -377,33 +377,33 @@
   z-index: 1000;
 }
 
-.add-appointment-modal .modal-content {
+.add-appointment-modal .modal-content,
+.edit-appointment-modal .modal-content {
   width: 90%;
   max-width: 600px;
   background-color: #f5f5f5;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   padding: 0;
-  overflow: hidden;
+  overflow: auto;
+  max-height: 80vh; /* Reduced from 90vh */
 }
 
-.add-appointment-modal .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
-  background-color: #fff;
+.add-appointment-modal .modal-header,
+.edit-appointment-modal .modal-header {
+  padding: 8px 20px; /* Reduced from 12px/15px */
 }
 
-.add-appointment-modal .modal-header h2 {
+.add-appointment-modal .modal-header h2,
+.edit-appointment-modal .modal-header h2 {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px; /* Reduced from 18px */
   color: #333;
   font-weight: 500;
 }
 
-.add-appointment-modal .close-btn {
+.add-appointment-modal .close-btn,
+.edit-appointment-modal .close-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -411,18 +411,21 @@
   color: #FF0000;
 }
 
-.add-appointment-modal form {
-  padding: 20px;
+.add-appointment-modal form,
+.edit-appointment-modal form {
+  padding: 12px 20px; /* Reduced from 15px/20px */
 }
 
-.add-appointment-modal .form-group {
-  margin-bottom: 20px;
+.add-appointment-modal .form-group,
+.edit-appointment-modal .form-group {
+  margin-bottom: 8px; /* Reduced from 12px/16px */
 }
 
-.add-appointment-modal label {
+.add-appointment-modal label,
+.edit-appointment-modal label {
   display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
+  margin-bottom: 4px; /* Reduced from 6px/8px */
+  font-size: 13px; /* Reduced from 14px */
   color: #333;
   font-weight: 500;
 }
@@ -431,18 +434,25 @@
 .add-appointment-modal input[type="date"],
 .add-appointment-modal input[type="time"],
 .add-appointment-modal textarea,
-.add-appointment-modal select {
+.add-appointment-modal select,
+.edit-appointment-modal input[type="text"],
+.edit-appointment-modal input[type="date"],
+.edit-appointment-modal input[type="time"],
+.edit-appointment-modal textarea,
+.edit-appointment-modal select {
   width: 100%;
-  padding: 12px 15px;
+  padding: 6px 12px; /* Reduced from 8px/12px */
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 13px; /* Reduced from 14px */
   color: #333;
   background-color: #fff;
 }
 
 .add-appointment-modal input[type="date"],
-.add-appointment-modal input[type="time"] {
+.add-appointment-modal input[type="time"],
+.edit-appointment-modal input[type="date"],
+.edit-appointment-modal input[type="time"] {
   padding: 11px 15px;
   cursor: pointer;
 }
@@ -470,10 +480,11 @@
   font-weight: normal;
 }
 
-.add-appointment-modal .form-row {
+.add-appointment-modal .form-row,
+.edit-appointment-modal .form-row {
   display: flex;
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 10px; /* Reduced from 12px/16px */
+  margin-bottom: 8px; /* Reduced from 12px/16px */
 }
 
 .add-appointment-modal .form-row .form-group {
@@ -481,55 +492,63 @@
   margin-bottom: 0;
 }
 
-.add-appointment-modal .dropdown-select {
+.add-appointment-modal .dropdown-select,
+.edit-appointment-modal .dropdown-select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23666' d='M0 2l4 4 4-4H0z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
+  background-position: right 8px center; /* Adjusted from 12px */
   background-size: 8px;
-  padding-right: 30px;
+  padding-right: 25px; /* Reduced from 30px */
 }
 
-.add-appointment-modal textarea {
-  min-height: 100px;
+.add-appointment-modal textarea,
+.edit-appointment-modal textarea {
+  min-height: 50px; /* Reduced from 60px/80px */
   resize: vertical;
 }
 
-.add-appointment-modal .share-options {
+.add-appointment-modal .share-options,
+.edit-appointment-modal .share-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
-  margin-top: 10px;
+  gap: 15px; /* Reduced from 20px */
+  margin-top: 6px; /* Reduced from 8px */
 }
 
-.add-appointment-modal .checkbox-label {
+.add-appointment-modal .checkbox-label,
+.edit-appointment-modal .checkbox-label {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
-.add-appointment-modal .checkbox-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
+.add-appointment-modal .checkbox-label input[type="checkbox"],
+.edit-appointment-modal .checkbox-label input[type="checkbox"] {
+  width: 16px; /* Reduced from 18px */
+  height: 16px; /* Reduced from 18px */
+  margin-right: 6px; /* Reduced from 8px */
 }
 
-.add-appointment-modal .checkbox-text {
-  font-size: 14px;
+.add-appointment-modal .checkbox-text,
+.edit-appointment-modal .checkbox-text {
+  font-size: 13px; /* Reduced from 14px */
   color: #333;
 }
 
-.add-appointment-modal .form-buttons {
+.add-appointment-modal .form-buttons,
+.edit-appointment-modal .form-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
-  padding-top: 20px;
+  margin-top: 15px; /* Reduced from 20px/24px */
+  padding-top: 12px; /* Reduced from 15px */
   border-top: 1px solid #ddd;
   align-items: center;
 }
 
-.add-appointment-modal .discard-btn {
-  padding: 12px 30px;
+.add-appointment-modal .discard-btn,
+.edit-appointment-modal .discard-btn {
+  padding: 6px 20px; /* Reduced from 8px/10px 25px/30px */
   background-color: rgba(255, 100, 100, 0.1);
   color: #d6708b;
   border: none;
@@ -539,225 +558,14 @@
   transition: background-color 0.2s;
 }
 
-.add-appointment-modal .discard-btn:hover {
+.add-appointment-modal .discard-btn:hover,
+.edit-appointment-modal .discard-btn:hover {
   background-color: rgba(255, 100, 100, 0.2);
 }
 
-.add-appointment-modal .save-btn {
-  padding: 12px 30px;
-  background-color: #45B69C;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.add-appointment-modal .save-btn i {
-  font-size: 16px;
-}
-
-.add-appointment-modal .save-btn:hover {
-  background-color: #3da68c;
-}
-
-/* Edit Appointment Modal Styling */
-.edit-appointment-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.edit-appointment-modal .modal-content {
-  width: 90%;
-  max-width: 600px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  padding: 0;
-  overflow: hidden;
-}
-
-.edit-appointment-modal .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
-}
-
-.edit-appointment-modal .modal-header h2 {
-  margin: 0;
-  font-size: 18px;
-  color: #333;
-  font-weight: 500;
-}
-
-.edit-appointment-modal .close-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  color: #999;
-}
-
-.edit-appointment-modal form {
-  padding: 20px;
-}
-
-.edit-appointment-modal .form-group {
-  margin-bottom: 16px;
-}
-
-.edit-appointment-modal label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: #666;
-}
-
-.edit-appointment-modal input[type="text"],
-.edit-appointment-modal input[type="date"],
-.edit-appointment-modal input[type="time"],
-.edit-appointment-modal textarea,
-.edit-appointment-modal select {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  color: #333;
-  background-color: #fff;
-}
-
-.edit-appointment-modal input[type="date"],
-.edit-appointment-modal input[type="time"] {
-  padding: 11px 15px;
-  cursor: pointer;
-}
-
-.edit-appointment-modal .input-with-add {
-  display: flex;
-  gap: 10px;
-}
-
-.edit-appointment-modal .input-with-add input {
-  flex: 1;
-}
-
-.edit-appointment-modal .add-btn {
-  background-color: transparent;
-  color: #45B69C;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  white-space: nowrap;
-  font-size: 14px;
-}
-
-.edit-appointment-modal .form-row {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.edit-appointment-modal .form-row .form-group {
-  flex: 1;
-  margin-bottom: 0;
-}
-
-.edit-appointment-modal .dropdown-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23666' d='M0 2l4 4 4-4H0z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 8px;
-  padding-right: 30px;
-}
-
-.edit-appointment-modal .share-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.edit-appointment-modal .checkbox-label {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.edit-appointment-modal .checkbox-label input {
-  margin-right: 8px;
-}
-
-.edit-appointment-modal .checkbox-text {
-  font-size: 14px;
-  color: #333;
-}
-
-.edit-appointment-modal .form-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 24px;
-  align-items: center;
-}
-
-.edit-appointment-modal .left-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.edit-appointment-modal .delete-btn {
-  padding: 10px 15px;
-  background-color: #fff0f0;
-  color: #ff4d4f;
-  border: none;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: background-color 0.2s;
-}
-
-.edit-appointment-modal .delete-btn:hover {
-  background-color: #ffdddd;
-}
-
-.edit-appointment-modal .delete-btn i {
-  font-size: 14px;
-}
-
-.edit-appointment-modal .discard-btn {
-  padding: 10px 30px;
-  background-color: #f8f0f0;
-  color: #d6708b;
-  border: none;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.edit-appointment-modal .discard-btn:hover {
-  background-color: #f7e8e8;
-}
-
+.add-appointment-modal .save-btn,
 .edit-appointment-modal .save-btn {
-  padding: 10px 30px;
+  padding: 6px 20px; /* Reduced from 8px/10px 25px/30px */
   background-color: #45B69C;
   color: white;
   border: none;
@@ -770,10 +578,12 @@
   transition: background-color 0.2s;
 }
 
+.add-appointment-modal .save-btn i,
 .edit-appointment-modal .save-btn i {
   font-size: 16px;
 }
 
+.add-appointment-modal .save-btn:hover,
 .edit-appointment-modal .save-btn:hover {
   background-color: #3da68c;
 }
