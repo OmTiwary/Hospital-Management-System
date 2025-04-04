@@ -18,6 +18,118 @@ The **Hospital Management System (HMS)** is a full-stack web application designe
 - ✅ **Real-time Notifications** – Alerts for **appointments, payments, and inventory updates**.
 - ✅ **Dark/Light Mode** – User-friendly **theme toggle feature**.
 
+### 1. Patient Management
+- Patient registration and profile management
+- Medical history tracking
+- Appointment scheduling and management
+- Patient billing and payment processing
+- Digital medical records maintenance
+- Prescription management
+
+### 2. Doctor Management
+- Doctor profiles and specializations
+- Schedule management
+- Patient assignment
+- Performance tracking
+- Leave management
+- Online consultation support
+
+### 3. Staff Management
+- Employee records management
+- Shift scheduling
+- Attendance tracking
+- Payroll management
+- Performance evaluation
+- Training records
+
+### 4. Appointment System
+- Online appointment booking
+- Appointment rescheduling
+- Automated reminders
+- Queue management
+- Emergency appointment handling
+
+### 5. Pharmacy Management
+- Medicine inventory tracking
+- Stock management
+- Prescription verification
+- Automated reordering system
+- Medicine expiry tracking
+- Billing integration
+
+### 6. Laboratory Management
+- Test scheduling
+- Sample tracking
+- Result management
+- Report generation
+- Inventory management
+- Quality control tracking
+
+### 7. Billing and Finance
+- Patient billing
+- Insurance processing
+- Payment tracking
+- Financial reporting
+- Cost analysis
+- Revenue management
+
+### 8. Ward Management
+- Bed allocation
+- Patient transfer management
+- Room availability tracking
+- Housekeeping integration
+- Medical equipment tracking
+- Emergency ward management
+
+### 9. Inventory Management
+- Medical supplies tracking
+- Equipment management
+- Automated ordering
+- Supplier management
+- Stock alerts
+- Usage analytics
+
+### 10. Reports and Analytics
+- Patient statistics
+- Financial reports
+- Resource utilization reports
+- Performance analytics
+- Quality metrics
+- Compliance reporting
+
+## Security Features
+- Role-based access control
+- Data encryption
+- Audit trails
+- HIPAA compliance
+- Secure data backup
+- Two-factor authentication
+
+## Technical Requirements
+- Modern web browser
+- Internet connection
+- Minimum 4GB RAM
+- Compatible with Windows/Mac/Linux
+- Secure network connection
+
+## Benefits
+- Improved patient care
+- Enhanced operational efficiency
+- Better resource management
+- Reduced paperwork
+- Improved data accuracy
+- Better decision making
+- Enhanced communication
+- Cost optimization
+
+## Support
+24/7 technical support available through:
+- Email support
+- Phone support
+- Live chat
+- Online documentation
+- Training materials
+
 ---
 
 ## Tech Stack
@@ -89,4 +201,10 @@ Edit
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
 PORT=5000
+```
+
+
+
+---
+© 2025 Hospital Management System. All rights reserved.
 
