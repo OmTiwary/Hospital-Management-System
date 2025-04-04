@@ -12,7 +12,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  background-color: #2d3546;
+  background-color: #63E6BE;
   padding: 15px 20px;
   border-radius: 8px;
 }
@@ -29,8 +29,8 @@
   padding: 10px 40px;
   border-radius: 0;
   border: none;
-  background-color: #2D3546;
-  color: white;
+  background-color: #ffff;
+  color: #000;
   font-size: 14px;
   text-align: center;
 }
@@ -67,31 +67,87 @@
   cursor: pointer;
   font-weight: 500;
   transition: all 0.3s ease;
+  background: #fff;
+  color: #000;
+  position: relative;
+  overflow: hidden;
+}
+.export-btn{
+  background: #07aa1d;
 }
 
-/* Attendance aur Shifts buttons ka specific style */
-.attendance-btn, .shifts-btn {
-  background-color: #3a4357;
-  color: white;
+/* Particle effect for all header buttons */
+.attendance-btn::before,
+.attendance-btn::after,
+.shifts-btn::before,
+.shifts-btn::after,
+.export-btn::before,
+.export-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-radial-gradient(
+    circle at center, 
+    #63E6BE 1px, 
+    transparent 2px, 
+    transparent 50px
+  );
+  opacity: 0;
+  transition: all 0.5s ease;
+  pointer-events: none;
 }
 
-/* Export button ka specific style */
-.export-btn {
-  background-color: #3498db;
-  color: white;
+/* Button text transition */
+.attendance-btn span,
+.shifts-btn span,
+.export-btn span,
+.attendance-btn .icon,
+.shifts-btn .icon,
+.export-btn .icon,
+.export-btn .download-icon {
+  position: relative;
+  z-index: 2;
+  transition: all 0.5s ease;
 }
 
-/* Buttons pe hover effect */
-.attendance-btn:hover, .shifts-btn:hover {
-  background-color: #4a536a;
+/* Hover effects */
+.attendance-btn:hover span,
+.attendance-btn:hover .icon,
+.shifts-btn:hover span,
+.shifts-btn:hover .icon,
+.export-btn:hover span,
+.export-btn:hover .icon,
+.export-btn:hover .download-icon {
+  transform: scale(1.2) rotate(360deg);
+  opacity: 0;
 }
 
+.attendance-btn:hover::before,
+.shifts-btn:hover::before,
+.export-btn:hover::before {
+  transform: scale(2) rotate(45deg);
+  opacity: 0.3;
+}
+
+.attendance-btn:hover::after,
+.shifts-btn:hover::after,
+.export-btn:hover::after {
+  transform: scale(2) rotate(-45deg);
+  opacity: 0.3;
+}
+
+.attendance-btn:hover,
+.shifts-btn:hover,
 .export-btn:hover {
-  background-color: #2980b9;
+  background: #9C27B0;
+  color: white;
 }
 
 /* Button mein icon ke liye margin */
-.icon {
+.icon, .download-icon {
   margin-right: 5px;
 }
 
@@ -241,7 +297,7 @@ tr:hover {
   align-items: center;
   position: sticky;
   top: 0;
-  background-color: white;
+  background-color: #63E6BE;
   z-index: 5;
   border-radius: 10px 10px 0 0;
 }
@@ -1024,7 +1080,7 @@ tr:last-child .dropdown-menu {
 }
 
 .attendance-modal-header {
-  background-color: #2c3e50;
+  background-color: #63E6BE;
   color: white;
   padding: 15px 20px;
   text-align: center;
@@ -1144,7 +1200,7 @@ tr:last-child .dropdown-menu {
 }
 
 .confirmation-header {
-  background-color: #e74c3c;
+  background-color: #63E6BE;
   color: white;
   padding: 15px 20px;
 }
@@ -1247,7 +1303,7 @@ tr:last-child .dropdown-menu {
 }
 
 .profile-header {
-  background-color: #3498db;
+  background-color: #63E6BE;
   color: white;
   padding: 20px;
   text-align: center;
@@ -1485,7 +1541,7 @@ tr:nth-last-child(-n+3) .dropdown-menu {
 }
 
 .shifts-modal-header {
-  background-color: #3498db;
+  background-color: #63E6BE;
   color: white;
   padding: 15px 20px;
   text-align: center;
