@@ -24,7 +24,11 @@ export default function Service() {
         {services.map(service => (
           <div key={service.id} className="service-card">
             <i className={service.icon}></i>
-            <h3>{service.name}</h3>
+            <h3 className="wave-text">
+              {service.name.split('').map((char, index) => (
+                <span key={index}>{char}</span>
+              ))}
+            </h3>
             <p>{service.description}</p>
             <button className="view-details" onClick={() => setSelectedService(service)}>View Details</button>
           </div>

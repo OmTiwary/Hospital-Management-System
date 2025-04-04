@@ -1,15 +1,18 @@
+/* Main container ki styling */
 .service-container {
     text-align: center;
     padding: 40px;
     background-color: #f4f7fc;
 }
 
+/* Heading ki styling */
 .service-container h2 {
     font-size: 2rem;
     color: #2c3e50;
     margin-bottom: 20px;
 }
 
+/* Services ka grid layout */
 .service-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -19,6 +22,7 @@
     padding: 20px;
 }
 
+/* Service card ki styling - ye wo white box hai jo dikhta hai */
 .service-card {
     background: white;
     border-radius: 12px;
@@ -33,23 +37,27 @@
     min-height: 250px;
 }
 
+/* Jab card pe hover karenge tab ye effect aayega */
 .service-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Service ke icons ki styling */
 .service-card i {
     font-size: 2.5rem;
     color: #63E6BE;
     margin-bottom: 10px;
 }
 
+/* Service ke heading ki styling */
 .service-card h3 {
     font-size: 1.5rem;
     color: #34495e;
     margin-bottom: 10px;
 }
 
+/* Service ke description ki styling */
 .service-card p {
     font-size: 1rem;
     color: #555;
@@ -57,6 +65,7 @@
     flex-grow: 1;
 }
 
+/* View Details button ki styling */
 .view-details {
     margin-top: auto;
     padding: 8px 15px;
@@ -69,10 +78,12 @@
     transition: background 0.3s ease-in-out;
 }
 
+/* View Details button pe hover effect */
 .view-details:hover {
     background: #63E6BE;
 }
 
+/* Modal ka background - jab details click karenge tab jo dark background aata hai */
 .modal {
     position: fixed;
     top: 0;
@@ -85,6 +96,7 @@
     justify-content: center;
 }
 
+/* Modal ka content box - details dikhane ke liye */
 .modal-content {
     background: white;
     padding: 20px;
@@ -94,17 +106,20 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Modal ke heading ki styling */
 .modal-content h2 {
     font-size: 1.8rem;
     color: #2c3e50;
     margin-bottom: 10px;
 }
 
+/* Modal ke content ki styling */
 .modal-content p {
     font-size: 1rem;
     color: #555;
 }
 
+/* Close button - modal band karne ke liye */
 .close {
     position: absolute;
     top: 15px;
@@ -114,6 +129,7 @@
     color: #63E6BE;
 }
 
+/* Mobile devices ke liye responsive design */
 @media (max-width: 768px) {
     .service-grid {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -121,5 +137,51 @@
 
     .modal-content {
         width: 90%;
+    }
+}
+
+/* Wave text effect ki styling - text ko wave karne ke liye */
+.wave-text {
+    display: inline-block;
+    white-space: nowrap;
+    cursor: pointer; /* Cursor pointer dikhane ke liye jab text pe hover ho */
+}
+
+/* Wave text ke har letter ki styling */
+.wave-text span {
+    display: inline-block;
+    font-size: 1.5rem;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Jab text pe hover karenge tab wave animation start hogi */
+.wave-text:hover span {
+    animation: wave 2s ease-in-out infinite;
+}
+
+/* Har letter ke liye alag alag delay set kiya hai taki wave effect create ho */
+.wave-text:hover span:nth-child(1) { animation-delay: 0s; }
+.wave-text:hover span:nth-child(2) { animation-delay: 0.1s; }
+.wave-text:hover span:nth-child(3) { animation-delay: 0.2s; }
+.wave-text:hover span:nth-child(4) { animation-delay: 0.3s; }
+.wave-text:hover span:nth-child(5) { animation-delay: 0.4s; }
+.wave-text:hover span:nth-child(6) { animation-delay: 0.5s; }
+.wave-text:hover span:nth-child(7) { animation-delay: 0.6s; }
+.wave-text:hover span:nth-child(8) { animation-delay: 0.7s; }
+.wave-text:hover span:nth-child(9) { animation-delay: 0.8s; }
+.wave-text:hover span:nth-child(10) { animation-delay: 0.9s; }
+.wave-text:hover span:nth-child(11) { animation-delay: 1.0s; }
+.wave-text:hover span:nth-child(12) { animation-delay: 1.1s; }
+.wave-text:hover span:nth-child(13) { animation-delay: 1.2s; }
+.wave-text:hover span:nth-child(14) { animation-delay: 1.3s; }
+.wave-text:hover span:nth-child(15) { animation-delay: 1.4s; }
+
+/* Wave animation ka keyframe - text ko upar niche karne ke liye */
+@keyframes wave {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
     }
 }
