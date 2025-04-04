@@ -72,10 +72,9 @@ const Doctors = () => {
   };
 
   return (
-    <div className="dashboard">
-      <div className="search-container">
+    <div className="doctors-container">
+      <div className="doctors-header">
         <div className="search-box">
-          <FaSearch className="search-icon" />
           <input
             type="text"
             placeholder="Search doctor or specialization..."
@@ -83,7 +82,10 @@ const Doctors = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
-          <button className="search-button">Search</button>
+          <FaSearch className="search-icon" />
+        </div>
+        <div className="action-buttons">
+          {/* Add any action buttons here if needed */}
         </div>
       </div>
 

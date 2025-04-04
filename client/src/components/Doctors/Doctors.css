@@ -76,11 +76,14 @@
 }
 
 .search-input {
-  padding: 12px;
-  font-size: 14px;
-  flex-grow: 1;
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border-radius: 0;
   border: none;
-  outline: none;
+  background-color: #ffff;
+  color: #000;
+  font-size: 14px;
+  text-align: center;
 }
 
 .search-button {
@@ -97,10 +100,20 @@
   background-color: #16a34a;
 }
 
+.search-input::placeholder {
+  color: #8a94a6;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
 .search-icon {
-  color: #22c55e;
-  margin: 0 12px;
-  font-size: 18px;
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4a5568;
+  margin-left: 10px;
+  font-size: 16px;
 }
 
 /* ===================== Doctor Cards ===================== */
@@ -243,4 +256,77 @@
   background-color: #f3f4f6;
   color: #6b7280;
   font-size: 14px;
+}
+
+/* Main container ke liye styling */
+.doctors-container {
+  width: 100%;
+  padding: 20px;
+  position: relative;
+}
+
+/* ---------- HEADER SECTION ---------- */
+/* Header with search aur buttons ke liye styling */
+.doctors-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #63E6BE;
+  padding: 15px 20px;
+  border-radius: 8px;
+}
+
+/* Search box ke liye styling */
+.search-box {
+  position: relative;
+  width: 300px;
+}
+
+/* Search input field ke liye styling */
+.search-input {
+  width: 100%;
+  padding: 10px 40px 10px 15px;
+  border-radius: 0;
+  border: none;
+  background-color: #ffff;
+  color: #000;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Search input ke placeholder ka style */
+.search-input::placeholder {
+  color: #8a94a6;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* Search icon ki position aur style */
+.search-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #4a5568;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
+/* Action buttons container ka style */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .doctors-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .search-box {
+    width: 100%;
+  }
 }
