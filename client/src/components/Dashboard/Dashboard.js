@@ -17,10 +17,10 @@ ChartJS.register(
 
 export default function Dashboard() {
   const [appointmentData, setAppointmentData] = useState({
-    labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+    labels: ['', '', '', '', '', '', '', '', '', ''],
     datasets: [{
       label: "Appointments",
-      data: [0],
+      data: [800, 1200, 520, 900, 750, 1800, 1100, 1450, 300, 2100],
       backgroundColor: 'orange',
     }]
   });
@@ -31,15 +31,17 @@ export default function Dashboard() {
     if (savedAppointments) {
       const parsedAppointments = JSON.parse(savedAppointments);
       
-      // Now 2 appointments = 1 unit (max 20 appointments for full scale)
-      const scaledValue = Math.min(10, parsedAppointments.length / 2);
+      // Generate random data for the bar chart
+      const randomData = Array(10).fill().map(() => 
+        Math.floor(Math.random() * 2000) + 500
+      );
       
       // Update appointment data
       setAppointmentData({
-        labels: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        labels: ['', '', '', '', '', '', '', '', '', ''],
         datasets: [{
-          label: "Total Appointments: " + parsedAppointments.length,
-          data: [scaledValue],
+          label: "Appointments",
+          data: randomData,
           backgroundColor: 'orange',
         }]
       });
@@ -157,40 +159,6 @@ export default function Dashboard() {
     },
   };
 
-  const appointmentOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    animation: {
-      duration: 1000,
-      easing: 'linear',
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          stepSize: 1
-        }
-      },
-      y: {
-        grid: {
-          display: false,
-        },
-        beginAtZero: true,
-        max: 10,
-        ticks: {
-          stepSize: 1
-        }
-      },
-    },
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-  };
-
   const doctors = [
     { id: 1, name: "Ayush Mishra", role: "Cardiologist", image: pat1, time: "2:20PM" },
     { id: 2, name: "Abhishek", role: "General Physician", image: pat2, time: "3:15PM" },
@@ -225,7 +193,7 @@ export default function Dashboard() {
             <h3>Total Appointments</h3>
           </div>
           <div className="data">
-            <Bar data={appointmentData} options={appointmentOptions} />
+            <Bar data={appointmentData} options={options} />
           </div>
         </div>
         <div className="box3">

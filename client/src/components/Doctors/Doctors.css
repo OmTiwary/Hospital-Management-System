@@ -269,7 +269,7 @@
 /* Header with search aur buttons ke liye styling */
 .doctors-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-bottom: 20px;
   background-color: #63E6BE;
@@ -281,13 +281,14 @@
 .search-box {
   position: relative;
   width: 300px;
+  margin: 0 auto;
 }
 
 /* Search input field ke liye styling */
 .search-input {
   width: 100%;
   padding: 10px 40px 10px 15px;
-  border-radius: 0;
+  border-radius: 8px;
   border: none;
   background-color: #ffff;
   color: #000;
