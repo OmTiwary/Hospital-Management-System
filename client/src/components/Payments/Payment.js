@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import './Payment.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Payment() {
   const [selectedPayment, setSelectedPayment] = useState('cod');
 
+  const Navigate = useNavigate();
   const paymentMethods = [
     { id: 'cod', name: 'Cash on Delivery', icon: 'fas fa-money-bill-wave', description: 'Pay with cash when you receive your order.', discount: 'No extra charge', enabled: true },
     { id: 'credit_card', name: 'Credit Card', icon: 'fas fa-credit-card', description: 'Pay securely using your credit card.', discount: 'Earn 2% cashback', enabled: false },
@@ -42,7 +44,7 @@ export default function Payment() {
         <p><i className="fas fa-mobile-alt"style={{ color: "#63E6BE" }}></i> First-time UPI users get ₹50 cashback.</p>
         <p><i className="fas fa-university"style={{ color: "#63E6BE" }}></i> Flat ₹100 off on orders above ₹5000 with Net Banking.</p>
       </div>
-      <button className="proceed-btn" disabled={selectedPayment !== 'cod'}>
+      <button className="proceed-btn" disabled={selectedPayment !== 'cod'} onClick={(e)=> Navigate('/invoices')}>
         <i className="fas fa-arrow-right"></i> Proceed to Payment
       </button>
     </div>
