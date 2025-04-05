@@ -10,7 +10,6 @@
 .reception-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
   background-color: #63E6BE;
   padding: 15px 20px;
@@ -32,13 +31,13 @@
   background-color: #ffff;
   color: #000;
   font-size: 14px;
-  text-align: center;
+  text-align: left; /* <- Change here */
 }
 
 /* Search input ke placeholder ka style */
 .search-input::placeholder {
   color: #8a94a6;
-  text-align: center;
+  text-align: left; /* <- Change here */
 }
 
 /* Search icon ki position aur style */

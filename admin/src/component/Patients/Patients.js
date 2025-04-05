@@ -1141,7 +1141,7 @@ export default function Appointment() {
                   </label>
                   <label className="checkbox-label">
                     <input 
-                      type="checkbox" 
+                      type="checkbox"
                       checked={newAppointment.shareVia.sms} 
                       onChange={() => handleShareChange('sms')} 
                     />
