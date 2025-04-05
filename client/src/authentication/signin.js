@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import './signin.css';
 import logo from '../components/asset/logo.png';
 import { FaEnvelope, FaLock, FaUser, FaArrowRight, FaPhone, FaUserMd } from 'react-icons/fa';
+import Axios from 'axios';
 
 const Signin = () => {
   const [firstName, setFirstName] = useState('');
@@ -15,6 +16,9 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    Axios.post('http://localhost:5000/user', {firstName, lastName, email, phone, password, confirmPassword})
+    .then(result => console.log(result))
+    .catch(err => console.log(err));
     console.log('Sign-up attempt with:', { firstName, lastName, email, phone, password, confirmPassword, agreeTerms });
   };
 

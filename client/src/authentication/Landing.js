@@ -40,17 +40,15 @@ const Landing = () => {
           </ul>
         </div>
       </nav>
-
-      {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-grid">
           <div className="hero-content">
             <h1>Get Better Care For
             Your <span className='health'>Health</span></h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.</p>
+            <p>Trusted Care, Advanced Healing – Your Health, Our Priority Always.</p>
             <div className="hero-buttons">
               <Link to="/login" className="primary-btn">Login</Link>
-              <Link to="/signin" className="secondary-btn">Sign In</Link>
+              <Link to="/signin" className="secondary-btn">Sign Up</Link>
             </div>
           </div>
           <div className="hero-image">
@@ -59,7 +57,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="features-section">
         <h2>Our Services</h2>
         <div className="features-grid">
@@ -87,7 +84,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* About Us Section */}
       <section className="about-us-section">
         <h2>About Us</h2>
         <div className="about-us-grid">
@@ -109,7 +105,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* APPOINTMENT Section */}
       <section className="appointment-section">
         <div className="appointment-grid">
           <div className="appointment-image">
@@ -126,7 +121,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* NewsLetter Section */}
       <section className="newsletter-section">
         <div className="newsletter-grid">
           <div className="newsletter-content">
@@ -149,7 +143,6 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* Footer Section */}
       <footer className="footer-section">
         <div className="footer-top">
           <div className="footer-grid">

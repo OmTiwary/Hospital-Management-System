@@ -6,9 +6,7 @@ import profile from '../asset/profile.png'
 import logo from '../asset/logo.avif'
 
 export default function Sidebar() {
-    // Function to handle reception link click
     const handleReceptionClick = (e) => {
-        // Dispatch a custom event that Reception component can listen for
         const event = new CustomEvent('receptionSidebarClick');
         window.dispatchEvent(event);
     };
