@@ -329,7 +329,7 @@ textarea {
         font-size: 1rem;
     }
 }
-/* Large Phones (min-width: 576px and below) */
+
 @media (max-width: 576px) {
     .setting-container {
         padding: 20px 15px;
@@ -373,7 +373,7 @@ textarea {
     }
 }
 
-/* Medium Phones (max-width: 480px) */
+
 @media (max-width: 480px) {
     .setting-item {
         padding: 12px;
@@ -403,7 +403,7 @@ textarea {
     }
 }
 
-/* Small Phones (max-width: 360px) */
+
 @media (max-width: 360px) {
     .setting-container h2 {
         font-size: 1.5rem;
@@ -436,8 +436,6 @@ textarea {
         padding: 10px;
     }
 }
-
-/* Extra-Small Devices (≤320px) */
 @media (max-width: 320px) {
     .setting-container {
         padding: 10px;
