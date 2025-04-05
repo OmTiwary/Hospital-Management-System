@@ -358,7 +358,7 @@ export default function Medicine() {
 
   return (
     <div className="medicine-container">
-      <h1 className="medicine-title">Popular Medicines</h1>
+      <h1 className="medicine-title">PharmaCart</h1>
       <div className="medicine-slider">
         <button className="prev-btn slider-btn" onClick={goToPrevSlide}>&#10094;</button>
         
@@ -391,7 +391,7 @@ export default function Medicine() {
       </div>
 
       <div className="medicine-info">
-        <h2>About Our Medications</h2>
+        <h2>About Our Medicines</h2>
         <p>We provide high-quality medications from trusted pharmaceutical companies. Our pharmacy offers a wide range of prescription drugs, over-the-counter medicines, and health supplements to meet your healthcare needs.</p>
       </div>
 

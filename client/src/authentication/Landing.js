@@ -48,7 +48,7 @@ const Landing = () => {
             <p>Trusted Care, Advanced Healing – Your Health, Our Priority Always.</p>
             <div className="hero-buttons">
               <Link to="/login" className="primary-btn">Login</Link>
-              <Link to="/signin" className="secondary-btn">Sign In</Link>
+              <Link to="/signin" className="secondary-btn">Sign Up</Link>
             </div>
           </div>
           <div className="hero-image">
