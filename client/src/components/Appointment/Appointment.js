@@ -12,6 +12,158 @@ const EMAILJS_CANCEL_TEMPLATE_ID = "template_nqr7o1g"; // Create another templat
 // Initialize EmailJS with your public key
 emailjs.init(EMAILJS_PUBLIC_KEY);
 
+// Helper function to check if a doctor is already booked at a specific time
+const isDoctorBooked = (doctorName, selectedDate, selectedTime, existingAppointments) => {
+  // If no appointments, doctor is not booked
+  if (!existingAppointments || existingAppointments.length === 0) return false;
+  
+  // Format the time for 30-minute slot comparison
+  const timeSlot = new Date(`${selectedDate}T${selectedTime}`);
+  
+  // Check if there's an existing appointment for this doctor at this time
+  return existingAppointments.some(appointment => {
+    // Skip canceled appointments
+    if (appointment.status === 'Canceled') return false;
+    
+    // Check if this appointment is for the same doctor and date
+    if (appointment.doctor === doctorName && appointment.date === selectedDate) {
+      // Create a date object for the appointment time
+      const appointmentTime = new Date(`${appointment.date}T${appointment.time}`);
+      
+      // Calculate time difference in minutes
+      const timeDiff = Math.abs(timeSlot - appointmentTime) / (1000 * 60);
+      
+      // If time difference is less than 20 minutes, consider slot as booked
+      return timeDiff < 20;
+    }
+    
+    return false;
+  });
+};
+
+// Helper function to find the next available time slot (20 min increments)
+const findNextAvailableSlot = (doctorName, selectedDate, selectedTime, existingAppointments) => {
+  // Start with selected time
+  const timeSlot = new Date(`${selectedDate}T${selectedTime}`);
+  let nextSlot = new Date(timeSlot);
+  
+  // Try slots in 20 minute increments (up to 2 hours)
+  for (let i = 1; i <= 6; i++) {
+    nextSlot = new Date(timeSlot.getTime() + (i * 20 * 60 * 1000));
+    
+    // Format time as HH:MM for checking
+    const nextTimeStr = nextSlot.toTimeString().substring(0, 5);
+    
+    // Check if this slot is available
+    if (!isDoctorBooked(doctorName, selectedDate, nextTimeStr, existingAppointments)) {
+      return nextTimeStr;
+    }
+  }
+  
+  // If no slot found within 2 hours, return null
+  return null;
+};
+
+// Helper function to check if a doctor is available on a specific day and time
+const isDoctorAvailable = (doctor, selectedDate, selectedTime, existingAppointments = []) => {
+  // If no date or time selected, return true
+  if (!selectedDate || !selectedTime) return true;
+  
+  // First check if the doctor is already booked at this time
+  if (isDoctorBooked(doctor.name, selectedDate, selectedTime, existingAppointments)) {
+    return false;
+  }
+  
+  const date = new Date(selectedDate);
+  const dayOfWeek = date.getDay(); // 0 is Sunday, 1 is Monday, etc.
+  const time = selectedTime;
+  
+  // Parse availability string (e.g., "Mon-Fri, 9AM-5PM")
+  const availabilityStr = doctor.availability;
+  
+  // If it's an emergency doctor with 24/7 availability
+  if (availabilityStr === "24/7") return true;
+  
+  // Parse day range
+  const parts = availabilityStr.split(', ');
+  const dayRange = parts[0]; // e.g., "Mon-Fri"
+  const timeRange = parts[1]; // e.g., "9AM-5PM"
+  
+  // Define day mapping
+  const dayMapping = {
+    "Sun": 0,
+    "Mon": 1,
+    "Tue": 2,
+    "Wed": 3,
+    "Thu": 4,
+    "Fri": 5,
+    "Sat": 6
+  };
+  
+  // Parse day range
+  let availableDays = [];
+  if (dayRange.includes('-')) {
+    const [startDay, endDay] = dayRange.split('-');
+    const startDayIndex = dayMapping[startDay];
+    const endDayIndex = dayMapping[endDay];
+    
+    // Handle cases like "Wed-Sun" where we need to wrap around
+    if (startDayIndex <= endDayIndex) {
+      for (let i = startDayIndex; i <= endDayIndex; i++) {
+        availableDays.push(i);
+      }
+    } else {
+      // Handle wraparound case (e.g., "Sat-Mon")
+      for (let i = startDayIndex; i <= 6; i++) {
+        availableDays.push(i);
+      }
+      for (let i = 0; i <= endDayIndex; i++) {
+        availableDays.push(i);
+      }
+    }
+  } else {
+    // Single day availability
+    availableDays.push(dayMapping[dayRange]);
+  }
+  
+  // Check if selected day is in available days
+  const isDayAvailable = availableDays.includes(dayOfWeek);
+  if (!isDayAvailable) return false;
+  
+  // Parse time range
+  if (!timeRange) return true; // If no time range specified, assume all times available
+  
+  const [startTime, endTime] = timeRange.split('-');
+  
+  // Convert 12-hour format to 24-hour for comparison
+  const convert12to24 = (time12h) => {
+    const [time, modifier] = time12h.split(/([AP]M)/);
+    let [hours, minutes] = time.split(':');
+    if (!minutes) minutes = '00';
+    
+    if (hours === '12') {
+      hours = '00';
+    }
+    
+    if (modifier === 'PM' && hours !== '00') {
+      hours = parseInt(hours, 10) + 12;
+    }
+    
+    // Convert hours to string before using padStart
+    return `${String(hours).padStart(2, '0')}:${minutes}`;
+  };
+  
+  // Convert selected time to 24-hour format for comparison
+  const selectedTime24 = time; // Already in 24h format as the input is type="time"
+  
+  // Get start and end hours in 24-hour format
+  const startTime24 = convert12to24(startTime);
+  const endTime24 = convert12to24(endTime);
+  
+  // Check if selected time is within the available time range
+  return selectedTime24 >= startTime24 && selectedTime24 <= endTime24;
+};
+
 export default function Appointment() {
   // States for appointments and form
   const [appointments, setAppointments] = useState([]);
@@ -23,6 +175,9 @@ export default function Appointment() {
   const [showClearDataConfirm, setShowClearDataConfirm] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [availableDoctors, setAvailableDoctors] = useState(doctorsList);
+  const [bookedSlot, setBookedSlot] = useState(null);
+  const [allAppointments, setAllAppointments] = useState([]);
 
   // Get current user info (this should come from your auth context/state)
   const currentUser = {
@@ -52,12 +207,16 @@ export default function Appointment() {
     "Chronic care visit"
   ];
 
-  // Load appointments from localStorage on component mount
+  // Load all appointments from localStorage on component mount
   useEffect(() => {
     const savedAppointments = localStorage.getItem('clientAppointments');
     if (savedAppointments) {
+      const parsedAppointments = JSON.parse(savedAppointments);
+      // Set all appointments for slot checking
+      setAllAppointments(parsedAppointments);
+      
       // Filter appointments for current user
-      const userAppointments = JSON.parse(savedAppointments).filter(
+      const userAppointments = parsedAppointments.filter(
         app => app.patientId === currentUser.id
       );
       setAppointments(userAppointments);
@@ -81,6 +240,37 @@ export default function Appointment() {
     setFilteredAppointments(filtered);
   }, [searchQuery, appointments]);
 
+  // Filter available doctors when date or time changes
+  useEffect(() => {
+    const { date, time, doctor } = newAppointment;
+    setBookedSlot(null); // Reset booked slot message when date/time changes
+    
+    if (date && time) {
+      // Check if any doctors are available at this time
+      const filtered = doctorsList.filter(doc => {
+        const isAvailable = isDoctorAvailable(doc, date, time, allAppointments);
+        
+        // If the user already selected this doctor and it's now unavailable due to booking,
+        // save the next available slot information
+        if (doctor === doc.name && !isAvailable && isDoctorBooked(doc.name, date, time, allAppointments)) {
+          const nextSlot = findNextAvailableSlot(doc.name, date, time, allAppointments);
+          if (nextSlot) {
+            setBookedSlot({
+              doctorName: doc.name,
+              nextAvailableTime: nextSlot
+            });
+          }
+        }
+        
+        return isAvailable;
+      });
+      
+      setAvailableDoctors(filtered);
+    } else {
+      setAvailableDoctors(doctorsList);
+    }
+  }, [newAppointment.date, newAppointment.time, allAppointments, newAppointment.doctor]);
+
   // Handle input changes in the form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -88,6 +278,27 @@ export default function Appointment() {
       ...prev,
       [name]: value
     }));
+    
+    // Reset booked slot message when doctor or date/time changes
+    if (name === 'doctor' || name === 'date' || name === 'time') {
+      setBookedSlot(null);
+    }
+    
+    // If doctor was selected but is no longer available after date/time change, clear selection
+    if ((name === 'date' || name === 'time') && newAppointment.doctor) {
+      const selectedDoctor = doctorsList.find(d => d.name === newAppointment.doctor);
+      if (selectedDoctor && !isDoctorAvailable(
+          selectedDoctor, 
+          name === 'date' ? value : newAppointment.date, 
+          name === 'time' ? value : newAppointment.time,
+          allAppointments
+      )) {
+        setNewAppointment(prev => ({
+          ...prev,
+          doctor: ''
+        }));
+      }
+    }
   };
 
   // Send confirmation email
@@ -179,6 +390,26 @@ export default function Appointment() {
       return;
     }
 
+    // Double-check if the doctor is still available (prevents race conditions)
+    const doctorObj = doctorsList.find(d => d.name === newAppointment.doctor);
+    if (doctorObj && !isDoctorAvailable(doctorObj, newAppointment.date, newAppointment.time, allAppointments)) {
+      // Doctor has been booked by someone else while form was open
+      const nextSlot = findNextAvailableSlot(
+        newAppointment.doctor, 
+        newAppointment.date, 
+        newAppointment.time, 
+        allAppointments
+      );
+      
+      setBookedSlot({
+        doctorName: newAppointment.doctor,
+        nextAvailableTime: nextSlot
+      });
+      
+      alert(`Sorry, ${newAppointment.doctor} is no longer available at this time slot. The next available slot is at ${nextSlot}.`);
+      return;
+    }
+
     setIsSubmitting(true);
     
     const appointment = {
@@ -192,10 +423,10 @@ export default function Appointment() {
       await sendConfirmationEmail(appointment);
       
       // If email sent successfully, save the appointment
-      const allAppointments = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
-      const updatedAppointments = [...allAppointments, appointment];
+      const updatedAllAppointments = [...allAppointments, appointment];
       
-      localStorage.setItem('clientAppointments', JSON.stringify(updatedAppointments));
+      localStorage.setItem('clientAppointments', JSON.stringify(updatedAllAppointments));
+      setAllAppointments(updatedAllAppointments);
       setAppointments(prev => [...prev, appointment]);
       
       // Reset form and close modal
@@ -230,15 +461,18 @@ export default function Appointment() {
       await sendCancellationEmail(selectedAppointment);
 
       // If email sent successfully, update appointment status
-      const allAppointments = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
+      const allApps = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
       
-      const updatedAllAppointments = allAppointments.map(app => 
+      const updatedAllAppointments = allApps.map(app => 
         app.id === selectedAppointment.id ? { ...app, status: 'Canceled' } : app
       );
 
       // Update localStorage with all appointments
       localStorage.setItem('clientAppointments', JSON.stringify(updatedAllAppointments));
 
+      // Update all appointments state for slot checking
+      setAllAppointments(updatedAllAppointments);
+      
       // Update state with only user's appointments
       setAppointments(prev => 
         prev.map(app => 
@@ -290,16 +524,19 @@ export default function Appointment() {
 
     try {
       // Get all appointments from localStorage
-      const allAppointments = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
+      const allApps = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
       
       // Filter out the selected appointment
-      const updatedAllAppointments = allAppointments.filter(app => 
+      const updatedAllAppointments = allApps.filter(app => 
         app.id !== selectedAppointment.id
       );
 
       // Update localStorage with all appointments except the deleted one
       localStorage.setItem('clientAppointments', JSON.stringify(updatedAllAppointments));
 
+      // Update all appointments state for slot checking
+      setAllAppointments(updatedAllAppointments);
+      
       // Update state with filtered appointments
       setAppointments(prev => 
         prev.filter(app => app.id !== selectedAppointment.id)
@@ -321,16 +558,19 @@ export default function Appointment() {
   const handleClearAllData = () => {
     try {
       // Get all appointments from localStorage
-      const allAppointments = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
+      const allApps = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
       
       // Filter out appointments for current user
-      const updatedAllAppointments = allAppointments.filter(app => 
+      const updatedAllAppointments = allApps.filter(app => 
         app.patientId !== currentUser.id
       );
 
       // Update localStorage without current user's appointments
       localStorage.setItem('clientAppointments', JSON.stringify(updatedAllAppointments));
 
+      // Update all appointments state for slot checking
+      setAllAppointments(updatedAllAppointments);
+      
       // Clear appointments state
       setAppointments([]);
       
@@ -461,24 +701,6 @@ export default function Appointment() {
 
               <div className="form-group">
                 <label>
-                  👨‍⚕️ Doctor
-                </label>
-                <select 
-                  name="doctor" 
-                  value={newAppointment.doctor} 
-                  onChange={handleInputChange}
-                  className="dropdown-select"
-                  required
-                >
-                  <option value="">Select a doctor</option>
-                  {doctorsList.map((doctor) => (
-                    <option key={doctor.id} value={doctor.name}>{doctor.name} - {doctor.specialization}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>
                   🩺 Visit Type
                 </label>
                 <select
@@ -493,7 +715,6 @@ export default function Appointment() {
                   ))}
                 </select>
               </div>
-
               <div className="date-time-container">
                 <div className="form-group">
                   <label>
@@ -523,6 +744,50 @@ export default function Appointment() {
                 </div>
               </div>
 
+              <div className="form-group">
+                <label>
+                  👨‍⚕️ Doctor
+                </label>
+                <select 
+                  name="doctor" 
+                  value={newAppointment.doctor} 
+                  onChange={handleInputChange}
+                  className="dropdown-select"
+                  required
+                >
+                  <option value="">Select a doctor</option>
+                  {availableDoctors.length > 0 ? (
+                    availableDoctors.map((doctor) => (
+                      <option key={doctor.id} value={doctor.name}>
+                        {doctor.name} - {doctor.specialization} ({doctor.availability})
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled value="">No doctors available at selected time</option>
+                  )}
+                </select>
+                {newAppointment.date && newAppointment.time && availableDoctors.length === 0 && (
+                  <p className="no-doctors-message">No doctors are available at the selected date and time. Please choose a different time.</p>
+                )}
+                {bookedSlot && (
+                  <div className="booked-slot-message">
+                    <p>Dr. {bookedSlot.doctorName} is already booked at this time.</p>
+                    <p>Next available slot: <button 
+                      type="button"
+                      className="next-slot-btn"
+                      onClick={() => {
+                        setNewAppointment(prev => ({
+                          ...prev,
+                          time: bookedSlot.nextAvailableTime
+                        }));
+                      }}
+                    >
+                      {bookedSlot.nextAvailableTime}
+                    </button></p>
+                  </div>
+                )}
+              </div>
+
               <div className="form-actions">
                 <button 
                   type="button" 
@@ -535,7 +800,7 @@ export default function Appointment() {
                 <button 
                   type="submit" 
                   className="submit-btn"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || availableDoctors.length === 0}
                 >
                   {isSubmitting ? 'Scheduling...' : 'Schedule Appointment'}
                 </button>
