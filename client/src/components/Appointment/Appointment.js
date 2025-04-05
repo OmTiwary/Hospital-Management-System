@@ -100,8 +100,8 @@ export default function Appointment() {
         appointment_time: appointmentDetails.time,
         visit_type: appointmentDetails.visitType,
         hospital_name: "𝚇𝚎𝚗𝚘 𝙷𝚎𝚊𝚕𝚝𝚑",
-        hospital_address: "371, ɢᴜʀᴜ ʜᴀʀɢᴏʙɪɴᴅ ɴᴀɢᴀʀ, ᴘʜᴀɢᴡᴀʀᴀ, ᴘᴜɴᴊᴀʙ 144401",
-        hospital_phone: "0182 426 0066",
+        hospital_address: "154, 9, Bannerghatta Rd, opposite IIM, Sahyadri Layout, Panduranga Nagar, Bengaluru, Karnataka 560076",
+        hospital_phone: "096633 67253",
         reply_to: "xenohealthcare@gmail.com" 
       };
 
@@ -136,8 +136,8 @@ export default function Appointment() {
         appointment_time: appointmentDetails.time,
         visit_type: appointmentDetails.visitType,
         hospital_name: "𝚇𝚎𝚗𝚘 𝙷𝚎𝚊𝚕𝚝𝚑",
-        hospital_address: "371, ɢᴜʀᴜ ʜᴀʀɢᴏʙɪɴᴅ ɴᴀɢᴀʀ, ᴘʜᴀɢᴡᴀʀᴀ, ᴘᴜɴᴊᴀʙ 144401",
-        hospital_phone: "0182 426 0066",
+        hospital_address: "154, 9, Bannerghatta Rd, opposite IIM, Sahyadri Layout, Panduranga Nagar, Bengaluru, Karnataka 560076",
+        hospital_phone: "096633 67253",
         reply_to: "xenohealthcare@gmail.com" 
       };
 
