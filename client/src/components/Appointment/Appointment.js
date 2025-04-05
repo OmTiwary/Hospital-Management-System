@@ -19,7 +19,10 @@ export default function Appointment() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showClearDataConfirm, setShowClearDataConfirm] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Get current user info (this should come from your auth context/state)
   const currentUser = {
@@ -31,7 +34,7 @@ export default function Appointment() {
   // State for new appointment
   const [newAppointment, setNewAppointment] = useState({
     patientId: currentUser.id,
-    patientName: currentUser.name,
+    patientName: '',
     patientEmail: '', // This will store the user's entered email
     doctor: '',
     visitType: '',
@@ -164,11 +167,20 @@ export default function Appointment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (isSubmitting) return;
+    
     if (!newAppointment.patientEmail) {
       alert('Please enter your email address');
       return;
     }
 
+    if (!newAppointment.patientName) {
+      alert('Please enter your name');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
     const appointment = {
       id: Date.now(),
       ...newAppointment,
@@ -189,7 +201,7 @@ export default function Appointment() {
       // Reset form and close modal
       setNewAppointment({
         patientId: currentUser.id,
-        patientName: currentUser.name,
+        patientName: '',
         patientEmail: '',
         doctor: '',
         visitType: '',
@@ -204,6 +216,8 @@ export default function Appointment() {
     } catch (error) {
       console.error('Error in appointment submission:', error);
       alert('There was an error scheduling your appointment. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -270,6 +284,67 @@ export default function Appointment() {
     return timeStr;
   };
 
+  // Handle appointment deletion
+  const handleDeleteAppointment = () => {
+    if (!selectedAppointment) return;
+
+    try {
+      // Get all appointments from localStorage
+      const allAppointments = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
+      
+      // Filter out the selected appointment
+      const updatedAllAppointments = allAppointments.filter(app => 
+        app.id !== selectedAppointment.id
+      );
+
+      // Update localStorage with all appointments except the deleted one
+      localStorage.setItem('clientAppointments', JSON.stringify(updatedAllAppointments));
+
+      // Update state with filtered appointments
+      setAppointments(prev => 
+        prev.filter(app => app.id !== selectedAppointment.id)
+      );
+
+      // Close confirmation modal
+      setShowDeleteConfirm(false);
+      setSelectedAppointment(null);
+
+      // Show success message
+      alert('Appointment has been deleted successfully.');
+    } catch (error) {
+      console.error('Error in appointment deletion:', error);
+      alert('There was an error deleting your appointment. Please try again.');
+    }
+  };
+
+  // Handle clearing all appointment data for current user
+  const handleClearAllData = () => {
+    try {
+      // Get all appointments from localStorage
+      const allAppointments = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
+      
+      // Filter out appointments for current user
+      const updatedAllAppointments = allAppointments.filter(app => 
+        app.patientId !== currentUser.id
+      );
+
+      // Update localStorage without current user's appointments
+      localStorage.setItem('clientAppointments', JSON.stringify(updatedAllAppointments));
+
+      // Clear appointments state
+      setAppointments([]);
+      
+      // Close confirmation modal
+      setShowClearDataConfirm(false);
+
+      // Show success message
+      alert('All your appointment records have been cleared successfully.');
+    } catch (error) {
+      console.error('Error clearing appointment data:', error);
+      alert('There was an error clearing your appointment data. Please try again.');
+    }
+  };
+
   return (
     <div className="appointments-container">
       <div className="appointments-header">
@@ -287,6 +362,12 @@ export default function Appointment() {
             onClick={() => setShowScheduleForm(true)}
           >
             Schedule an Appointment
+          </button>
+          <button 
+            className="clear-data-btn"
+            onClick={() => setShowClearDataConfirm(true)}
+          >
+            Clear All Records
           </button>
         </div>
       </div>
@@ -351,7 +432,9 @@ export default function Appointment() {
             </div>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label>Email Address</label>
+                <label>
+                  ✉️ Email Address
+                </label>
                 <input
                   type="email"
                   name="patientEmail"
@@ -362,15 +445,32 @@ export default function Appointment() {
                 />
               </div>
 
+              <div className="form-group name-field">
+                <label>
+                  👤 Your Name
+                </label>
+                <input
+                  type="text"
+                  name="patientName"
+                  value={newAppointment.patientName}
+                  onChange={handleInputChange}
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+
               <div className="form-group">
-                <label>Doctor</label>
+                <label>
+                  👨‍⚕️ Doctor
+                </label>
                 <select 
                   name="doctor" 
                   value={newAppointment.doctor} 
                   onChange={handleInputChange}
                   className="dropdown-select"
+                  required
                 >
-                  <option value="">Select doctor</option>
+                  <option value="">Select a doctor</option>
                   {doctorsList.map((doctor) => (
                     <option key={doctor.id} value={doctor.name}>{doctor.name} - {doctor.specialization}</option>
                   ))}
@@ -378,41 +478,49 @@ export default function Appointment() {
               </div>
 
               <div className="form-group">
-                <label>Visit Type</label>
+                <label>
+                  🩺 Visit Type
+                </label>
                 <select
                   name="visitType"
                   value={newAppointment.visitType}
                   onChange={handleInputChange}
                   required
                 >
-                  <option value="">Select visit type...</option>
+                  <option value="">Select visit type</option>
                   {visitTypes.map((type, index) => (
                     <option key={index} value={type}>{type}</option>
                   ))}
                 </select>
               </div>
 
-              <div className="form-group">
-                <label>Date</label>
-                <input
-                  type="date"
-                  name="date"
-                  value={newAppointment.date}
-                  onChange={handleInputChange}
-                  min={new Date().toISOString().split('T')[0]}
-                  required
-                />
-              </div>
+              <div className="date-time-container">
+                <div className="form-group">
+                  <label>
+                    📅 Date
+                  </label>
+                  <input
+                    type="date"
+                    name="date"
+                    value={newAppointment.date}
+                    onChange={handleInputChange}
+                    min={new Date().toISOString().split('T')[0]}
+                    required
+                  />
+                </div>
 
-              <div className="form-group">
-                <label>Time</label>
-                <input
-                  type="time"
-                  name="time"
-                  value={newAppointment.time}
-                  onChange={handleInputChange}
-                  required
-                />
+                <div className="form-group">
+                  <label>
+                    🕒 Time
+                  </label>
+                  <input
+                    type="time"
+                    name="time"
+                    value={newAppointment.time}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
               </div>
 
               <div className="form-actions">
@@ -420,11 +528,16 @@ export default function Appointment() {
                   type="button" 
                   className="cancel-btn"
                   onClick={() => setShowScheduleForm(false)}
+                  disabled={isSubmitting}
                 >
                   Cancel
                 </button>
-                <button type="submit" className="submit-btn">
-                  Schedule Appointment
+                <button 
+                  type="submit" 
+                  className="submit-btn"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Scheduling...' : 'Schedule Appointment'}
                 </button>
               </div>
             </form>
@@ -459,6 +572,74 @@ export default function Appointment() {
                   onClick={handleCancelAppointment}
                 >
                   Yes, Cancel Appointment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && selectedAppointment && (
+        <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="cancel-confirm-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Delete Appointment</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-content">
+              <p>Are you sure you want to delete your completed appointment with {selectedAppointment.doctor} on {formatDate(selectedAppointment.date)} at {formatTime(selectedAppointment.time)}?</p>
+              <div className="form-actions">
+                <button 
+                  className="cancel-btn"
+                  onClick={() => setShowDeleteConfirm(false)}
+                >
+                  No, Keep It
+                </button>
+                <button 
+                  className="submit-btn delete-confirm-btn"
+                  onClick={handleDeleteAppointment}
+                >
+                  Yes, Delete Appointment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear All Data Confirmation Modal */}
+      {showClearDataConfirm && (
+        <div className="modal-overlay" onClick={() => setShowClearDataConfirm(false)}>
+          <div className="cancel-confirm-modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Clear All Records</h2>
+              <button 
+                className="close-btn"
+                onClick={() => setShowClearDataConfirm(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-content">
+              <p>Are you sure you want to delete ALL your appointment records? This action cannot be undone.</p>
+              <div className="form-actions">
+                <button 
+                  className="cancel-btn"
+                  onClick={() => setShowClearDataConfirm(false)}
+                >
+                  No, Keep Records
+                </button>
+                <button 
+                  className="submit-btn delete-confirm-btn"
+                  onClick={handleClearAllData}
+                >
+                  Yes, Clear All Records
                 </button>
               </div>
             </div>
