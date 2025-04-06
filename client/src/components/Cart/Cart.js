@@ -9,8 +9,27 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const handleCheckout = () => {
-    navigate('/payments');
+    const savedAddress = JSON.parse(localStorage.getItem('userAddress'));
+
+    const invoiceData = {
+      orderId: 'ORD' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0'),
+      orderDate: new Date().toLocaleString(),
+      fromAddress: savedAddress
+        ? `${savedAddress.street}, ${savedAddress.city}, ${savedAddress.state} - ${savedAddress.pin}`
+        : 'Xeno Health, Bangalore, Karnataka - 560001',
+      phone: savedAddress?.phone || 'N/A',
+      paymentMethod: 'Online Payment (UPI)',
+      deliveryEstimate: '8 April 2025',
+      status: 'Confirmed',
+      items: cartItems,
+      total: Math.round(getCartTotal() * 83),
+    };
+
+    localStorage.setItem('invoiceData', JSON.stringify(invoiceData));
+    localStorage.setItem('cart', JSON.stringify([]));
+    navigate('/invoices');
   };
+
 
   return (
     <div className="cart-container">
@@ -51,7 +70,7 @@ const Cart = () => {
                   <div className="item-total">
                     ₹{Math.round((item.price * item.quantity) * 83).toLocaleString('en-IN')}
                   </div>
-                  <button 
+                  <button
                     className="remove-item"
                     onClick={() => removeFromCart(item.id)}
                   >
