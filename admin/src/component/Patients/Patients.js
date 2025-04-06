@@ -78,38 +78,99 @@ export default function Appointment() {
   
   // Component load hone par appointments ko localStorage se fetch karo
   useEffect(() => {
+    // Clear localStorage sample data on first load (uncomment this line to reset data)
+    // localStorage.removeItem('appointments');
+    
     // LocalStorage se appointments ko get karo
     const savedAppointments = localStorage.getItem('appointments');
     
+    // Client appointments ko bhi get karo
+    const clientAppointments = localStorage.getItem('clientAppointments');
+    
+    let allAppointments = [];
+    let shouldSetSampleData = false;
+    
     if (savedAppointments) {
-      // Agar appointments hai to unko parse karo
-      const parsedAppointments = JSON.parse(savedAppointments);
-      
-      // Date strings ko Date objects me convert karo
-      const appointmentsWithDates = parsedAppointments.map(appointment => ({
-        ...appointment,
-        date: new Date(appointment.date)
-      }));
-      
-      setAppointments(appointmentsWithDates);
+      try {
+        // Agar appointments hai to unko parse karo
+        const parsedAppointments = JSON.parse(savedAppointments);
+        
+        // Check if data is valid (contains necessary fields)
+        if (Array.isArray(parsedAppointments) && parsedAppointments.length > 0) {
+          // Date strings ko Date objects me convert karo
+          const appointmentsWithDates = parsedAppointments.map(appointment => ({
+            ...appointment,
+            date: new Date(appointment.date),
+            source: 'admin' // Mark as admin appointment
+          }));
+          
+          allAppointments = [...appointmentsWithDates];
+        } else {
+          // If data is invalid, we'll set sample data
+          shouldSetSampleData = true;
+        }
+      } catch (error) {
+        console.error("Error parsing admin appointments:", error);
+        shouldSetSampleData = true;
+      }
     } else {
-      // Agar koi appointments nahi hai to sample data use karo
+      shouldSetSampleData = true;
+    }
+    
+    // Process client appointments if they exist
+    if (clientAppointments) {
+      try {
+        const parsedClientAppointments = JSON.parse(clientAppointments);
+        
+        if (Array.isArray(parsedClientAppointments) && parsedClientAppointments.length > 0) {
+          // Convert client appointments to the format used in admin panel
+          const formattedClientAppointments = parsedClientAppointments.map(clientApp => ({
+            id: clientApp.id,
+            name: clientApp.patientName || "Unknown Patient",
+            date: new Date(clientApp.date),
+            startTime: clientApp.time,
+            endTime: addMinutesToTime(clientApp.time, 30), // Add 30 mins by default
+            purpose: clientApp.visitType || "Consultation",
+            doctor: clientApp.doctor,
+            status: clientApp.status || "Confirmed",
+            description: `Patient Email: ${clientApp.patientEmail || "No email provided"}`,
+            shareVia: {
+              email: true,
+              sms: false,
+              whatsapp: false
+            },
+            source: 'client' // Mark as client appointment
+          }));
+          
+          // Add client appointments to allAppointments
+          allAppointments = [...allAppointments, ...formattedClientAppointments];
+        }
+      } catch (error) {
+        console.error("Error parsing client appointments:", error);
+      }
+    }
+    
+    if (allAppointments.length > 0) {
+      setAppointments(allAppointments);
+    } else if (shouldSetSampleData) {
+      // Only set sample data if we have no valid appointments
       const sampleAppointments = [
         { 
           id: 1, 
           name: 'Manjeet Singh', 
-          date: new Date(2025, 6, 14), 
+          date: new Date(2023, 6, 14), 
           startTime: '07:00', 
           endTime: '09:00', 
-          purpose: 'x-ray',
-          doctor: 'Abhishek Kr',
+          purpose: 'Checkup',
+          doctor: 'Dr. Alok Pandey',
           status: 'Confirmed',
-          description: 'He is not sure about the time',
+          description: 'Sample appointment data',
           shareVia: {
             email: true,
             sms: true,
             whatsapp: false
           },
+          source: 'admin',
           more: 2 
         },
       ];
@@ -134,15 +195,39 @@ export default function Appointment() {
     }
   }, []);
   
+  // Helper function to add minutes to time string (HH:MM format)
+  const addMinutesToTime = (timeStr, minutes) => {
+    if (!timeStr) return "09:00";
+    
+    const [hours, mins] = timeStr.split(':').map(Number);
+    let totalMinutes = hours * 60 + mins + minutes;
+    
+    const newHours = Math.floor(totalMinutes / 60) % 24;
+    const newMins = totalMinutes % 60;
+    
+    return `${String(newHours).padStart(2, '0')}:${String(newMins).padStart(2, '0')}`;
+  };
+  
   // Jab bhi appointments update ho, localStorage me save karo
   useEffect(() => {
-    if (appointments.length > 0) {
-      const appointmentsToSave = appointments.map(appointment => ({
-        ...appointment,
-        date: appointment.date.toISOString()
-      }));
-      localStorage.setItem('appointments', JSON.stringify(appointmentsToSave));
-    }
+    // Keep only admin appointments for saving to localStorage
+    const adminAppointments = appointments.filter(appointment => 
+      appointment.source !== 'client'
+    );
+    
+    // Filter out necessary fields before saving to localStorage
+    const appointmentsToSave = adminAppointments.map(appointment => {
+      // Convert Date object to string to prevent circular reference issues
+      const appointmentCopy = { ...appointment };
+      
+      if (appointmentCopy.date instanceof Date) {
+        appointmentCopy.date = appointmentCopy.date.toISOString();
+      }
+      
+      return appointmentCopy;
+    });
+    
+    localStorage.setItem('appointments', JSON.stringify(appointmentsToSave));
   }, [appointments]);
 
   // Add this useEffect near the top of the component with other useEffects
@@ -397,27 +482,41 @@ export default function Appointment() {
   const handleEditAppointment = (e) => {
     e.preventDefault();
     
-    // Selected appointment ko update karo
+    // Create updated appointment object
+    const updatedAppointment = {
+      ...selectedAppointment,
+      name: newAppointment.name,
+      startDate: new Date(newAppointment.startDate),
+      endDate: new Date(newAppointment.endDate),
+      date: new Date(newAppointment.startDate),
+      startTime: newAppointment.startTime,
+      endTime: newAppointment.endTime,
+      purpose: newAppointment.purpose,
+      doctor: newAppointment.doctor,
+      status: newAppointment.status,
+      description: newAppointment.description,
+      shareVia: newAppointment.shareVia
+    };
+    
+    // For client appointments, only update the status
+    if (selectedAppointment.source === 'client') {
+      // Only update status for client appointments
+      updatedAppointment.status = newAppointment.status;
+      
+      // Also update in client appointments localStorage
+      const clientAppointments = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
+      const updatedClientAppointments = clientAppointments.map(app => 
+        app.id === selectedAppointment.id ? {...app, status: newAppointment.status} : app
+      );
+      localStorage.setItem('clientAppointments', JSON.stringify(updatedClientAppointments));
+    }
+    
+    // Map over appointments to update the correct one
     const updatedAppointments = appointments.map(app => 
-      app.id === selectedAppointment.id 
-        ? { ...app, 
-            name: newAppointment.name,
-            startDate: new Date(newAppointment.startDate),
-            endDate: new Date(newAppointment.endDate),
-            date: new Date(newAppointment.startDate),
-            startTime: newAppointment.startTime,
-            endTime: newAppointment.endTime,
-            purpose: newAppointment.purpose,
-            doctor: newAppointment.doctor,
-            status: newAppointment.status,
-            description: newAppointment.description,
-            shareVia: newAppointment.shareVia
-          } 
-        : app
+      app.id === selectedAppointment.id ? updatedAppointment : app
     );
     
     setAppointments(updatedAppointments);
-    localStorage.setItem('appointments', JSON.stringify(updatedAppointments));
     
     // Form reset karke close karo
     resetForm();
@@ -428,26 +527,46 @@ export default function Appointment() {
   // Appointment ko delete karne ke liye
   const handleDeleteAppointment = (id) => {
     if (window.confirm('Are you sure you want to delete this appointment?')) {
+      // Find the appointment to check if it's a client appointment
+      const appointmentToDelete = appointments.find(app => app.id === id);
+      
+      // Update the appointments state
       const updatedAppointments = appointments.filter(app => app.id !== id);
       setAppointments(updatedAppointments);
+      
+      // If it's a client appointment, also update clientAppointments in localStorage
+      if (appointmentToDelete && appointmentToDelete.source === 'client') {
+        const clientAppointments = JSON.parse(localStorage.getItem('clientAppointments') || '[]');
+        const updatedClientAppointments = clientAppointments.filter(app => app.id !== id);
+        localStorage.setItem('clientAppointments', JSON.stringify(updatedClientAppointments));
+      }
     }
   };
 
   // Edit modal ko open karne ke liye
   const openEditModal = (appointment) => {
+    // Ensure appointment date is a proper Date object
+    const appointmentDate = appointment.date instanceof Date 
+      ? appointment.date 
+      : new Date(appointment.date);
+    
     setSelectedAppointment(appointment);
     setNewAppointment({
       name: appointment.name,
-      startDate: appointment.startDate || appointment.date,
-      endDate: appointment.endDate || appointment.date,
-      date: appointment.date,
+      startDate: appointment.startDate || appointmentDate,
+      endDate: appointment.endDate || appointmentDate,
+      date: appointmentDate,
       startTime: appointment.startTime,
       endTime: appointment.endTime,
       purpose: appointment.purpose,
       doctor: appointment.doctor,
-      status: appointment.status,
-      description: appointment.description,
-      shareVia: appointment.shareVia
+      status: appointment.status || 'Confirmed',
+      description: appointment.description || '',
+      shareVia: appointment.shareVia || {
+        email: true,
+        sms: false,
+        whatsapp: false
+      }
     });
     setShowEditForm(true);
   };
@@ -1042,7 +1161,7 @@ export default function Appointment() {
                 </div>
               </div>
               
-              <div className="form-row">
+              {/* <div className="form-row">
                 <div className="form-group">
                   <label>End Date</label>
                   <input 
@@ -1100,7 +1219,7 @@ export default function Appointment() {
                     )}
                   </select>
                 </div>
-              </div>
+              </div> */}
               
               <div className="form-group">
                 <label>Status</label>
