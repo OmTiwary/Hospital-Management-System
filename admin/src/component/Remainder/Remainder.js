@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Remainder.css';
+import emailjs from 'emailjs-com';
 
 export default function Remainder() {
   const [form30, setForm30] = useState({
@@ -19,26 +20,59 @@ export default function Remainder() {
   const handleChange = (e, formType) => {
     const { name, value, type, checked } = e.target;
     const val = type === 'checkbox' ? checked : value;
-
-    if (formType === '30') {
-      setForm30(prev => ({ ...prev, [name]: val }));
-    } else {
-      setForm5(prev => ({ ...prev, [name]: val }));
-    }
+    formType === '30'
+      ? setForm30(prev => ({ ...prev, [name]: val }))
+      : setForm5(prev => ({ ...prev, [name]: val }));
   };
 
-  const validateForm = (formData) => {
+  const validateForm = (formData, label) => {
     const { name, email, message } = formData;
-    if (!name.trim() || !email.trim() || !message.trim()) {
-      alert('Please fill in all fields.');
+    if (!name.trim() || !message.trim()) {
+      alert('Please fill in all required fields.');
       return false;
     }
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      alert('Please enter a valid email address.');
-      return false;
+
+    if (label === '30-minute') {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.trim() || !emailPattern.test(email)) {
+        alert('Please enter a valid email address.');
+        return false;
+      }
     }
+
     return true;
+  };
+
+  const sendNotification = async (formData, label) => {
+    const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+    const publicKey = process.env.REACT_APP_EMAILJS_PUBLIC_KEY;
+
+    const templateId =
+      label === '30-minute'
+        ? process.env.REACT_APP_EMAILJS_TEMPLATE_ID_30
+        : process.env.REACT_APP_EMAILJS_TEMPLATE_ID_5;
+
+    const templateParams =
+      label === '30-minute'
+        ? {
+            name: formData.name,
+            user_email: formData.email,
+            from_email: 'pro13fessor3@gmail.com',
+            custom_message: formData.message,
+            subject: `30-minute Appointment Reminder`,
+          }
+        : {
+            name: formData.name,
+            custom_message: formData.message,
+          };
+
+    try {
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      alert(`${label} notification has been sent to ${formData.email || formData.name}!`);
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      alert('Failed to send the notification. Please try again later.');
+    }
   };
 
   const handleSubmit = (formData, label) => {
@@ -46,10 +80,8 @@ export default function Remainder() {
       alert(`${label} reminder is not enabled.`);
       return;
     }
-    if (!validateForm(formData)) return;
-
-    console.log(`${label} Notification Sent:`, formData);
-    alert(`${label} notification has been sent successfully!`);
+    if (!validateForm(formData, label)) return;
+    sendNotification(formData, label);
   };
 
   return (
@@ -61,6 +93,7 @@ export default function Remainder() {
         Notify patients before their appointments with custom messages.
       </p>
 
+      {/* 30 Minutes Before */}
       <div className="reminder-card">
         <h2><i className="fas fa-clock"></i> 30 Minutes Before</h2>
 
@@ -108,13 +141,12 @@ export default function Remainder() {
           placeholder="e.g., Your appointment starts in 30 minutes."
         ></textarea>
 
-        <button
-          className="save-btn"
-          onClick={() => handleSubmit(form30, '30-minute')}
-        >
-          <i className="fas fa-save"></i> Send Notification
+        <button className="save-btn" onClick={() => handleSubmit(form30, '30-minute')}>
+          <i className="fas fa-paper-plane"></i> Send Notification
         </button>
       </div>
+
+      {/* 5 Minutes Before */}
       <div className="reminder-card">
         <h2><i className="fas fa-stopwatch"></i> 5 Minutes Before</h2>
 
@@ -131,7 +163,7 @@ export default function Remainder() {
         </div>
 
         <div className="form-group">
-          <label><i className="fas fa-envelope"></i> Email Address</label>
+          <label><i className="fas fa-envelope"></i> Email Address (Optional)</label>
           <input
             type="email"
             className="text-input"
@@ -162,11 +194,8 @@ export default function Remainder() {
           placeholder="e.g., Your appointment begins in 5 minutes."
         ></textarea>
 
-        <button
-          className="save-btn"
-          onClick={() => handleSubmit(form5, '5-minute')}
-        >
-          <i className="fas fa-save"></i> Send Notification
+        <button className="save-btn" onClick={() => handleSubmit(form5, '5-minute')}>
+          <i className="fas fa-paper-plane"></i> Send Notification
         </button>
       </div>
     </div>
