@@ -1,0 +1,160 @@
+.remainder-container {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 30px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.remainder-header {
+    font-size: 30px;
+    margin-bottom: 10px;
+    background: linear-gradient(to right, #00c875, #00b067);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
+
+.remainder-header i {
+    margin-right: 10px;
+}
+
+.remainder-description {
+    color: #555;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.reminder-card {
+    background: #ffffff;
+    border: 2px solid #a8f0ce;
+    padding: 25px;
+    margin-bottom: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 200, 117, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reminder-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 6px 20px rgba(0, 200, 117, 0.15);
+}
+
+.reminder-card h2 {
+    color: #00c875;
+    font-size: 22px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 6px;
+}
+
+.form-group label i {
+    margin-right: 6px;
+    color: #00c875;
+}
+
+.text-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #b2f2d7;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+.text-input:focus {
+    border-color: #00c875;
+    box-shadow: 0 0 0 2px rgba(0, 200, 117, 0.2);
+}
+
+.toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    color: #333;
+    font-weight: 500;
+}
+
+.toggle input[type="checkbox"] {
+    transform: scale(1.3);
+    accent-color: #00c875;
+}
+
+.msg-label {
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.msg-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #b2f2d7;
+    border-radius: 8px;
+    resize: none;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+.msg-input:focus {
+    border-color: #00c875;
+    box-shadow: 0 0 0 2px rgba(0, 200, 117, 0.2);
+}
+
+.save-btn {
+    background: linear-gradient(to right, #00c875, #00b067);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.save-btn i {
+    margin-right: 8px;
+}
+
+.save-btn:hover {
+    background: #009c5d;
+}
+
+@media (max-width: 768px) {
+    .remainder-header {
+        font-size: 26px;
+    }
+
+    .reminder-card {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .reminder-card h2 {
+        font-size: 18px;
+    }
+
+    .text-input,
+    .msg-input {
+        font-size: 14px;
+    }
+
+    .save-btn {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+}
