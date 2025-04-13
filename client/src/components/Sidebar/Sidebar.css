@@ -95,7 +95,7 @@ body {
   display: none;
 }
 
-.sidebar-links li a{
+.sidebar-links li a {
   display: flex;
   align-items: center;
   gap: 0 25px;
@@ -150,4 +150,14 @@ body {
 .sidebar:hover .user-account {
   background: #fff;
   border-radius: 4px;
+}
+@media (max-width: 480px) {
+  .sidebar {
+    width: 70px !important;
+    padding: 20px 15px;
+  }
+
+  .sidebar:hover {
+    width: 70px !important;
+  }
 }

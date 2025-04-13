@@ -1,0 +1,196 @@
+.profile-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.profile-card {
+    background-color: #f0fff4;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0, 128, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background: #a7f3d0;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #22c55e;
+    box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
+    margin-right: 20px;
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.profile-info h2 {
+    margin: 0;
+    color: #14532d;
+    font-size: 28px;
+}
+
+.profile-info p {
+    margin: 5px 0;
+    font-size: 15px;
+    color: #1f2937;
+}
+
+.edit-btn {
+    background-color: #22c55e;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    transition: background 0.3s ease;
+}
+
+.edit-btn:hover {
+    background-color: #16a34a;
+}
+
+/* Details Section */
+.profile-details {
+    margin-top: 10px;
+}
+
+.profile-details h3 {
+    color: #14532d;
+    margin-bottom: 10px;
+}
+
+.profile-details p,
+.profile-details li {
+    color: #374151;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.profile-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.profile-details ul li::before {
+    content: '•';
+    color: #22c55e;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(34, 197, 94, 0.15);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 15px 30px rgba(0, 128, 0, 0.2);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-form h3 {
+    text-align: center;
+    color: #14532d;
+    margin-bottom: 20px;
+}
+
+.modal-form input[type="file"] {
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.modal-form input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.save-btn,
+.cancel-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.save-btn {
+    background-color: #22c55e;
+    color: white;
+}
+
+.save-btn:hover {
+    background-color: #16a34a;
+}
+
+.cancel-btn {
+    background-color: #e2e8f0;
+    color: #1f2937;
+}
+
+.cancel-btn:hover {
+    background-color: #cbd5e1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

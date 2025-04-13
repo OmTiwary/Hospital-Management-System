@@ -30,12 +30,12 @@ export default function Dashboard() {
     const savedAppointments = localStorage.getItem('appointments');
     if (savedAppointments) {
       const parsedAppointments = JSON.parse(savedAppointments);
-      
+
       // Generate random data for the bar chart
-      const randomData = Array(10).fill().map(() => 
+      const randomData = Array(10).fill().map(() =>
         Math.floor(Math.random() * 2000) + 500
       );
-      
+
       // Update appointment data
       setAppointmentData({
         labels: ['', '', '', '', '', '', '', '', '', ''],
@@ -169,10 +169,12 @@ export default function Dashboard() {
   return (
     <>
       <div className="nav">
-        <input type="search" name="search" id="search" placeholder='Search "Doctor" ' required autoComplete='off' />
+        <div className="search-container">
+          <input type="search" name="search" id="search" placeholder='Search "Doctor" ' required autoComplete='off' />
+          <i className="fa-solid fa-magnifying-glass search-icon"></i>
+        </div>
         <h4>Ayush Mishra</h4>
       </div>
-
       <div className="box">
         <div className="box1">
           <div className="layout">

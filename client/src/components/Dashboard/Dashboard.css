@@ -1,19 +1,41 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
-*{
+
+* {
     margin: 0%;
     padding: 0%;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
     cursor: pointer;
 }
-.nav{
+
+.nav {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
-.nav input{
+.search-container {
+    position: relative;
+    display: inline-block;
+}
+
+.search-container input[type="search"] {
+    padding-right: 30px;
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #aaa;
+    pointer-events: none;
+}
+
+
+
+.nav input {
     width: 350px;
     height: 40px;
     border-radius: 4px;
@@ -27,7 +49,7 @@
     padding-right: 20px;
 }
 
-.box{
+.box {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -36,7 +58,10 @@
     padding-top: 40px;
 }
 
-.box .box1, .box .box2, .box .box3, .box .box4{
+.box .box1,
+.box .box2,
+.box .box3,
+.box .box4 {
     width: 290px;
     height: 200px;
     box-shadow: 3px 3px 4px lightgrey;
@@ -47,14 +72,21 @@
     padding-bottom: 5px;
 }
 
-.box1 .layout, .box2 .layout, .box3 .layout, .box4 .layout, .cure .layout{
+.box1 .layout,
+.box2 .layout,
+.box3 .layout,
+.box4 .layout,
+.cure .layout {
     display: flex;
     justify-content: start;
     align-items: start;
     gap: 4px;
 }
 
-.box1 .layout i, .box2 .layout i, .box3 .layout i, .box4 .layout i{
+.box1 .layout i,
+.box2 .layout i,
+.box3 .layout i,
+.box4 .layout i {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -64,7 +96,7 @@
     margin: 6px;
 }
 
-.cure .layout i{
+.cure .layout i {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -74,27 +106,33 @@
     margin: 10px;
 }
 
-.box1 .layout h3, .box2 .layout h3, .box3 .layout h3, .box4 .layout h3{
+.box1 .layout h3,
+.box2 .layout h3,
+.box3 .layout h3,
+.box4 .layout h3 {
     margin: 6px;
     font-weight: 400;
     font-style: normal;
 }
 
-.cure h3{
+.cure h3 {
     margin: 20px;
     font-weight: 400;
     font-style: normal;
 }
 
 
-.box1 .data, .box2 .data, .box3 .data, .box4 .data{
+.box1 .data,
+.box2 .data,
+.box3 .data,
+.box4 .data {
     height: 125px;
     margin-top: 20px;
     margin-left: 20px;
     width: 80%;
 }
 
-.cure .data{
+.cure .data {
     height: 220px;
     width: 80%;
     margin-top: 20px;
@@ -102,7 +140,7 @@
 }
 
 
-.cure{
+.cure {
     width: 850px;
     height: 320px;
     box-shadow: 3px 3px 4px lightgray;
@@ -117,9 +155,9 @@
     height: 320px;
     box-shadow: 3px 3px 4px lightgray;
     background-color: #fff;
-    border-radius: 10px; 
+    border-radius: 10px;
     padding: 10px;
-    overflow: hidden; 
+    overflow: hidden;
     display: flex;
     flex-direction: column;
 }
@@ -138,7 +176,7 @@
     margin: 6px 10px;
     padding: 8px;
     border-radius: 8px;
-    background: rgb(233, 233, 233); 
+    background: rgb(233, 233, 233);
     position: relative;
     overflow: hidden;
 }
@@ -147,14 +185,14 @@
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    object-fit: cover; 
+    object-fit: cover;
     flex-shrink: 0;
 }
 
 .pat .id {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; 
+    flex-grow: 1;
     margin-left: 12px;
 }
 
@@ -167,10 +205,176 @@
 }
 
 .pat .time {
-    position: relative; 
+    position: relative;
     font-size: 12px;
     color: gray;
     text-align: right;
     flex-shrink: 0;
 }
 
+@media (max-width: 992px) {
+    .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .nav input {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .box {
+        justify-content: center;
+    }
+
+    .box .box1,
+    .box .box2,
+    .box .box3,
+    .box .box4,
+    .cure,
+    .patient {
+        width: 90%;
+    }
+
+    .cure {
+        height: auto;
+    }
+
+    .cure .data {
+        margin-left: 10%;
+        width: 80%;
+    }
+
+    .patient {
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .nav input {
+        width: 100%;
+    }
+
+    .box {
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+    }
+
+    .box .box1,
+    .box .box2,
+    .box .box3,
+    .box .box4 {
+        width: 95%;
+        margin-bottom: 15px;
+    }
+
+    .cure,
+    .patient {
+        width: 95%;
+        margin-bottom: 20px;
+    }
+
+    .cure .data {
+        margin-left: 5%;
+        width: 90%;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .search-container input[type="search"] {
+        width: 100%;
+        padding-right: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .nav input {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px 35px 10px 15px;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .search-icon {
+        right: 12px;
+    }
+
+    .box {
+        flex-direction: column;
+        padding-top: 20px;
+        align-items: center;
+    }
+
+    .box .box1,
+    .box .box2,
+    .box .box3,
+    .box .box4,
+    .cure,
+    .patient {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .cure {
+        height: auto;
+    }
+
+    .cure .data {
+        margin-left: 0;
+        width: 95%;
+    }
+
+    .patient {
+        height: auto;
+    }
+
+    .pat {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        padding: 10px;
+    }
+
+    .pat img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .pat .id h4 {
+        font-size: 13px;
+    }
+
+    .pat .time {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    h3 {
+        font-size: 16px;
+    }
+
+    .layout h3 {
+        font-size: 14px;
+    }
+}

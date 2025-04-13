@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 import { doctorsList } from '../Doctors/Doctors';
 import './Appointment.css';
+import Axios from 'axios';
 
 // Replace these with your actual EmailJS credentials
 const EMAILJS_PUBLIC_KEY = "Z1FnnOX_5kkn5xVzn"; // Get this from EmailJS Account Settings
@@ -374,9 +375,21 @@ export default function Appointment() {
     }
   };
 
+  
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const {patientName, patientEmail, doctor, visitType, date, time} = newAppointment;
+    Axios.post('http://localhost:5000/patient', {patientName, patientEmail, doctor, visitType, date, time})
+    .then((result) => {
+      alert("Form Submitted!")
+      console.log(result)
+    })
+    .catch((err)=> {
+      alert("Error submiitng the form!")
+      console.log(err)
+    })
+    
     
     if (isSubmitting) return;
     
