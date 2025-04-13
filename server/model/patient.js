@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 
-const userSchema = new mongoose.Schema({
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
-    phone: {type: String, required: true, unique: true},
-    email: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
-    confirmPassword: {type: String, required: true}
+const patientSchema = new mongoose.Schema({
+    patientName: {type: String, required: true},
+    patientEmail: {type: String, required: true},
+    doctor: {type: String, required: true, unique: true},
+    visitType: {type: String, required: true, unique: true},
+    time: {type: String, required: true},
+    date: {type: String, required: true}
 })
 
-module.exports = mongoose.model("appointment", userSchema)
+module.exports = mongoose.model("appointment", patientSchema)

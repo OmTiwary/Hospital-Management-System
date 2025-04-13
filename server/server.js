@@ -8,6 +8,8 @@ const app = express();
 const PORT = process.env.PORT || 5000
 
 const userModel = require('./model/user')
+const campaignModel = require('./model/campaign')
+const patientModel = require('./model/patient')
 
 app.use(cors(
    {
@@ -51,6 +53,18 @@ app.post('/login', (req, res)=>{
             res.json("No record existed!")
         }
     })
+})
+
+app.post('/data', (req, res)=>{
+    campaignModel.create(req.body)
+    .then((data)=> res.json(data))
+    .catch((err)=> res.json(err))
+})
+
+app.post('/patient', (req, res)=>{
+    patientModel.create(req.body)
+    .then((data)=> res.json(data))
+    .catch((err)=> res.json(err))
 })
 
 app.listen(PORT, (req, res)=>{
