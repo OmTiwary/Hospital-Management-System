@@ -4,21 +4,24 @@ import './login.css';
 import logo from '../components/asset/logo.png';
 import { FaEnvelope, FaLock, FaUser, FaArrowRight } from 'react-icons/fa';
 import Axios from 'axios';
-import {Navigate} from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
   const Navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/login', {email, password})
-    .then(result => {console.log(result)
-      Navigate('/');
-    })
-    .catch(err => console.log(err))
+    Axios.post('http://localhost:5000/login', { email, password })
+      .then((result) => {
+        console.log(result);
+        onLogin();
+        Navigate('/');
+      })
+      .catch((err) => console.log(err));
+
     console.log('Login attempt with:', { email, password, rememberMe });
   };
 

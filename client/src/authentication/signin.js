@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './signin.css';
+import { useNavigate } from 'react-router-dom';
 import logo from '../components/asset/logo.png';
 import { FaEnvelope, FaLock, FaUser, FaArrowRight, FaPhone, FaUserMd } from 'react-icons/fa';
 import Axios from 'axios';
@@ -14,12 +15,19 @@ const Signin = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [agreeTerms, setAgreeTerms] = useState(false);
 
+  const Navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     Axios.post('http://localhost:5000/user', {firstName, lastName, email, phone, password, confirmPassword})
-    .then(result => console.log(result))
-    .catch(err => console.log(err));
-    console.log('Sign-up attempt with:', { firstName, lastName, email, phone, password, confirmPassword, agreeTerms });
+    .then(result => {
+      console.log(result);
+      Navigate('/login');
+    })
+    .catch(err => {
+      console.log(err);
+      alert("Something went wrong. Try again!");
+    });
   };
 
   return (
