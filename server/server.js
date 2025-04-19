@@ -67,6 +67,13 @@ app.post('/patient', (req, res)=>{
     .catch((err)=> res.json(err))
 })
 
+app.get('/patient', (req, res) => {
+    patientModel.find()
+    .then((data) => res.json(data))
+    .catch((err) => res.json(err));
+});
+
+
 app.listen(PORT, (req, res)=>{
     console.log(`Server is connected to http://localhost:${PORT}`)
 })
