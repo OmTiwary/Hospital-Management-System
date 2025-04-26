@@ -64,7 +64,7 @@ function App() {
           </div>
         </CartProvider>
 
-      )}
+      )
     </BrowserRouter>
   );
 }
